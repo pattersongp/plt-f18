@@ -1,11 +1,13 @@
 # Language Proposal
 
 LIT -- Language ? ?
+FIRE - File Input Reinterpretation Engine
 
 ## Table of Contents
 * [Introduction](#introduction)
 * [Features](#features)
 * [Documentation](#documentation)
+* [Code Example](#codeexample)
 * [FAQ](#faq)
 * [Authors](#authors)
 
@@ -16,25 +18,70 @@ LIT -- Language ? ?
 ## Features
 
 {LANG} supports the following data types:
-* int
-* float
-* string
-* bool
-* array
-* file
+* `int` - Integer
+* `float` - A floating point number
+* `string` - A sequence of characters
+* `bool` - {True or False}
+* `array` - represented as assoc
+* `file` - native file type for easily operating on files
+* `func` - Treated like first class objects, ie they may be passed as parameters and stored in variables
 
 ## Documentation
 
 ### Syntax
 
+Scope is bounded by `{...}` and `;` will delimit statements, ie indentation is not a syntactic enforcer.
+
 ### Basic Operators
 
-|Operator|Purpose|Exmaple|
-| ------------- |:-------------:| :-----:|
-| +, -, \*, /  | basic arithmatic operators | x = a {+, -, \*, /} b |
-| \|  | pipe, streaming output of one function to another |  f(x) \| g() |
+| Operator             | Purpose                    | Exmaple |
+| -------------------- |:--------------------------:| :-----:|
+|`=`                   |asssignment                 |`x=6`   |
+| `+, -, *, /`        | basic arithmatic operators | `x = a {+, -, *, /} b` |
+| `\|`                 | pipe, streaming output of one function to another |  `f(x) \| g()` |
+|`==, >, >=, <, <=, !=`| traditional comparison operators| `if (x == y) ...` |
 
-### Semantics
+### Array Operators
+
+| Operator      | Purpose       | Exmaple |
+| ------------- |:-------------:| :-----:|
+| `[::]`        | slicing operators on arrays | `x = arr[3:5:]` |
+| `del <arr>`   | delete operator on arrays |  `del arr[3]` |
+  
+### File operators
+
+| Operator      | Purpose       | Exmaple |
+| ------------- |:-------------:| :------:|
+| stream        | opens a stream to the file | `f = file("roster.csv"); x = f.stream()` | 
+
+### Control Flows
+
+{LANG} provides the following set of control flow operators: `if`, `while`, and `for`.
+
+## Code Example
+
+```
+...
+func lessThanThree(string filename) {
+    file f = file(filename);
+    stream s = f.stream();
+    
+    string[] words;
+    
+    for word in s {
+        if word.length < 5 { 
+           words[word] = word.length;
+        }
+    }
+    
+    for short in words {
+        print short " is length " words[short];
+    }
+}
+
+lessThanThree("myBookWithShortWords.txt") | someOtherFunction()
+...
+```
 
 ## FAQ
 
