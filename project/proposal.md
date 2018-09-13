@@ -16,7 +16,7 @@ FIRE - File Input Reinterpretation Engine
 {LANG} is a programming language designed for implementing algorithms which extract, mutate, process, and report text and structured data. {LANG} is meant to be used in conjunction with large sets of structured and delimited data, like CSV's.
 
 ## Motivation 
-Many programmers who use UNIX-based, command-line interfaces prefer to do their text manipulation with pipes and an array of UNIX tools, stringing together inputs and outputs in cumbersome, syntactically complex statements. Our language aspires to streamline and simplify text manipulation tasks by making files first-class citizens.
+Many programmers who use UNIX-based, command-line interfaces prefer to do their text manipulation with pipes and an array of UNIX tools, stringing together inputs and outputs in cumbersome, syntactically complex statements. Our language aspires to streamline and simplify text manipulation tasks by making files first-class citizens. {LANG} is a scripting language, inspired by AWK and other languages, and aims to make the manipulation of files and text as easy as possible. 
 
 ## Features
 
