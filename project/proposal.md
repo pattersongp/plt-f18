@@ -1,6 +1,5 @@
 # Language Proposal
 
-LIT -- Language ? ?
 FIRE - File Input Reinterpretation Engine
 
 ## Table of Contents
@@ -13,14 +12,15 @@ FIRE - File Input Reinterpretation Engine
 
 ## Introduction
 
-{LANG} is a programming language designed for implementing algorithms which extract, mutate, process, and report text and structured data. {LANG} is meant to be used in conjunction with large sets of structured and delimited data, like CSV's.
+FIRE is a programming language designed for implementing algorithms which extract, mutate, process, and report text and structured data. FIRE is meant to be used in conjunction with large sets of structured and delimited data, like CSV's.
 
-## Motivation 
-Many programmers who use UNIX-based, command-line interfaces prefer to do their text manipulation with pipes and an array of UNIX tools, stringing together inputs and outputs in cumbersome, syntactically complex statements. Our language aspires to streamline and simplify text manipulation tasks by making files first-class citizens. {LANG} is a scripting language, inspired by AWK and other languages, and aims to make the manipulation of files and text as easy as possible. 
+## Motivation
+
+Many programmers who use UNIX-based, command-line interfaces prefer to do their text manipulation with pipes and an array of UNIX tools, stringing together inputs and outputs in cumbersome, syntactically complex statements. Our language aspires to streamline and simplify text manipulation tasks by making files first-class citizens. FIRE is a scripting language, inspired by AWK and other languages, and aims to make the manipulation of files and text as easy as possible.
 
 ## Features
 
-{LANG} supports the following data types:
+FIRE supports the following data types:
 * `int` - Integer
 * `float` - A floating point number
 * `string` - A sequence of characters
@@ -35,21 +35,30 @@ Many programmers who use UNIX-based, command-line interfaces prefer to do their 
 
 Scope is bounded by `{...}` and `;` will delimit statements, ie indentation is not a syntactic enforcer.
 
+### Regular Expressions
+
+FIRE supports regular expressions for finding, replacing, and manipulating text. For example, if you're interested in accessing elements of an array, which might be strings, a concise expression of that would be:
+```
+...
+col = arr[r'[a-zA-Z]']
+...
+```
+
 ### Basic Operators
 
 | Operator             | Purpose                    | Exmaple |
 | -------------------- |:--------------------------:| :-----:|
 |`=`                   |asssignment                 |`x=6`   |
-| `+, -, *, /`        | basic arithmatic operators | `x = a {+, -, *, /} b` |
+| `+, -, *, /`         | basic arithmatic operators | `x = a {+, -, *, /} b` |
 | `\|`                 | pipe, streaming output of one function to another |  `f(x) \| g()` |
 |`==, >, >=, <, <=, !=`| traditional comparison operators| `if (x == y) ...` |
 
 ### Array Operators
 
 | Operator      | Purpose       | Exmaple |
-| ------------- |:-------------:| :-----:|
+| ------------- |:-------------:| :-----: |
 | `[::]`        | slicing operators on arrays | `x = arr[3:5:]` |
-| `del <arr>`   | delete operator on arrays |  `del arr[3]` |
+| `del <arr>[<item>]`   | delete operator on an item in an array |  `del arr[3]` |
   
 ### File operators
 
