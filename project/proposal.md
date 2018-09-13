@@ -68,7 +68,7 @@ col = arr[r'[a-zA-Z]']
 
 ### Control Flows
 
-{LANG} provides the following set of control flow operators: `if`, `while`, and `for`.
+FIRE provides the following set of control flow operators: `if`, `while`, and `for`.
 
 ## Code Example
 
