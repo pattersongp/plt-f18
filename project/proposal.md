@@ -4,7 +4,6 @@ LIT -- Language ? ?
 
 ## Table of Contents
 * [Introduction](#introduction)
-* [Purpose](#purpose)
 * [Features](#features)
 * [Documentation](#documentation)
 * [FAQ](#faq)
@@ -12,25 +11,36 @@ LIT -- Language ? ?
 
 ## Introduction
 
-A brief introduction and summary of the language
-
-## Purpose
+{LANG} is a programming language designed for implementing algorithms which extract, mutate, process, and report text and structured data. {LANG} is meant to be used in conjunction with large sets of structured and delimited data, like CSV's.
 
 ## Features
+
+{LANG} supports the following data types:
+* int
+* float
+* string
+* bool
+* array
+* file
 
 ## Documentation
 
 ### Syntax
 
-### Semantics
+### Basic Operators
 
-## Figures
+|Operator|Purpose|Exmaple|
+| ------------- |:-------------:| :-----:|
+| +, -, \*, /  | basic arithmatic operators | x = a {+, -, \*, /} b |
+| \|  | pipe, streaming output of one function to another |  f(x) \| g() |
+
+### Semantics
 
 ## FAQ
 
-Q. Is this normal?
+Q. Is this awk?
 
-A. Yes. This is normal. Why ...
+A. No, it's only the best parts.
 
 ## Authors
 
