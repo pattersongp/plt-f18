@@ -1,6 +1,9 @@
-# Language Proposal
 
-FIRE - File Input Reinterpretation Engine
+<p align="center">
+ <img src="https://cdn2.vectorstock.com/i/thumb-large/92/06/fire-logo-vector-13639206.jpg" alt="FIRE Logo"                      height="500px" width="500px" /></p>
+ 
+ <p align="center">File Input Reinterpretation Engine</p>
+
 
 ## Table of Contents
 * [Introduction](#introduction)
@@ -20,14 +23,21 @@ Many programmers who use UNIX-based, command-line interfaces prefer to do their 
 
 ## Features
 
-FIRE supports the following data types:
+Primitive Data Types:
 * `int` - Integer
 * `float` - A floating point number
 * `string` - A sequence of characters
 * `bool` - {True or False}
-* `array` - represented as assoc
+* `array` - represented as associative arrays
 * `file` - native file type for easily operating on files
 * `func` - Treated like first class citizens, i.e. they may be passed as parameters and stored in variables
+
+Reserved Keywords:
+* all data types 
+* all control statements - `{if, while, for}`
+* in - syntactical sugar to iterate over every element in array or every line in file stream : `for (x in numbers)`
+* print - used to print data to the screen
+
 
 ## Documentation
 
@@ -52,6 +62,9 @@ col = arr[r'[a-zA-Z]']
 | `+, -, *, /`         | basic arithmatic operators | `x = a {+, -, *, /} b` |
 | `\|`                 | pipe, streaming output of one function to another |  `f(x) \| g()` |
 |`==, >, >=, <, <=, !=`| traditional comparison operators| `if (x == y) ...` |
+|`++, --`              | increment/decrement        | `x++`or`++x` / `x--`or`--x`|
+|`=>`                  | declares an anonymous function that can be assigned to a variable | `(param) => { body }`|
+| `===`                | matches data to regex      | `if (String y === [a-zA-Z]*)`| 
 
 ### Array Operators
 
@@ -73,33 +86,56 @@ FIRE provides the following set of control flow operators: `if`, `while`, and `f
 ## Code Example
 
 ```
+PhoneNumbers.txt
+//example file with list of phone numbers
+
+201-445-9372
+954-667-8990
+312-421-0098
+201-750-0911
+783-444-7862
 ...
-func lessThanThree(string filename) {
-    file f = file(filename);
-    stream s = f.stream();
-    
-    string[] words;
-    
-    for word in s {
-        if word.length < 5 { 
-           words[word] = word.length;
-        }
-    }
-    
-    for short in words {
-        print short " is length " words[short];
-    }
+
+
+ColdCall.Fire
+//using fire to extract NJ phone numbers and pipe into a "cold call" function
+
+file f = file(PhoneNumbers.txt);
+
+//first class citizen 
+func isNJ = (String phoneNumber) => {
+    return phoneNumber === "201-/d{3}-/d{4}";
 }
 
-lessThanThree("myBookWithShortWords.txt") | someOtherFunction()
+
+func extractRegion(func isRegion, file numbers) {
+    String[] resultingNums;
+    
+    for(number in numbers.stream() ){
+        if(isRegion(number)){
+            resultingNums[number] = number;
+        }
+    }
+        
+    return resultingNums;
+}
+    
+    
+
+extractRegion(isNJ, f) | coldCallNumbers()
 ...
 ```
 
 ## FAQ
 
-Q. Is this awk?
+Q. Is this AWK?
 
 A. No, it's only the best parts.
+
+Q. Is this awk?
+
+A. Depends what kind of files you use
+
 
 ## Authors
 
