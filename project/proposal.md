@@ -1,9 +1,10 @@
 
 <p align="center">
  <img src="https://cdn2.vectorstock.com/i/thumb-large/92/06/fire-logo-vector-13639206.jpg" alt="FIRE Logo"                      height="500px" width="500px" /></p>
- 
- <p align="center">File Input Reinterpretation Engine</p>
 
+ <p align="center">File Input Reinterpretation Engine</p>
+# Fire
+File Input Reinterpretation Engine
 
 ## Table of Contents
 * [Introduction](#introduction)
@@ -15,17 +16,18 @@
 
 ## Introduction
 
-FIRE is a programming language designed for implementing algorithms which extract, mutate, process, and report text and structured data. FIRE is meant to be used in conjunction with large sets of structured and delimited data, like CSV's.
+FIRE is a programming language designed for implementing algorithms which extract, mutate, process, and report text and structured data. FIRE is meant to be used in conjunction with large sets of structured and delimited data, like CSV's. At the core of the language is the motivation to intuitively iterate over, manipulate, and map functions to large sets of structured data.
 
 ## Motivation
 
 Many programmers who use UNIX-based, command-line interfaces prefer to do their text manipulation with pipes and an array of UNIX tools, stringing together inputs and outputs in cumbersome, syntactically complex statements. Our language aspires to streamline and simplify text manipulation tasks by making files first-class citizens. FIRE is a scripting language, inspired by AWK and other languages, and aims to make the manipulation of files and text as easy as possible.
 
-Additionally, the most common way for professional teams to share data between eachother is with a csv file. If a team receives some data and they want to quickly manipulate that data, how can we avoid the overhead of importing it into a relational database, then querying that database for the desired manipulation? Fire allows for such a manipulation. 
+Additionally, the most common way for professional teams to share data between eachother is with a csv file. If a team receives some data and they want to quickly manipulate that data, how can we avoid the overhead of importing it into a relational database, then querying that database for the desired manipulation? Fire allows for such a manipulation.
 
 ## Features
 
-Primitive Data Types:
+### Primitive Data Types:
+
 * `int` - Integer
 * `float` - A floating point number
 * `string` - A sequence of characters
@@ -34,12 +36,12 @@ Primitive Data Types:
 * `file` - native file type for easily operating on files
 * `func` - Treated like first class citizens, i.e. they may be passed as parameters and stored in variables
 
-Reserved Keywords:
-* all data types 
+### Reserved Keywords:
+
+* all data types
 * all control statements - `{if, while, for}`
 * in - syntactical sugar to iterate over every element in array or every line in file stream : `for (x in numbers)`
 * print - used to print data to the screen
-
 
 ## Documentation
 
@@ -49,37 +51,32 @@ Scope is bounded by `{...}` and `;` will delimit statements, ie indentation is n
 
 ### Regular Expressions
 
-FIRE supports regular expressions for finding, replacing, and manipulating text. For example, if you're interested in accessing elements of an array, which might be strings, a concise expression of that would be:
-```
-...
-col = arr[r'[a-zA-Z]']
-...
-```
+FIRE supports regular expressions for finding, replacing, and manipulating text. For example, if you're interested in accessing elements of an array, which might be strings, a concise expression of that would be: `col = arr[r'[a-zA-Z]']`
 
 ### Basic Operators
 
-| Operator             | Purpose                    | Exmaple |
-| -------------------- |:--------------------------:| :-----:|
-|`=`                   |asssignment                 |`x=6`   |
+| Operator             | Purpose                    | Example |
+| ------------ | -------------- | :---------: |
+|`=`                   | asssignment                 |`x=6`   |
 | `+, -, *, /`         | basic arithmatic operators | `x = a {+, -, *, /} b` |
-| `\|`                 | pipe, streaming output of one function to another |  `f(x) \| g()` |
-|`==, >, >=, <, <=, !=`| traditional comparison operators| `if (x == y) ...` |
+| `\|`                 | pipe output of a function to another |  `f(x) \| g()` |
+|`==, >, >=, <, <=, !=`| comparison operators | `if (x == y) ...` |
 |`++, --`              | {post, pre}fix increment and decrement        | `x++; ++x` `x--; --x`|
-|`=>`                  | declares an anonymous function that can be assigned to a variable | `(param) => { body }`|
-| `===`                | matches data to regex      | `if (String y === [a-zA-Z]*)`| 
+|`=>`                  | anonymous function that can be assigned to a variable | `(param) => { body }`|
+| `===`                | matches data to regex      | `if (String y === [a-zA-Z]*)`|
 
 ### Array Operators
 
-| Operator      | Purpose       | Exmaple |
-| ------------- |:-------------:| :-----: |
+| Operator      | Purpose       | Example |
+| ------------- | ------------- | :--------------: |
 | `[::]`        | slicing operators on arrays | `x = arr[3:5:]` |
 | `del <arr>[<item>]`   | delete operator on an item in an array |  `del arr[3]` |
-  
+
 ### File operators
 
-| Operator      | Purpose       | Exmaple |
-| ------------- |:-------------:| :------:|
-| stream        | opens a stream to the file | `f = file("roster.csv"); x = f.stream()` | 
+| Operator      | Purpose       | Example |
+| ------------- | ------------- | ----------------- |
+| stream        | opens a stream to the file | `f = file("roster.csv"); x = f.stream()` |
 
 ### Control Flows
 
@@ -104,7 +101,7 @@ ColdCall.Fire
 
 file f = file(PhoneNumbers.txt);
 
-//first class citizen 
+//first class citizen
 func isNJ = (String phoneNumber) => {
     return phoneNumber === "201-/d{3}-/d{4}";
 }
@@ -112,17 +109,17 @@ func isNJ = (String phoneNumber) => {
 
 func extractRegion(func isRegion, file numbers) {
     String[] resultingNums;
-    
+
     for(number in numbers.stream() ){
         if(isRegion(number)){
             resultingNums[number] = number;
         }
     }
-        
+
     return resultingNums;
 }
-    
-    
+
+
 
 extractRegion(isNJ, f) | coldCallNumbers()
 ...
@@ -143,6 +140,6 @@ A. Depends what kind of files you use
 
 * [Jason Konikow](https://github.com/jkon1513)
 * [Frank Spano](https://github.com/fspano118)
-* [Graham Patterson](https://github.com/pattersongp)
+* [Graham Patterson](https://github.com/pattersongp) gpp2109
 * [Christopher Thomas](https://github.com/lord-left)
 * [Ayer Chan](https://github.com/ochan4)
