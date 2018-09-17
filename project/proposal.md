@@ -21,6 +21,8 @@ FIRE is a programming language designed for implementing algorithms which extrac
 
 Many programmers who use UNIX-based, command-line interfaces prefer to do their text manipulation with pipes and an array of UNIX tools, stringing together inputs and outputs in cumbersome, syntactically complex statements. Our language aspires to streamline and simplify text manipulation tasks by making files first-class citizens. FIRE is a scripting language, inspired by AWK and other languages, and aims to make the manipulation of files and text as easy as possible.
 
+Additionally, the most common way for professional teams to share data between eachother is with a csv file. If a team receives some data and they want to quickly manipulate that data, how can we avoid the overhead of importing it into a relational database, then querying that database for the desired manipulation? Fire allows for such a manipulation. 
+
 ## Features
 
 Primitive Data Types:
@@ -62,7 +64,7 @@ col = arr[r'[a-zA-Z]']
 | `+, -, *, /`         | basic arithmatic operators | `x = a {+, -, *, /} b` |
 | `\|`                 | pipe, streaming output of one function to another |  `f(x) \| g()` |
 |`==, >, >=, <, <=, !=`| traditional comparison operators| `if (x == y) ...` |
-|`++, --`              | increment/decrement        | `x++`or`++x` / `x--`or`--x`|
+|`++, --`              | {post, pre}fix increment and decrement        | `x++; ++x` `x--; --x`|
 |`=>`                  | declares an anonymous function that can be assigned to a variable | `(param) => { body }`|
 | `===`                | matches data to regex      | `if (String y === [a-zA-Z]*)`| 
 
