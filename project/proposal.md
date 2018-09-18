@@ -148,14 +148,14 @@ A. Depends what kind of files you use
 
 Q. What the heck is an associative array?
 
-A. An associative array is not that different from its more popular "indexed array" counterpart. The major difference is that in an associative array the indices are represented as strings rather than numbers. You are still allowed to use numbers as your indices should you choose, but in all actuality they are being stringified which means its possible to have numbers such as -1 or 2.55 as indices. 
+A. An associative array is not that different from its more popular "indexed array" counterpart. The major difference is that in an associative array the indices are represented as strings rather than integers. With an associative array, we can pair information in way that “associates” the key to value so that the array is more informative to us than an indexed type. You are still allowed to use numbers as your indices should you choose, but in all actuality they are being stringified which means its possible to have numbers such as -1 or 2.55 as indices. 
 
 example: 
 ```
 int[] x; 
-x[fireIsCool] = 1; 
-x[-987] = 2; 
-x[66.876] = 3;  `
+x["fireIsCool"] = 1; 
+x["-987"] = 2; 
+x["66.876"] = 3;  `
 ```
 This means that the relationship between an array element and its index can be thought of in the same light as the key/value pair from java, or the object/property relationship from javascript.  
 
