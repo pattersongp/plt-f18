@@ -6,6 +6,14 @@
 # Fire
 File Input Reinterpretation Engine
 
+## Authors
+
+* [Jason Konikow](https://github.com/jkon1513) 
+* [Frank Spano](https://github.com/fspano118)
+* [Graham Patterson](https://github.com/pattersongp) gpp2109
+* [Christopher Thomas](https://github.com/lord-left)
+* [Ayer Chan](https://github.com/ochan4) o2237
+
 ## Table of Contents
 * [Introduction](#introduction)
 * [Features](#features)
@@ -159,10 +167,4 @@ x["66.876"] = 3;  `
 ```
 This means that the relationship between an array element and its index can be thought of in the same light as the key/value pair from java, or the object/property relationship from javascript.  
 
-## Authors
 
-* [Jason Konikow](https://github.com/jkon1513)
-* [Frank Spano](https://github.com/fspano118)
-* [Graham Patterson](https://github.com/pattersongp) gpp2109
-* [Christopher Thomas](https://github.com/lord-left)
-* [Ayer Chan](https://github.com/ochan4)
