@@ -11,7 +11,7 @@ File Input Reinterpretation Engine
 * [Jason Konikow](https://github.com/jkon1513) uni: jk4057
 * [Frank Spano](https://github.com/fspano118) uni: fas2154
 * [Graham Patterson](https://github.com/pattersongp) uni: gpp2109
-* [Christopher Thomas](https://github.com/lord-left)
+* [Christopher Thomas](https://github.com/lord-left)uni: cpt2132
 * [Ayer Chan](https://github.com/ochan4) uni: o2237
 
 ## Table of Contents
