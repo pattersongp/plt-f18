@@ -95,7 +95,8 @@ FIRE supports regular expressions for finding, replacing, and manipulating text.
 
 | Operator      | Purpose       | Example |
 | ------------- | ------------- | ----------------- |
-| stream        | opens a stream to the file | `f = file("roster.csv"); f.stream()` |
+| stream        | returns an array with lines of the file of elements | `f = file("roster.csv"); f.stream()` |
+| extract       | returns an array of all matching fields in the file | String[] x = 
 
 ### Control Flows
 
