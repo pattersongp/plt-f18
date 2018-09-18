@@ -8,11 +8,11 @@ File Input Reinterpretation Engine
 
 ## Team Members
 
-* [Jason Konikow](https://github.com/jkon1513) jk4057
-* [Frank Spano](https://github.com/fspano118)
-* [Graham Patterson](https://github.com/pattersongp) gpp2109
+* [Jason Konikow](https://github.com/jkon1513) uni: jk4057
+* [Frank Spano](https://github.com/fspano118) uni: fas2154
+* [Graham Patterson](https://github.com/pattersongp) uni: gpp2109
 * [Christopher Thomas](https://github.com/lord-left)
-* [Ayer Chan](https://github.com/ochan4) o2237
+* [Ayer Chan](https://github.com/ochan4) uni: o2237
 
 ## Table of Contents
 * [Introduction](#introduction)
