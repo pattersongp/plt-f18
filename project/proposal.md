@@ -42,6 +42,9 @@ Additionally, the most common way for professional teams to share data between e
 * all control statements - `{if, while, for}`
 * in - syntactical sugar to iterate over every element in array or every line in file stream : `for (x in numbers)`
 * print - used to print data to the screen
+* return - used to return value from func
+* map - operator keyword
+* stream - operator keyword
 
 ## Documentation
 
@@ -51,7 +54,7 @@ Scope is bounded by `{...}` and `;` will delimit statements, ie indentation is n
 
 ### Regular Expressions
 
-FIRE supports regular expressions for finding, replacing, and manipulating text. For example, if you're interested in accessing elements of an array, which might be strings, a concise expression of that would be: `col = arr[r'[a-zA-Z]']`
+FIRE supports regular expressions for finding, replacing, and manipulating text. For example, if you're interested in accessing elements of an array whos indices take a particular form you can use a regular expression : `col = arr[r'[a-zA-Z]']`
 
 ### Basic Operators
 
@@ -62,8 +65,15 @@ FIRE supports regular expressions for finding, replacing, and manipulating text.
 | `\|`                 | pipe output of a function to another |  `f(x) \| g()` |
 |`==, >, >=, <, <=, !=`| comparison operators | `if (x == y) ...` |
 |`++, --`              | {post, pre}fix increment and decrement        | `x++; ++x` `x--; --x`|
-|`=>`                  | anonymous function that can be assigned to a variable | `(param) => { body }`|
+|`=>`                  | anonymous function that is assignable to a variable | `(param) => { body }`|
 | `===`                | matches data to regex      | `if (String y === [a-zA-Z]*)`|
+
+### Logical Operators
+| Operator     | Purpose        | Example |
+| -------------| -------------- | :-------------: |
+| `||`         | logical or     | if(x||y)        |
+| `&&`         | logical and    | if(x&&y)        |
+| `!`          | logical not    | if(!x)          |
 
 ### Array Operators
 
@@ -71,12 +81,13 @@ FIRE supports regular expressions for finding, replacing, and manipulating text.
 | ------------- | ------------- | :--------------: |
 | `[::]`        | slicing operators on arrays | `x = arr[3:5:]` |
 | `del <arr>[<item>]`   | delete operator on an item in an array |  `del arr[3]` |
+| `map <arr>(<func>)` | call passed func on each element in array | `map numbers(doubleFunction);`|
 
 ### File operators
 
 | Operator      | Purpose       | Example |
 | ------------- | ------------- | ----------------- |
-| stream        | opens a stream to the file | `f = file("roster.csv"); x = f.stream()` |
+| stream        | opens a stream to the file | `f = file("roster.csv"); f.stream()` |
 
 ### Control Flows
 
@@ -104,7 +115,7 @@ file f = file(PhoneNumbers.txt);
 //first class citizen
 func isNJ = (String phoneNumber) => {
     return phoneNumber === "201-/d{3}-/d{4}";
-}
+};
 
 
 func extractRegion(func isRegion, file numbers) {
@@ -121,7 +132,7 @@ func extractRegion(func isRegion, file numbers) {
 
 
 
-extractRegion(isNJ, f) | coldCallNumbers()
+extractRegion(isNJ, f) | coldCallNumbers();
 ...
 ```
 
@@ -135,6 +146,18 @@ Q. Is this awk?
 
 A. Depends what kind of files you use
 
+Q. What the heck is an associative array?
+
+A. An associative array is not that different from its more popular "indexed array" counterpart. The major difference is that in an associative array the indices are represented as strings rather than numbers. You are still allowed to use numbers as your indices should you choose, but in all actuality they are being stringified which means its possible to have numbers such as -1 or 2.55 as indices. 
+
+example: 
+```
+int[] x; 
+x[fireIsCool] = 1; 
+x[-987] = 2; 
+x[66.876] = 3;  `
+```
+This means that the relationship between an array element and its index can be thought of in the same light as the key/value pair from java, or the object/property relationship from javascript.  
 
 ## Authors
 
