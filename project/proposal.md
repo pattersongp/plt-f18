@@ -6,7 +6,7 @@
 # Fire
 File Input Reinterpretation Engine
 
-## Authors
+## Team Members
 
 * [Jason Konikow](https://github.com/jkon1513) 
 * [Frank Spano](https://github.com/fspano118)
