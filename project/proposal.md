@@ -16,15 +16,15 @@ File Input Reinterpretation Engine
 
 ## Table of Contents
 * [Introduction](#introduction)
+* [Motivation](#motivation)
 * [Features](#features)
 * [Documentation](#documentation)
 * [Code Example](#codeexample)
 * [FAQ](#faq)
-* [Authors](#authors)
 
 ## Introduction
 
-FIRE is a programming language designed for implementing algorithms which extract, mutate, process, and report text and structured data. FIRE is meant to be used in conjunction with large sets of structured and delimited data, like CSV's. At the core of the language is the motivation to intuitively iterate over, manipulate, and map functions to large sets of structured data.
+FIRE is a statically typed programming language designed for implementing algorithms which extract, mutate, process, and report text and structured data. FIRE is meant to be used in conjunction with large sets of structured and delimited data, like CSV's. At the core of the language is the motivation to intuitively iterate over, manipulate, and map functions to large sets of structured data.
 
 ## Motivation
 
@@ -40,8 +40,7 @@ Additionally, the most common way for professional teams to share data between e
 * `float` - A floating point number
 * `string` - A sequence of characters
 * `bool` - {True or False}
-* `array` - represented as associative arrays
-* `file` - native file type for easily operating on files
+* `file` - Native file type for easily operating on files
 * `func` - Treated like first class citizens, i.e. they may be passed as parameters and stored in variables
 
 ### Reserved Keywords:
@@ -53,6 +52,7 @@ Additionally, the most common way for professional teams to share data between e
 * return - used to return value from func
 * map - operator keyword
 * stream - operator keyword
+* extract - operator keyword
 
 ## Documentation
 
@@ -64,6 +64,19 @@ Scope is bounded by `{...}` and `;` will delimit statements, ie indentation is n
 
 FIRE supports regular expressions for finding, replacing, and manipulating text. For example, if you're interested in accessing elements of an array whos indices take a particular form you can use a regular expression : `col = arr[r'[a-zA-Z]']`
 
+### Arrays
+FIRE supports the use of associative arrays exclusively. An associative array is not that different from its more popular "indexed array" counterpart. The major difference is that in an associative array the indices are converted to strings under the hood allowing for any valid string (including numbers) to be used as an index. This allows FIRE to pair information in a way that “associates” the key to a value so that the array is more flexibly intuitive than traditional indexing. You can simulate indexed arrays in FIRE by simply using sequential numbers as your indices , but in all actuality they are being stringified which means its possible to have numbers such as -1 or 2.55 as indices, and proper numerical ordering is left to the programmer.
+
+Since FIRE enforces static typing, this means that any given array can only contain elements of a single data type.
+
+example: 
+```
+int[] x; 
+x[fireIsCool] = 1;  
+x[-987] = 2; // numbers are converted to strings under the hood so this is legal
+x[66.876] = 3;  `
+```
+ 
 ### Basic Operators
 
 | Operator             | Purpose                    | Example |
@@ -78,10 +91,10 @@ FIRE supports regular expressions for finding, replacing, and manipulating text.
 
 ### Logical Operators
 | Operator     | Purpose        | Example |
-| -------------| -------------- | :-------------: |
-| `||`         | logical or     | if(x||y)        |
-| `&&`         | logical and    | if(x&&y)        |
-| `!`          | logical not    | if(!x)          |
+| -------------| -------------- | :-------------:   |
+| `\|\|`         | logical or     | `if(x\|\|y)`    |
+| `&&`         | logical and    | `if(x&&y)`        |
+| `!`          | logical not    | `if(!x)`          |
 
 ### Array Operators
 
@@ -89,14 +102,14 @@ FIRE supports regular expressions for finding, replacing, and manipulating text.
 | ------------- | ------------- | :--------------: |
 | `[::]`        | slicing operators on arrays | `x = arr[3:5:]` |
 | `del <arr>[<item>]`   | delete operator on an item in an array |  `del arr[3]` |
-| `map <arr>(<func>)` | call passed func on each element in array | `map numbers(doubleFunction);`|
+| `map <arr>(<func>)` | the passed func is called on each element in the array | `map numbers(doubleFunction);`|
 
 ### File operators
 
 | Operator      | Purpose       | Example |
 | ------------- | ------------- | ----------------- |
-| stream        | returns an array with lines of the file of elements | `f = file("roster.csv"); f.stream()` |
-| extract       | returns an array of all matching fields in the file | String[] x = 
+| `stream`        | returns an array with lines of the file of elements | `f = file("roster.csv"); f.stream()` |
+| `extract`       | returns an array of all matching fields in the file | `String[] x = file.extract("/w{5}")` |
 
 ### Control Flows
 
@@ -154,18 +167,5 @@ A. No, it's only the best parts.
 Q. Is this awk?
 
 A. Depends what kind of files you use
-
-Q. What the heck is an associative array?
-
-A. An associative array is not that different from its more popular "indexed array" counterpart. The major difference is that in an associative array the indices are represented as strings rather than integers. With an associative array, we can pair information in way that “associates” the key to value so that the array is more informative to us than an indexed type. You are still allowed to use numbers as your indices should you choose, but in all actuality they are being stringified which means its possible to have numbers such as -1 or 2.55 as indices. 
-
-example: 
-```
-int[] x; 
-x["fireIsCool"] = 1; 
-x["-987"] = 2; 
-x["66.876"] = 3;  `
-```
-This means that the relationship between an array element and its index can be thought of in the same light as the key/value pair from java, or the object/property relationship from javascript.  
 
 
