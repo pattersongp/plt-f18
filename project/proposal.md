@@ -51,6 +51,8 @@ Additionally, the most common way for professional teams to share data between e
 * `stdout` - standard output
 * `stderr` - standard error
 
+<div style="page-break-after: always;"></div>
+
 ## Documentation
 
 ### Syntax
@@ -108,6 +110,8 @@ for (e in arr) {
 | `del <arr>[<item>]`   | delete operator on an item in an array |  `del arr[3];` |
 | `map <arr>(<func>)` | the passed func is called on each element in the array | `map numbers(doubleFunction);`|
 
+<div style="page-break-after: always;"></div>
+
 ### File operators
 
 | Operator      | Purpose       | Example |
@@ -126,6 +130,7 @@ Comments are represented with two forward slashes, e.g:
 ```
 // This is a comment!
 ```
+<div style="page-break-after: always;"></div>
 
 ## Code Example
 
