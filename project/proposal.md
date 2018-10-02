@@ -31,25 +31,20 @@ Additionally, the most common way for professional teams to share data between e
 ### Primitive Data Types:
 
 * `int` - Integer
-* `float` - A floating point number
 * `string` - A sequence of characters
 * `file` - Native file type for easily operating on files
 * `func` - Function type, are first class citizens
 * `array` - An associative array
+* `r'<regex>'` - regular expression type
 
 ### Reserved Keywords:
 
 * all data types
 * all control statements - `{if, while, for}`
-* `in` - syntactic sugar to iterate over every element in array or every line in file stream : `for (x in numbers)`
+* `:` - syntactic sugar to iterate over every element in array or every line in file stream : `for (<type> i  : numbers)`
 * `print` - used to print data to `stdout`
 * `return` - used to return value from `func`
-* `map` - `array` operator keyword
-* `stream` - `file` type operator keyword
-* `extract` - `file` type operator keyword
-* `stdin` - standard input
-* `stdout` - standard output
-* `stderr` - standard error
+* `map` - Apply a function across 
 
 <div style="page-break-after: always;"></div>
 
@@ -74,18 +69,19 @@ Arrays are declared using the `array <variable name>` keyword and do not require
 Example:
 
 ```
-array arr;
-arr["fireIsCool"] = 1;
+array <int, string> arr;
+arr[1] = "Last Name";
+array <int, int> arrint;
+arrint[2] = 10;
 arr[-987] = "two";
-arr[66.876] = 3;
+arrint[66] = 3;
 
-for (e in arr) {
+for (e : arr) {
 	print e;
 }
 ```
 
 ### Basic Operators
-
 | Operator             | Purpose                    | Example |
 | ------------ | -------------- | :---------: |
 |`=`                   | assignment                 |`x=6`   |
@@ -110,14 +106,24 @@ for (e in arr) {
 | `del <arr>[<item>]`   | delete operator on an item in an array |  `del arr[3];` |
 | `map <arr>(<func>)` | the passed func is called on each element in the array | `map numbers(doubleFunction);`|
 
+### Slicing
+
+The slicing operator can take three arguments in positions 1, 2, 3 in `[1:2:3]`.
+
+1. Position 1 is the beginning of the slice, inclusive.
+2. Position 2 is the end of the slice, exclusive.
+3. Position 3 is the stride of the slice. Negative strides go in reverse.
+add default value 
+
 <div style="page-break-after: always;"></div>
 
 ### File operators
 
 | Operator      | Purpose       | Example |
 | ------------- | ------------- | ----------------- |
-| `stream`        | returns an array of the file delimited by `\n` | `f = file("roster.csv"); f.stream();` |
-| `extract`       | returns an array of all matching fields in the file | `array x = file.extract("/w{5}");` |
+| `read`       | reads a portion of the file delimted by delimiter at instantiation and returns a string. Emits EOF at end of file. | `file f = file("filename.csv", ";") string chunk = f.read();` |
+| `readline`       | reads a string from pointer to '/n' | `string line = f.readline();` |
+| `write`       | takes a string, writes it from current pointer' | `string chunk = f.write();` |
 
 ### Control Flows
 
