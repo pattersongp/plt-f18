@@ -8,3 +8,4 @@ File Input Reinterpretation Engine
 * System Architect [Frank Spano](https://github.com/fspano118) fas2154
 * Tester [Ayer Chan](https://github.com/ochan4) oc2237
 * Manager [Graham Patterson](https://github.com/pattersongp) gpp2109
+* TA Advisor [John Hui](https://github.com/j-hui) 
