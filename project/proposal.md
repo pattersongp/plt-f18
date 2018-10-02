@@ -113,6 +113,7 @@ The slicing operator can take three arguments in positions 1, 2, 3 in `[1:2:3]`.
 1. Position 1 is the beginning of the slice, inclusive.
 2. Position 2 is the end of the slice, exclusive.
 3. Position 3 is the stride of the slice. Negative strides go in reverse.
+add default value 
 
 <div style="page-break-after: always;"></div>
 
