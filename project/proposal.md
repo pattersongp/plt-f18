@@ -114,6 +114,7 @@ for (e in arr) {
 
 ### File operators
 
+GET RID OFF stream!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 | Operator      | Purpose       | Example |
 | ------------- | ------------- | ----------------- |
 | `stream`        | returns an array of the file delimited by `\n` | `f = file("roster.csv"); f.stream();` |
