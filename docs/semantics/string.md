@@ -15,7 +15,9 @@ Initalized string objects are immutable. Future support for a mutable string cla
 ### Operators
 
 * `^` allows for string concatenation, e.g: `str newString = str1 ^ str2;`
-* `[::]` allows for string slicing, e.g: `str slicedString = str1[3:4];`
+* `[i]` returns a string of length 1 consisting of the character at index _i_, e.g. `str char4 = str1[4];`
+* `[:]` allows for string slicing, e.g: `str slicedString = str1[3:4];`
+
 
 
 ### Operator Precedence
