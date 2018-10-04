@@ -6,11 +6,11 @@ The string type encapsulates sequences of characters. Strings are declared via t
 
 ## Syntax
 
-A string type declaration in general takes the form of `str myString = "Text"`. 
+A string type declaration in general takes the form of `str myString = "Text";`.  
 
 ## Semantics
 
-A `regx` matches against an entire `string`. Therefore any attempt to `filter` against an array of strings will return all strings that the `regx` matches against.
+Initalized string objects are immutable. Future support for a mutable string class, in the manner of `StringBuilder` in Java, may be supported in our standard library. 
 
 ### Operators
 
