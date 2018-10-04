@@ -2,9 +2,8 @@
 
 ## Overview
 
-An array type is an expression used for pattern matching. 
-A regular expression type is declared using `regx` identifier, always begins with `r`, 
-and is bounded by two single quotes `'<pattern>'` where `<pattern>` is the desired pattern to be matched. 
+An array type is an expression to store a set of values. 
+An array expression type is declared using `array` identifier and is bounded by `[]`, where the two arguments in `[]`define a key type and a value type. They are separate with `,`.
 `regx` type is constant once initialized and cannot be changed.
 
 ## Syntax
