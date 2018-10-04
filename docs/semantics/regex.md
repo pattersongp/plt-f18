@@ -20,12 +20,20 @@ A `regx` matches against an entire `string`. Therefore any attempt to `filter` a
 * `.` matches any single character
 * `[ ... ]` defines a character list, where the character list can also be character range. This matches any string containing these characters
 * `[^ ... ]` defines a character list, but negates them. This matches any string *not* containing these characters
-* `<e1>|<e2>` matches either expression `e1` or `e2`
+* `|` matches either expression `e1` or `e2`
 * `( ... )` groups expressions together where `...` is some regular expression
-* `<e1>*` matches the preceding character 0 or many times
-* `<e1>+` matches the preceding character at least once
+* `*` matches the preceding character 0 or many times
+* `+` matches the preceding character at least once
 
 ### Operator Precedence
+
+1. Escaped characters
+1. Character list
+1. Grouping with parentheses
+1. Single character operations like `*, +, .`
+1. Concatenation
+1. Anchoring operators like `^, $`
+1. Alternation
 
 ### Character Ranges
 
@@ -37,3 +45,7 @@ A character range consists of `[R1-R2]` where `R1` is lower than `R2` in the ASC
 regx myPattern = r'[a-z]';
 myFunction(someString, myPattern);
 ```
+
+## Notes
+
+We're providing this suppose with [this](https://www.gnu.org/software/libc/manual/html_node/Regular-Expressions.html#Regular-Expressions)
