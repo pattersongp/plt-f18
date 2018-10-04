@@ -1,4 +1,4 @@
-# String Semantic
+# String Semantics
 
 ## Overview
 
@@ -14,16 +14,9 @@ Initalized string objects are immutable. Future support for a mutable string cla
 
 ### Operators
 
-* `\` escapes any of the operators for the literal character
-* `^` matches only the beginning of the string
-* `$` matches only the end of the string
-* `.` matches any single character
-* `[ ... ]` defines a character list, where the character list can also be character range. This matches any string containing these characters
-* `[^ ... ]` defines a character list, but negates them. This matches any string *not* containing these characters
-* `<e1>|<e2>` matches either expression `e1` or `e2`
-* `( ... )` groups expressions together where `...` is some regular expression
-* `<e1>*` matches the preceding character 0 or many times
-* `<e1>+` matches the preceding character at least once
+* `^` allows for string concatenation, e.g: `str newString = str1 ^ str2;`
+* `[::]` allows for string slicing, e.g: `str slicedString = str1[3:4];`
+
 
 ### Operator Precedence
 
