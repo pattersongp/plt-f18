@@ -3,7 +3,7 @@
 ## Overview
 
 An array type is an expression to store a set of values. 
-An array expression type is declared using `array` identifier, is bounded by `[<type>,<type>]` and is followed by an array name. The two arguments in `[]`define a key type and a value type. They are separate with `,`. 
+An array expression type is declared using `array` identifier, is bounded by `[<type>,<type>]` and is followed by an array name. The two arguments in `[]`define a key type and a value type. They are separate with `,`. The data structure
 `array` type is mutable.
 
 ## Syntax
