@@ -15,12 +15,12 @@ A `regx` matches against an entire `string`. Therefore any attempt to `filter` a
 
 ### Methods
 
-find --- .mem --- return bool
-sort --- only for int --- return void
-get --- int value = arr["John"]; --- return int or string or array
-set --- arr[2] = value --- return int or string
-add --- arr.add[1,"value"]; --- return a pointer
-head --- string word = arr.head; --- return a pointer
+*find --- .mem --- return bool
+*sort --- only for int --- return void
+*get --- int value = arr["John"]; --- return int or string or array
+*set --- arr[2] = value --- return int or string
+*add --- arr.add[1,"value"]; --- return a pointer
+*head --- string word = arr.head; --- return a pointer
 
 ### Operator 
 concat ^
