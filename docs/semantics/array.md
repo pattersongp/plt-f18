@@ -13,19 +13,18 @@ An `array` type declaration in general takes the form of `array[<key_type>, <val
 * get --- int value = arr["John"]; --- return int or string or array
 * set --- arr[2] = value --- return int or string
 
-| Methods     | Return Value        | Restriction    |Example       |
+| Methods     | Return Value        |Example       | Restriction    
 | -------------| -------------- | -------------- | :-------------:   |
-| `.add` | Return the reference to the newly added element   | | `arr[1,"value"].add`        |
-| `.contains` | Return 1 if a key exist in an array, else return 0|N/A| `arr["John"].contains`    |
-| `.sort`         | Return the sorted array by its integer key type | Only accept arrays with integer key value type  | `arr.sort`        |
-| `.head`          | Return the first element of an array  | N/A | `arr.head`          |
+| `.add` | Return a reference to the newly added element   |  `arr[1,"value"].add`        |
+| `.contains` | Return 1 if a key exist in an array, else return 0| `arr["John"].contains`    |
+| `.sort`         | Return the sorted array by its integer key type | `arr.sort`        |  Only accept arrays with integer key value type |
 
 ### Operator 
 
-| Operator     | Return Value   |Example       |
+| Operator     | Purpose |Return Value   |Example       |
 | -------------| -------------- | :-------------: |
-| `^` | Return the reference to the concated array| `arr1^arr2`    |
-| `:` | Return the reference to   | `arr1:arr2`        |
+| `^` |Concatenating two arrays |Return a reference to the concated array| `arr1^arr2`    |
+| `:` |Slicing an array |Return a reference to the new sub-array| `arr[6:10]`     |
 
 ## Example
 
