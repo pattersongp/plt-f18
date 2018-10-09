@@ -22,6 +22,17 @@ elements in `array` can be retrieve with following example\:
 
 `string lastname = arr["John"];`
 
+### Processing Array
+When processing array elements, FIRE use foreach loop to iterate all array, because all of the elements in an array are of the same type.  
+Below is an example showing how foreach loop works:  
+
+```
+//Interate the array
+for (e : arrint) {
+	print e;
+}
+```
+
 ### Methods
 | Methods     | Return Value        |Example       | Restriction    
 | -------------| -------------- | :--------------: | -------------   |
@@ -34,26 +45,3 @@ elements in `array` can be retrieve with following example\:
 | -------------| -------------- | -------------- | :-------------: |
 | `^` |Concatenating two arrays |Return a reference to the concated array| `arr1^arr2`    |
 | `:` |Slicing an array into two arrays|Return a reference to the new sub-array| `arr[6:10]`     |
-
-## Example
-
-```
-//Declaration
-array[int, string] arr;
-
-//Set Value
-arr[1] = "Last Name";
-arr[-987] = "two";
-
-//Declaration 
-array [int, int] arrint;
-arrint[2] = 10;
-arrint[66] = 3;
-
-//
-
-//Interate the array
-for (e : arrint) {
-	print e;
-}
-```
