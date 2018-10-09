@@ -18,7 +18,7 @@ For the purposes of the below documentation, `str1` is the string consisting of 
 
 * `^` allows for string concatenation, e.g: `str newString = str1 ^ str2;`. Returns a new string whose contents are "firstsecond". 
 * `[i]` returns a string of length 1 consisting of the character at index _i_, e.g. `str char4 = str1[4];`. Returns "t" (as indexes begin at 0 in FIRE).
-* `[:]` allows for string slicing, e.g: `str slicedString = str1[3:4];`. Returns "st".
+* `[:]` allows for string slicing, e.g: `str slicedString = str1[3:4];`. Returns "st". If an integer is not supplied for for the `:` operator, a default parameter of `0` will be supplied, e.g. `str slicedString = str1[:4];` would slice the substring beginning from 0 and ending at four, inclusive of the element at 4 ("first"). Failure to provide the second operand will throw a syntax error.
 
 
 ### Char
@@ -31,8 +31,8 @@ Characters or the `Char` data type does not exist in FIRE; instead, individual c
 ```
 string myString = "Hello";
 string myString2 = "World";
-myString = myString + " "; 
-myString = myString + myString2; // returns a new string with "Hello World"
+myString = myString ^ " "; 
+myString = myString ^ myString2; // returns a new string with "Hello World"
 myString = myString[0:4]; // returns "Hello"
 
 ```
