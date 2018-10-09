@@ -22,9 +22,9 @@ An `array` type declaration in general takes the form of `array[<key_type>, <val
 ### Operator 
 
 | Operator     | Purpose |Return Value   |Example       |
-| -------------| -------------- | :-------------: |
+| -------------| -------------- | -------------- | :-------------: |
 | `^` |Concatenating two arrays |Return a reference to the concated array| `arr1^arr2`    |
-| `:` |Slicing an array |Return a reference to the new sub-array| `arr[6:10]`     |
+| `:` |Slicing an array into two arrays|Return a reference to the new sub-array| `arr[6:10]`     |
 
 ## Example
 
