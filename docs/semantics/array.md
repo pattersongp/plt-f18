@@ -2,7 +2,7 @@
 
 ## Overview
 
-FIRE provides a data structure, the array, which stores a flexible-size collection of elements of the same type. Array types are either integer or string. The `array` type is mutable, but all keys and all elements must follow the original initialization. Our array is a combination of map in ocaml and hashmap in Java.
+FIRE provides a data structure, the array, which stores a flexible-size collection of elements of the same type. Array types are either integer or string. The `array` type is mutable, but the type of all keys and all elements must follow the original initialization. Our array is a combination of map in ocaml and hashmap in Java.
 
 ## Syntax
 the `array` type is declared in the following format\:
