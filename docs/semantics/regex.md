@@ -4,6 +4,8 @@
 
 A regular expression type is an expression used for pattern matching. A regular expression type is declared using `regx` identifier, always begins with `r`, and is bounded by two single quotes `'<pattern>'` where `<pattern>` is the desired pattern to be matched. `regx` type is constant once initialized and cannot be changed.
 
+There are no operations on `regx` type but there are native functions that require a `regx` type as an argument, ie `filter`
+
 ## Syntax
 
 A `regx` type declaration in general takes the form of `regx myPattern = r'<pattern>'` where `<pattern>` is the desired pattern.
@@ -48,4 +50,4 @@ myFunction(someString, myPattern);
 
 ## Notes
 
-We're providing this suppose with [this](https://www.gnu.org/software/libc/manual/html_node/Regular-Expressions.html#Regular-Expressions)
+We're providing this functionality with [this](https://www.gnu.org/software/libc/manual/html_node/Regular-Expressions.html#Regular-Expressions) library.
