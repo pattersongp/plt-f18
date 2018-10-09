@@ -15,7 +15,7 @@ An `array` type declaration in general takes the form of `array[<key_type>, <val
 
 | Methods     | Return Value        | Restriction    |Example       |
 | -------------| -------------- | -------------- | :-------------:   |
-| `.add` | Return a reference to the newly added element   | | `arr[1,"value"].add`        |
+| `.add` | Return the reference to the newly added element   | | `arr[1,"value"].add`        |
 | `.contains` | Return 1 if a key exist in an array, else return 0|N/A| `arr["John"].contains`    |
 | `.sort`         | Return the sorted array by its integer key type | Only accept arrays with integer key value type  | `arr.sort`        |
 | `.head`          | Return the first element of an array  | N/A | `arr.head`          |
@@ -24,8 +24,8 @@ An `array` type declaration in general takes the form of `array[<key_type>, <val
 
 | Operator     | Return Value   |Example       |
 | -------------| -------------- | :-------------: |
-| `^` | Return 1 if a key exist in an array, else return 0| `arr["John"].contains`    |
-| `:` | Return the sorted array by its integer key type   | `arr.sort`        |
+| `^` | Return the reference to the concated array| `arr1^arr2`    |
+| `:` | Return the reference to   | `arr1:arr2`        |
 
 ## Example
 
