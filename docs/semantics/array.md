@@ -18,7 +18,14 @@ An `array` type declaration in general takes the form of `array[<key_type>, <val
 * add --- arr.add[1,"value"]; --- return a reference to array
 * head --- string word = arr.head; --- return a reference to array
 
+| Methods     | Return Value        | Restriction    |Example       |
+| -------------| -------------- | -------------- | :-------------:   |
+| `.contains` | Return 1 if a key exist in an array, else return 0|Only accept an array with int key value type| `arr["John"].contains`    |
+| `.sort`         | Return the sorted array by its integer key type |   | `arr.sort`        |
+| `.head`          | Return the first element of an array  |  | `arr.head`          |
+
 ### Operator 
+
 * concat ^
 * slice :
 
