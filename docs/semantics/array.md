@@ -12,9 +12,6 @@ FIRE provides a data structure, the array, which stores a flexible-size collecti
 | Get |`arr[<key>]`|Return an integer or a string| `string lastname = arr["John"];`  |
 
 ### Methods
-* get --- int value = arr["John"]; --- return int or string or array
-* set --- arr[2] = value --- return int or string
-
 | Methods     | Return Value        |Example       | Restriction    
 | -------------| -------------- | :--------------: | -------------   |
 | `.add` | Return a reference to the newly added element   |  `arr[1,"value"].add`        |
@@ -22,7 +19,6 @@ FIRE provides a data structure, the array, which stores a flexible-size collecti
 | `.sort`         | Return the sorted array by its integer key type | `arr.sort`        |  Only accept arrays with integer key value type |
 
 ### Operator 
-
 | Operator     | Purpose |Return Value   |Example       |
 | -------------| -------------- | -------------- | :-------------: |
 | `^` |Concatenating two arrays |Return a reference to the concated array| `arr1^arr2`    |
