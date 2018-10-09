@@ -2,14 +2,25 @@
 
 ## Overview
 
-FIRE provides a data structure, the array, which stores a flexible-size collection of elements of the same type. Array types are either integer or string. The `array` type is mutable. Our array is a combination of map in ocaml and hashmap in Java.
+FIRE provides a data structure, the array, which stores a flexible-size collection of elements of the same type. Array types are either integer or string. The `array` type is mutable, but all keys and all elements must follow the original initialization. Our array is a combination of map in ocaml and hashmap in Java.
 
 ## Syntax
-|      | Format|Explanation  |Example|
-| -------------| -------------- | -------------- | :-------------: |
-| Declaration |`array arr[<key_type>, <value_type>]` |`<key_type>` is the type of key, and `<value_type>` is the type of value | `array arr1[int, string];`    |
-| Set |`arr[<key>]`|Return a reference to the new sub-array|  `arr[17] = "age17";`   |
-| Get |`arr[<key>]`|Return an integer or a string| `string lastname = arr["John"];`  |
+the `array` type is declared in the following format\:
+`array arr[<key_type>, <value_type>];`
+
+where:  
+ * `<key_type>` is the type of the key used to access elements in array.  
+ * `<value_type>` is the type of the element in array.  
+ 
+### Setting
+ the `array` can be set with following example\:  
+
+ `arr[17] = "age17";`  
+
+### Retrieving
+elements in `array` can be retrieve with following example\:  
+
+`string lastname = arr["John"];`
 
 ### Methods
 | Methods     | Return Value        |Example       | Restriction    
