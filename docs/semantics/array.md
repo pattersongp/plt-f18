@@ -20,9 +20,9 @@ An `array` type declaration in general takes the form of `array[<key_type>, <val
 
 | Methods     | Return Value        | Restriction    |Example       |
 | -------------| -------------- | -------------- | :-------------:   |
-| `.contains` | Return 1 if a key exist in an array, else return 0|Only accept an array with int key value type| `arr["John"].contains`    |
-| `.sort`         | Return the sorted array by its integer key type |   | `arr.sort`        |
-| `.head`          | Return the first element of an array  |  | `arr.head`          |
+| `.contains` | Return 1 if a key exist in an array, else return 0|N/A| `arr["John"].contains`    |
+| `.sort`         | Return the sorted array by its integer key type | Only accept arrays with integer key value type  | `arr.sort`        |
+| `.head`          | Return the first element of an array  | N/A | `arr.head`          |
 
 ### Operator 
 
