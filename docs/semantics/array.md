@@ -2,11 +2,10 @@
 
 ## Overview
 
-An array type is an expression to store a set of values. 
-An array expression type is declared using `array` identifier, is bounded by `[<key_type>,<value_type>]` and is followed by an array name. The two arguments in `[]` are separate by `,`. The data structure `array` type is mutable.
+FIRE provides a data structure, the array, which stores a flexible-size collection of elements of the same type. Array types are either integer or string. The `array` type is mutable. Our array is a combination of map in ocaml and hashmap in Java.
 
-## Syntax
-
+## Declaration Syntax
+`array arr[int, string];`
 An `array` type declaration in general takes the form of `array[<key_type>, <value_type>] arr;`, where `<key_type>` is the type of key, and `<value_type>` is the type of value.
 
 ### Methods
