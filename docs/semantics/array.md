@@ -44,11 +44,8 @@ array [int, int] arrint;
 arrint[2] = 10;
 arrint[66] = 3;
 
-arr1[1]=
-arr1["String"]=
 
-
-for (e : arr) {
+for (e : arrint) {
 	print e;
 }
 ```
