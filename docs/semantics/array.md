@@ -9,42 +9,37 @@ An array expression type is declared using `array` identifier, is bounded by `[<
 
 An `array` type declaration in general takes the form of `array[<key_type>, <value_type>] arr;`, where `<key_type>` is the type of key, and `<value_type>` is the type of value.
 
-## Semantics
-
-A `regx` matches against an entire `string`. Therefore any attempt to `filter` against an array of strings will return all strings that the `regx` matches against.
-
 ### Methods
 
 * find --- .mem --- return bool
 * sort --- only for int --- return void
 * get --- int value = arr["John"]; --- return int or string or array
 * set --- arr[2] = value --- return int or string
-* add --- arr.add[1,"value"]; --- return a pointer
-* head --- string word = arr.head; --- return a pointer
+* add --- arr.add[1,"value"]; --- return a reference to array
+* head --- string word = arr.head; --- return a reference to array
 
 ### Operator 
-concat ^
-slice :
-
-### Character Ranges
-
-A character range consists of `[R1-R2]` where `R1` is lower than `R2` in the ASCII table. A descending range is a syntax error. The range boundaries are both inclusive.
+* concat ^
+* slice :
 
 ## Example
 
 ```
-//Declaration with <key_type> int and <value_type> 
+//Declaration
 array[int, string] arr;
 
 //Set Value
 arr[1] = "Last Name";
 arr[-987] = "two";
 
+//Declaration 
 array [int, int] arrint;
 arrint[2] = 10;
 arrint[66] = 3;
 
+//
 
+//Interate the array
 for (e : arrint) {
 	print e;
 }
