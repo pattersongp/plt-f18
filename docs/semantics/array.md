@@ -11,7 +11,9 @@ the `array` type is declared in the following format\:
 where:  
  * `<key_type>` is the type of the key used to access elements in array.  
  * `<value_type>` is the type of the element in array.  
- 
+  
+for example:  
+`array arr[int, string];` 
 ### Setting
  the `array` can be set with following example\:  
 
