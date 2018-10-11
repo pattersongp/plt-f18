@@ -14,22 +14,28 @@ where:
   
 for example:  
 `array arr[int, string];` 
-### Setting
- the `array` can be set with following example\:  
+### Setting Values
+ Values in `array` can be set in the following format\:  
+`arr[<key_value>] = "element";`  
 
+for example:  
  `arr[17] = "age17";`  
 
-### Retrieving
-elements in `array` can be retrieve with following example\:  
+### Retrieving Values
+Values in `array` can be retrieved in the following format\:  
+`string element = arr[<key_value>];`  
 
-`string lastname = arr["John"];`
+for example:  
+`string lastname = arr["John"];`  
+`int age = arr["age"];`
 
 ### Processing Array
-When processing array elements, FIRE use foreach loop to iterate all array, because all of the elements in an array are of the same type.  
+When processing array elements, FIRE use foreach loop to iterate all array, because all of the elements in an array are of the same type. 
+
 Below is an example showing how foreach loop works:  
 
 ```
-//Interate the array
+//Iterate the array
 for (e : arrint) {
 	print e;
 }
