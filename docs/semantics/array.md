@@ -23,10 +23,9 @@ for example:
 
 ### Retrieving Values
 Values in `array` can be retrieved in the following format\:  
-`string element = arr[<key_value>];`  
+`int element = arr[<key_value>];`  
 
 for example:  
-`string lastname = arr["John"];`  
 `int age = arr["age"];`
 
 ### Processing Array
