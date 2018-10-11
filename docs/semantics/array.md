@@ -36,11 +36,11 @@ for (e : arrint) {
 ```
 
 ### Methods
-| Methods     | Return Value        |Example       | Restriction    
-| -------------| -------------- | :--------------: | -------------   |
+| Methods     | Return Value        |Example       |  
+| -------------| -------------- | :--------------: | 
 | `.add` | Return a reference to the newly added element   |  `arr[1,"value"].add`        |
 | `.contains` | Return 1 if a key exist in an array, else return 0| `arr["John"].contains`    |
-| `.sort`         | Return the sorted array by its integer key type | `arr.sort`        |  Only accept arrays with integer key value type |
+| `.sort`         | Return the sorted array by its integer key type | `arr.sort`        | 
 
 ### Operator 
 | Operator     | Purpose |Return Value   |Example       |
