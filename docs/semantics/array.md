@@ -13,10 +13,10 @@ where:
  * `<value_type>` is the type of the element in array.  
   
 for example:  
-`array arr[int, string];` 
-`array arr[string, string];`
-`array arr[int, int];`
-`array arr[string, int];`
+`array arr[int, string];`  
+`array arr[string, string];`  
+`array arr[int, int];`  
+`array arr[string, int];`  
 
 ### Setting Values
  Values in `array` can be set in the following format\:  
