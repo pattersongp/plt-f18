@@ -45,7 +45,7 @@ for (e : arrint) {
 | -------------| -------------- | :--------------: | 
 | `.add` | Return a reference to the newly added element   |  `arr[1,"value"].add`        |
 | `.contains` | Return 1 if a key exist in an array, else return 0| `arr["John"].contains`    |
-| `.sort`         | Return the sorted array by its integer key type | `arr.sort`        | 
+| `.sort`         | Return the sorted array in ascending order | `arr.sort`        | 
 
 ### Operator 
 | Operator     | Purpose |Return Value   |Example       |
