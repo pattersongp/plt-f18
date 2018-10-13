@@ -1,0 +1,14 @@
+int a = 2;
+int b = 3;
+
+int c = a + b * b;
+int d = b / a - a; 
+d = c = b;
+
+string x = "name";
+
+array arr1[int,string];
+array arr2[int,int];
+array arr3[string, string];
+array arr4[string, int];
+
