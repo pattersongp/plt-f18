@@ -6,6 +6,8 @@ int d = b / a - a;
 d = c = b;
 
 string x = "name";
+string y = "1";
+x = y
 
 array arr1[int,string];
 array arr2[int,int];
