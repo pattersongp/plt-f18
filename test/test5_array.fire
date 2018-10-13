@@ -1,7 +1,7 @@
 //Test5: array
 array arr[int, string];
 arr[0,"value0"].add;
-arr[0,"value0"].del;
+arr[0].del;
 
 array arrstring[string, string];
 arr["firstname","John"].add;
