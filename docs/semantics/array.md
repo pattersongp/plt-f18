@@ -14,8 +14,8 @@ where:
   
 for example:  
 `array arr[int, string];`  
-`array arr[string, string];`  
 `array arr[int, int];`  
+`array arr[string, string];`  
 `array arr[string, int];`  
 
 ### Setting Values
@@ -48,8 +48,10 @@ for (e : arrint) {
 | Methods     | Return Value        |Example       |  
 | -------------| -------------- | :--------------: | 
 | `.add` | Return a reference to the newly added element   |  `arr[1,"value"].add`        |
+| `.del`         | Return a reference to the newly deleted element  | `arr[0].del`        | 
 | `.contains` | Return 1 if a key exist in an array, else return 0| `arr["John"].contains`    |
 | `.sort`         | Return the sorted array in ascending order | `arr.sort`        | 
+
 
 ### Operator 
 | Operator     | Purpose |Return Value   |Example       |
