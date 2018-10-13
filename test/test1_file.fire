@@ -1,0 +1,4 @@
+//Test1: File
+file f = file("report.csv", "rw", ",");
+string line = f.read();
+int bytes = f.write("line");

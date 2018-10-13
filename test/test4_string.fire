@@ -1,0 +1,8 @@
+//Test4: String
+
+string myString = "Hello";
+string myString2 = "World";
+
+myString = myString ^ " "; 
+myString = myString ^ myString2; 
+myString = myString[0:4];

@@ -1,0 +1,9 @@
+//Test2: func
+
+file f = file("report.csv", "rw", ",");
+string line = f.read();
+
+func testfunc = () => { print(line); };
+
+func testfunc2 = (func f) => { f(); };
+testfunc2(testfunc);

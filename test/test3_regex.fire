@@ -1,0 +1,8 @@
+//Test3: regex
+
+file f = file("report.csv", "rw", ",");
+string line = f.read();
+
+regx testpatt = r'[a-z]';
+
+func testfunc = (line, testpatt) => { };

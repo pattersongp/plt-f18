@@ -1,0 +1,9 @@
+//Test5: array
+array arr[int, string];
+arr[0,"value0"].add;
+arr[0,"value0"].del;
+
+array arrstring[string, string];
+arr["firstname","John"].add;
+
+arr^arrstring;
