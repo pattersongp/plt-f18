@@ -211,7 +211,7 @@ doSomething(saySomething);
 ```
 #### 7.1.4. array
 
-The `array` type is a dynamic collection of elements. Inspired by AWK's assocative arrays, an `array` object maps keys of one type to values of one type. Keys and values do not have be of the same type, but all keys must share the same time and all values must share the same type. 
+The `array` type is a dynamic collection of elements. Inspired by AWK's assocative arrays, an `array` object maps keys of one type to values of one type. Keys and values do not have be of the same type, but all keys must share the same type and all values must share the same type. 
 
 The structure of `array` variable declarations is as follows:
 
