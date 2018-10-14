@@ -21,7 +21,7 @@ Jason Konikow
 
 ## 1: Introduction
 
-FIRE, an initalism of "File Input Reinterperetation Engine", is a scripting language inspired by AWK and bash. These languages are renowed for their ability to robustly extract, pattern-match and manipulate text files, and FIRE. seeks to emulate this functionality with a more attractive, C-inspired syntax and intuitive semantics. 
+FIRE, an initialism of "File Input Reinterpretation Engine", is a scripting language inspired by AWK and bash. These languages are renowed for their ability to robustly extract, pattern-match and manipulate text files, and FIRE. seeks to emulate this functionality with a more attractive, C-inspired syntax and intuitive semantics. 
 
 FIRE is intended to be utilized with large sets of delimited data, like `csv` files. FIRE is also animated by the premise that files are first class citizens. 
 
@@ -35,7 +35,7 @@ FIRE only supports the use the block comments. Comments are initiated with the `
 
 #### 2.2 Identifiers
 
-Identifiers are a sequence of characters consisting of uppercase or lowercase letters,digits, underscores 
+Identifiers are a sequence of characters consisting of uppercase or lowercase letters, digits, underscores 
 or dashes 
 
 #### 2.3 Keywords
@@ -54,7 +54,7 @@ Do we want to support constants?
 
 #### 2.5 Strings
 
-Strings are sequences of characters surounded by double quotes `"`.  
+Strings are sequences of characters surrounded by double quotes `"`.  
 As string has the type `str`.
 
 #### 2.6 Regular Expressions
@@ -65,13 +65,13 @@ Regular expressions are of type `regx`
 
 ## 3: Syntax Notation
 
-The syntax notation of this reference manual is to enclose any and all code in the follwing format\: `As such code will be clearly discernable`
+The syntax notation of this reference manual is to enclose any and all code in the following format\: `As such code will be clearly discernable`
 
 ## 4: Meaning of Identifiers
 
-Identifiers are names that corelate to single values , functions, or arrays. The restrictions on valid identifers are found in section 2.3  
+Identifiers are names that correlate to a single value, a function, or an array. The restrictions on valid identifiers are found in section 2.3  
 
-The scope of an identifier can be either global or local. local identifier's scope is limited to inside the brackets in which they are declared, where as global identifiers are declared outside any brackets.  
+The scope of an identifier can be either global or local. local identifier's scope is limited to inside the brackets in which they are declared, whereas global identifiers are declared outside any brackets.  
 
 ## 5: Conversions
 
@@ -81,16 +81,16 @@ The scope of an identifier can be either global or local. local identifier's sco
 
 #### 6.1 Primary expressions
 
- Similair to C, Primary expressions consist of identifiers, strings, and parenthesized expressions. 
+ Similar to C, Primary expressions consist of identifiers, strings, and parenthesized expressions. 
  identifiers are described in 2.2 and strings are described in 2.5
 
 #### 6.2 Assignement Operator
 
-The assignment operators `=` returns the value of the expression that is evaluated on its right hand side.
+The assignment operators `=` returns the value of the expression that is evaluated on its right-hand side.
 
 #### 6.3 Function Calls
 
-Function calls operate largely in the same manner as C. Functions take in arguments by value and support the use of assignment expressions. Functions need to be assigned before being called, but can be declared anonymously. 
+Function calls operate largely in the same manner as C. Functions take in arguments by value and support the use of assignment expressions. Functions need to be assigned before being called but can be declared anonymously. 
 
 #### 6.4 Logical Negation
 
@@ -106,7 +106,7 @@ The logical OR operator is a short circuit operator and returns 1 if either of t
 
 #### 6.7 Relational Operators
 
-The relational operators `<, >, <=, <=, ==` return 1 if the expression on the left side of the operator has the expected relation to the operator on the right hand side. 
+The relational operators `<, >, <=, <=, ==` return 1 if the expression on the left side of the operator has the expected relation to the operator on the right-hand side. 
 
 these relationships amongst ints are determined by natural ordering, where as strings.....
 
@@ -116,7 +116,7 @@ these relationships amongst ints are determined by natural ordering, where as st
 
 The pattern match operator `===` returns 1 if the regular expression or string on its right side conforms to the rules laid out by the regular expression on its left side.  
 it will return 0 otherwise.  
-the pattern match orperator must always have a regular expression on its left side.
+the pattern match operator must always have a regular expression on its left side.
 
 ex:  
 
@@ -124,13 +124,13 @@ ex:
 
 #### 6.9 String Concatination Operator
 
-The string concatination `^` operator returns a new string that is the concatination of the string on its left side and the string on its right side. 
+The string concatenation `^` operator returns a new string that is the concatenation of the string on its left side and the string on its right side. 
 
 #### 6.10 Bracket Operator
 
 The bracket operator `[]` can be used with either strings or arrays.  
 
-When used on arrays it is supplied a key and returns the coresponding element, or -1 if it does not exist.
+When used on arrays it is supplied a key and returns the corresponding element, or -1 if it does not exist.
 
 When used on Strings it functions in a similar manner to character arrays in C. It is supplied an integer and returns the letter of that index, however unlike C FIRE does not support chars so it returns a string of length 1.
 
@@ -152,7 +152,7 @@ Objects are instantiated via declarations, which explicitly assign a data type t
 
 #### 7.1.1. int
 
-Objects of type `int` represent integers and include negative values. The upper and lower bounds for int are defined by the architectual constraints of the computer, in the manner of C and OCaml. 
+Objects of type `int` represent integers and include negative values. The upper and lower bounds for int are defined by the architechtural constraints of the computer, in the manner of C and OCaml. 
 
 Example: 
 
@@ -190,7 +190,7 @@ Example:
   
 `file f = file("filename.csv", "mode", "delim");`
 
-An optional third argument *delim* may be provided to the constructer specifiying a delimiter for reading. If the *delim* argument is not supplied it will default to `\n`. 
+An optional third argument *delim* may be provided to the constructor specifying a delimiter for reading. If the *delim* argument is not supplied it will default to `\n`. 
 
 Example: 
 
@@ -211,7 +211,7 @@ doSomething(saySomething);
 ```
 #### 7.1.4. array
 
-The `array` type is a dynamic collection of elements. Inspired by AWK's assocative arrays, an `array` object maps keys of one type to values of one type. Keys and values do not have be of the same type, but all keys must share the same type and all values must share the same type. 
+The `array` type is a dynamic collection of elements. Inspired by AWK's associative arrays, an `array` object maps keys of one type to values of one type. Keys and values do not have be the same type, but all keys must share the same type and all values must share the same type. 
 
 The structure of `array` variable declarations is as follows:
 
@@ -239,7 +239,7 @@ Example:
  
 #### 7.1.5. regx
 
-Regular expressions are supported in FIRE. via the `regx` type, which assigns an object to a regular expression. That object can then be passed as a parameter to functions that utilize regular expressions to pattern match or extract data.
+Regular expressions are supported in FIRE. Via the `regx` type, which assigns an object to a regular expression. That object can then be passed as a parameter to functions that utilize regular expressions to a pattern match or extract data.
 
 The structure of a `regx` declaration is as follows:
 
