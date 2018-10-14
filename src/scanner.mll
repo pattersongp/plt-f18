@@ -20,8 +20,10 @@ rule token = parse
 | '('      { LPAREN }
 | ')'      { RPAREN }
 | 'r'      { REGX }
+| "=="     { EQ }
+| "!="     { NEQ }
 | ">="     { GTEQ }
-| "<="     { LT }
+| "<="     { LTEQ }
 | "=>"     { FATARROW }
 | "/*"     { comment lexbuf }
 | "||"     { OR }
@@ -37,10 +39,10 @@ rule token = parse
 | "return" { RETURN }
 | "break"  { BREAK }
 | "array"  { ARRAY }
+| "void"   { VOID }
 | "func"   { FUNCTION }
 | "int"    { INT }
 | "string" { STRING }
-
 | ['0'-'9']+ as lit { LITERAL(int_of_string lit) }
 | ['a'-'z']+ as id { VARIABLE(id) }
 | eof { EOF }
