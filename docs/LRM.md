@@ -164,7 +164,7 @@ int objects can also be assigned to the result of expressions:
 
 Floating point values are **not** supported in FIRE.
 
-####7.1.2. str
+#### 7.1.2. str
 
 Objects of type `str` objects are used to represent sequences of characters, i.e. strings. Strings are immutable and can be declared in the following manner:
 
@@ -174,7 +174,7 @@ Example:
 
 char values are **not** supported in FIRE, but a string of length 0 or 1, can be returned via the bracket operator discussed in section 6.10 
 
-####7.1.3. file
+#### 7.1.3. file
 
 Files are regarded as first-class citizens in FIRE. This is made apparent by the importance and centrality of files. A `file` object represents either an existing file or a file that is to be written to, and allows the programmer to more easily perform operations on the file.
 
@@ -209,7 +209,7 @@ func saySomething () =>{ print("something"); };
 func doSomething = (func f) => { f(); };
 doSomething(saySomething);
 ```
-####8.1.4. array
+#### 7.1.4. array
 
 The `array` type is a dynamic collection of elements. Inspired by AWK's assocative arrays, an `array` object maps keys of one type to values of one type. Keys and values do not have be of the same type, but all keys must share the same time and all values must share the same type. 
 
@@ -237,9 +237,9 @@ Example:
  
  `int age = arr["age"];`
  
-####8.1.5. regx
+#### 7.1.5. regx
 
-Regular expressions are supported in `F.I.R.E.` via the `regx` type, which assigns an object to a regular expression. That object can then be passed as a parameter to functions that utilize regular expressions to pattern match or extract data.
+Regular expressions are supported in FIRE. via the `regx` type, which assigns an object to a regular expression. That object can then be passed as a parameter to functions that utilize regular expressions to pattern match or extract data.
 
 The structure of a `regx` declaration is as follows:
 
@@ -292,6 +292,7 @@ ex:
 ```
 for(str current : stringArray){
     print(current);
+}
 ``` 
 
 #### 8.4 While Statements 
