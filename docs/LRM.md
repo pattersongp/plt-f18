@@ -15,11 +15,17 @@ Jason Konikow
 * Conversions
 * Expressions
 * Statements 
-* ...
+* Semantics
+* ....
 
 
 ## 1: Introduction
-\< introduction text >
+
+FIRE, an initalism of "File Input Reinterperetation Engine", is a scripting language inspired by AWK and bash. These languages are renowed for their ability to robustly extract, pattern-match and manipulate text files, and FIRE. seeks to emulate this functionality with a more attractive, C-inspired syntax and intuitive semantics. 
+
+FIRE is intended to be utilized with large sets of delimited data, like `csv` files. FIRE is also animated by the premise that files are first class citizens. 
+
+FIRE was built by a team of Columbia University undergraduates for Professor Stephen Edward's Programming Language and Translators course. FIRE is written in OCaml , utilizing libraries built in `C`, and leveraging the `LLVM` compiler back-end.
 
 ## 2: Lexical Conventions 
 
@@ -112,6 +118,10 @@ The pattern match operator `===` returns 1 if the regular expression or string o
 it will return 0 otherwise.  
 the pattern match orperator must always have a regular expression on its left side.
 
+ex:  
+
+`r'[a-z]+' === word`
+
 #### 6.9 String Concatination Operator
 
 The string concatination `^` operator returns a new string that is the concatination of the string on its left side and the string on its right side. 
@@ -124,11 +134,173 @@ When used on arrays it is supplied a key and returns the coresponding element, o
 
 When used on Strings it functions in a similar manner to character arrays in C. It is supplied an integer and returns the letter of that index, however unlike C FIRE does not support chars so it returns a string of length 1.
 
-*note: how are we going to perform this indexing?* 
-
+```
+str hello = "hello"
+str o = hello[4]; 
+```
 #### 6.11 Slice operator 
 
-The slice operator ....
+The slice operator `[x:y]` is used on a string and returns a substring
 
-*note: same as above. if we have an array of type [string, string] how do you slice it by providing ints?*
+## 7: Declarations  
+
+Objects are instantiated via declarations, which explicitly assign a data type to a variable. In Fire a variable cannot be declared without also being assigned to a value. Types are explicit in FIRE. The format of a declaration is as follows: 
+
+`{type} {variable name} = {value};`.
+
+#### 7.1 Data Types
+
+#### 7.1.1. int
+
+Objects of type `int` represent integers and include negative values. The upper and lower bounds for int are defined by the architectual constraints of the computer, in the manner of C and OCaml. 
+
+Example: 
+
+`int num = 32;`
+
+int objects can also be assigned to the result of expressions:
+
+`int a = 34 * 2 + (2 / 1);`
+
+Floating point values are **not** supported in FIRE.
+
+####7.1.2. str
+
+Objects of type `str` objects are used to represent sequences of characters, i.e. strings. Strings are immutable and can be declared in the following manner:
+
+Example: 
+
+`str myString = "Hello World";`
+
+char values are **not** supported in FIRE, but a string of length 0 or 1, can be returned via the bracket operator discussed in section 6.10 
+
+####7.1.3. file
+
+Files are regarded as first-class citizens in FIRE. This is made apparent by the importance and centrality of files. A `file` object represents either an existing file or a file that is to be written to, and allows the programmer to more easily perform operations on the file.
+
+The semantics for instantiating a `file` object is as follows:
+
+`file f = file("filename.csv", "mode");`
+
+In the example provided above, two arguments are fed into the `file()` argument: *filename* for reading, writing or both, and *mode*. The *mode* argument can be `r` for read only, `w` for write only, and `rw` for both.  
+
+Example:  
+
+`file f = file("test.csv", "rw");` will open the File named test.csv in the current directory for both reading and writing.  
+  
+`file f = file("filename.csv", "mode", "delim");`
+
+An optional third argument *delim* may be provided to the constructer specifiying a delimiter for reading. If the *delim* argument is not supplied it will default to `\n`. 
+
+Example: 
+
+`file f = file("test.csv", "rw", ";");` will open the File named test.csv in the current directory for both reading and writing. Calls to read() will read in chunks of the file delimited by the ';' character. 
+
+#### 7.1.4. func
+
+`func` objects reference functions and are treated as first class citizens.  
+The structure of `func` variable declarations is as follows:
+
+`func <name> = (<parameters>) => { <function body> };`
+
+Example: 
+```
+func saySomething () =>{ print("something"); };
+func doSomething = (func f) => { f(); };
+doSomething(saySomething);
+```
+####8.1.4. array
+
+The `array` type is a dynamic collection of elements. Inspired by AWK's assocative arrays, an `array` object maps keys of one type to values of one type. Keys and values do not have be of the same type, but all keys must share the same time and all values must share the same type. 
+
+The structure of `array` variable declarations is as follows:
+
+`array arr[<key_type>, <value_type>];`
+
+Example: 
+
+`array arr[int, string];` 
+
+The assignment of variables has the following structure:
+
+`arr[<key_value>] = <element>;` 
+
+Example: 
+
+ `arr[17] = "age17";`
+ 
+ Finally, a programmer can retrieve a value associated with a key with the below syntax:
+ 
+ `int element = arr[<key_value>];`
+ 
+ Example:
+ 
+ `int age = arr["age"];`
+ 
+####8.1.5. regx
+
+Regular expressions are supported in `F.I.R.E.` via the `regx` type, which assigns an object to a regular expression. That object can then be passed as a parameter to functions that utilize regular expressions to pattern match or extract data.
+
+The structure of a `regx` declaration is as follows:
+
+`regx myPattern = r'<pattern>'`
+
+Example:
+
+```
+regx myPattern = r'[a-z]';
+myFunction(someString, myPattern);
+```
+
+The syntax for the regex patterns are as follows:
+
+* `\` escapes any of the operators for the literal character
+* `^` matches only the beginning of the string
+* `$` matches only the end of the string
+* `.` matches any single character
+* `[ ... ]` defines a character list, where the character list can also be character range. This matches any string containing these characters
+* `[^ ... ]` defines a character list, but negates them. This matches any string *not* containing these characters
+* `|` matches either expression `e1` or `e2`
+* `( ... )` groups expressions together where `...` is some regular expression
+* `*` matches the preceding character 0 or many times
+* `+` matches the preceding character at least once
+
+
+## 8: Statements 
+
+#### 8.1 Print Statement
+
+The print statement prints a literal value, or the value returned by an expression. 
+
+`print("i will be printed");`
+
+#### 8.2 Conditional Statements
+
+Conditional statements evaluate expressions and execute code based on the truth values of those expressions.
+
+```
+if (expression) {code block}
+elif {code block}
+else {code block}
+```
+
+#### 8.3 For Statements
+
+For statements iterate over an array and execute a code block for every iteration. The code block can mutate the array elements, but can not add or remove elements from the array.  
+ex:
+
+```
+for(str current : stringArray){
+    print(current);
+``` 
+
+#### 8.4 While Statements 
+
+While statements execute a code block  until its provided condition fails to be met.  
+
+```
+while(condition) {
+	code block
+}
+```
 
