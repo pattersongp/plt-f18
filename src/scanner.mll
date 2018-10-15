@@ -3,6 +3,7 @@
 rule token = parse
   [' ' '\t' '\r' '\n'] { token lexbuf }
 | '=' { ASSN }
+| ',' { COMMA }
 | ';' { SEMI }
 | '+' { PLUS }
 | ':' { COLON }
@@ -20,12 +21,17 @@ rule token = parse
 | '('      { LPAREN }
 | ')'      { RPAREN }
 | 'r'      { REGX }
+| "=="     { EQ }
+| "==="    { REQ }
+| "!="     { NEQ }
 | ">="     { GTEQ }
-| "<="     { LT }
+| "<="     { LTEQ }
 | "=>"     { FATARROW }
 | "/*"     { comment lexbuf }
 | "||"     { OR }
 | "&&"     { AND }
+| "true"   { TRUE }
+| "false"  { FALSE }
 | "if"     { IF }
 | "print"  { PRINT }
 | "else"   { ELSE }
@@ -37,10 +43,12 @@ rule token = parse
 | "return" { RETURN }
 | "break"  { BREAK }
 | "array"  { ARRAY }
+| "void"   { VOID }
+| "file"   { FILE }
 | "func"   { FUNCTION }
 | "int"    { INT }
+| "bool"    { BOOL }
 | "string" { STRING }
-
 | ['0'-'9']+ as lit { LITERAL(int_of_string lit) }
 | ['a'-'z']+ as id { VARIABLE(id) }
 | eof { EOF }
