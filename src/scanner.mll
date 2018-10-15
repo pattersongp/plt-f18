@@ -44,6 +44,7 @@ rule token = parse
 | "break"  { BREAK }
 | "array"  { ARRAY }
 | "void"   { VOID }
+| "file"   { FILE }
 | "func"   { FUNCTION }
 | "int"    { INT }
 | "bool"    { BOOL }
