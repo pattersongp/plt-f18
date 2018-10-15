@@ -16,12 +16,13 @@ Jason Konikow
 * Expressions
 * Statements 
 * Semantics
+* Code Sample
 * ....
 
 
 ## 1: Introduction
 
-File Input Reinterpretation Engine (FIRE) is a scripting language inspired by AWK, bash, syntacically light languages. These languages are renowed for their ability to robustly extract, pattern-match, and manipulate text files. FIRE seeks to emulate this functionality with a more attractive, C-Family inspired syntax and intuitive semantics.
+File Input Reinterpretation Engine (FIRE) is a scripting language inspired by AWK, bash, and other syntacically light languages. These languages are renowed for their ability to robustly extract, pattern-match, and manipulate text files. FIRE seeks to emulate this functionality with a more attractive, C-Family inspired syntax and intuitive semantics.
 
 FIRE is intended to be utilized with large sets of delimited data, like `csv` files. FIRE is also animated by the premise that files are first class citizens. 
 
