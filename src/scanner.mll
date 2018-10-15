@@ -22,6 +22,7 @@ rule token = parse
 | ')'      { RPAREN }
 | 'r'      { REGX }
 | "=="     { EQ }
+| "==="    { REQ }
 | "!="     { NEQ }
 | ">="     { GTEQ }
 | "<="     { LTEQ }
@@ -29,8 +30,8 @@ rule token = parse
 | "/*"     { comment lexbuf }
 | "||"     { OR }
 | "&&"     { AND }
-| "true"     { TRUE }
-| "false"     { FALSE }
+| "true"   { TRUE }
+| "false"  { FALSE }
 | "if"     { IF }
 | "print"  { PRINT }
 | "else"   { ELSE }
