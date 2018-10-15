@@ -265,6 +265,27 @@ The syntax for the regex patterns are as follows:
 * `*` matches the preceding character 0 or many times
 * `+` matches the preceding character at least once
 
+#### 7.1.6. `bool`
+
+Boolean objects contain a value of either `true` or `false`. They can be declared on their own, and are used in conditional statements.
+
+The structure of a boolean declaration:
+
+```
+bool switch = true; // or false
+```
+
+Example: 
+
+```
+int x = 0;
+bool switch = true;
+
+// infinite loop
+while(switch) {
+	x = x + 1;
+}
+```
 
 ## 8: Statements 
 
