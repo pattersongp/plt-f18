@@ -61,6 +61,7 @@ The following identifiers are restricted from use:
 * `print`
 * `return`
 * `map`
+* `filter`
 
 
 #### 2.5 Regular Expressions
@@ -308,5 +309,45 @@ While statements execute a code block  until its provided condition fails to be 
 while(<condition>) {
 	<code block>
 }
+```
+
+### x.: Code Sample
+
+The below is an example of `F.I.R.E` in action. In the snippet below, a `F.I.R.E` program is used to extract phone numbers that begin with a particular area code:
+
+```
+user:~ $ cat PhoneNumbers.txt
+Dennis 201-445-9372
+Kenneth 954-667-8990
+Richie 312-421-0098
+Thomas 201-750-0911
+Albert 783-444-7862
+
+user:~ $ cat nj_numbers.fire
+//
+// Program that determines if a number if from NJ based on 201 area code
+//
+
+func isNJ = (String phoneNumber) => {
+    return phoneNumber === "201-/d{3}-/d{4}";
+};
+
+func extractRegion(func isRegion, file numbers) {
+	
+	array resultingNums;
+    for(number in numbers.stream()) {
+        if(isRegion(number)){
+            resultingNums[number] = number;
+        }
+    }
+    return resultingNums;
+}
+
+file in = file(stdin);
+print extractRegion(isNJ, in);
+
+user:~ $ cut -d' ' -f2 | fire nj_numbers.fire
+201-445-9372
+201-750-0911
 ```
 
