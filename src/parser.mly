@@ -36,26 +36,15 @@ program:
 decls:
         /*nothing*/   { [] }
         | decls vdecl {($2 :: fst $1), snd $1}
-
-vdecl:
-        | typ ID assign_opt SEMI { ($1, $2, $3) }
-
-vdecl_list:
-        /*nothing*/   { [] }
-        | vdecl_list vdecl { $2 :: $1 }
-
-assign_opt:
-        /*nothing*/ { Noexpr }
-        | ASSN expr { $2 }
-        | LBRACKET typ COMMA typ RBRACKET { ($2, $4) } 
+        | decls fdecl {fst $1, ($2 :: snd $1)}
 
 fdecl:
-        FUNCTION typ ID ASSN LPAREN formals_opt RPAREN FATARROW vdecl_list stmt_list RBRACE 
+        FUNCTION typ ID ASSN LPAREN formals_opt RPAREN FATARROW vdecl_list stmt_list RBRACE
         { { typ = $2;
-            fname = $3;
-            formals = $6;
-            locals = List.rev $9;
-            body = List.rev $10; } }
+        fname = $3;
+        formals = $6;
+        locals = List.rev $9;
+        body = List.rev $10 } }
 
 formals_opt:
     /*nothing*/ { [] }
@@ -68,9 +57,25 @@ formal_list:
 typ:
           INT       { Int    }
         | STRING    { String }
+        | BOOL      { Bool }
         | ARRAY     { Array }
         | VOID      { Void   }
         | FUNCTION  { Function   }
+
+vdecl_list:
+        /*nothing*/   { [] }
+        | vdecl_list vdecl { $2 :: $1 }
+
+vdecl:
+        | typ ID assign_opt SEMI { ($1, $2, $3) }
+
+
+assign_opt:
+        /*nothing*/ { Noexpr }
+        | ASSN expr { $2 }
+        | LBRACKET typ COMMA typ RBRACKET { ($2, $4) }
+
+
 
 stmt_list:
     /* nothing */  { [] }
@@ -78,7 +83,9 @@ stmt_list:
 
 stmt:
     | expr SEMI { Expr $1 }
+    | RETURN SEMI { Return Noexpr }
     | RETURN expr SEMI { Return($2) }
+    | LBRACE stmt_list RBRACE { Block(List.rev $2) }
     | IF LPAREN expr RPAREN stmt %prec NOELSE { If($3, $5, Block([])) }
     | IF LPAREN expr RPAREN stmt ELSE stmt    { If($3, $5, $7) }
     | FOR LPAREN typ ID COLON ID RPAREN stmt
@@ -88,6 +95,8 @@ stmt:
 expr:
       STRING           { String($1) }
     | ID               { Id($1) }
+    | TRUE             { BoolLit(true) }
+    | FALSE            { BoolLit(false) }
     | expr PLUS   expr { Binop($1, Add,   $3) }
     | expr MINUS  expr { Binop($1, Sub,   $3) }
     | expr TIMES  expr { Binop($1, Mult,  $3) }
@@ -114,4 +123,4 @@ actuals_opt:
 
 actuals_list:
     expr                    { [$1] }
-  | actuals_list COMMA expr { $3 :: $1 }    
+  | actuals_list COMMA expr { $3 :: $1 }
