@@ -22,7 +22,6 @@ Once a function has been assigined to a `func` type it becomes a "named function
 #### Paramaterization
 
 Named functions can be passed to other functions as a parameter as follows\:
-
 ```
 func void saySomething = () =>{ print("something"); };
 func void doSomething = (func f) => { f(); };
