@@ -62,6 +62,8 @@ The following identifiers are restricted from use:
 * `return`
 * `map`
 * `filter`
+* `true`
+* `false`
 
 
 #### 2.5 Regular Expressions
@@ -146,6 +148,22 @@ str o = hello[4];
 #### 6.11 Slice operator 
 
 The slice operator `[x:y]` is used on a string and returns a substring.
+
+#### 6.12 map keyword
+
+The map keyword allows a programmer to apply a function to every element of an array. 
+
+Example: `map f arr1;` 
+
+The map keyword does not mutate the values in the provided array; it instead returns a new array with results of every element of arr1 after they are passed to func f. 
+
+#### 6.13 filter keyword
+
+The filter keyword takes any function that returns a boolean and applies it to elements of an array. This allows filter to quickly generate a new array that consists of elements that match whatever member criteria your function tests for.
+
+Example: `filter f arr1;`
+
+In the above example, arr1 contains an array of strings that are either `dog` or `cat`. func f returns true if the element is equal to `dog`. The above expression would return an array only consisting of every element in arr1 that contains `dog`.
 
 ## 7: Declarations  
 
