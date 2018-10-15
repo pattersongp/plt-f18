@@ -28,6 +28,8 @@ rule token = parse
 | "/*"     { comment lexbuf }
 | "||"     { OR }
 | "&&"     { AND }
+| "true"     { TRUE }
+| "false"     { FALSE }
 | "if"     { IF }
 | "print"  { PRINT }
 | "else"   { ELSE }
@@ -42,6 +44,7 @@ rule token = parse
 | "void"   { VOID }
 | "func"   { FUNCTION }
 | "int"    { INT }
+| "bool"    { BOOL }
 | "string" { STRING }
 | ['0'-'9']+ as lit { LITERAL(int_of_string lit) }
 | ['a'-'z']+ as id { VARIABLE(id) }
