@@ -1,0 +1,14 @@
+Updating LRM
+
+1. No more anonymous function
+2. Bool is no longer 0/1, we will do T/F
+3. create map function that take array and function
+4. filter returns a boolean value
+5. proofread
+
+Before next deliverables
+
+1. Makefile
+2. Plugging into library
+3. CARL use small C++
+4. intermedia schedule before helloworld
