@@ -25,7 +25,7 @@ FIRE is intended to be utilized with large sets of delimited data, like `csv` fi
 
 FIRE was built by a team of Columbia University undergraduates for Professor Stephen Edward's Programming Language and Translators course. FIRE is written in OCaml , utilizing libraries built in `C`, and leveraging the `LLVM` compiler back-end.
 
-## 2 Lexical Conventions 
+## 2: Lexical Conventions 
 
 #### 2.1 Strings
 
@@ -62,6 +62,7 @@ The following identifiers are restricted from use:
 * `true`
 * `false`
 * `null`
+* `void`
 
 
 #### 2.5 Regular Expressions
@@ -72,13 +73,13 @@ Regular expressions are a special sequence of characters used for pattern matchi
 
 FIRE only supports the use the block comments. Comments are initiated with the `/*` symbol and terminated by the `*/` symbol. Everything in between the symbols will be ignored by FIRE during compilation
 
-## 3 Meaning of Identifiers
+## 3: Meaning of Identifiers
 
 Identifiers are names that correlate to a single value, a function, or an array. The restrictions on valid identifiers are found in section 2.2.
 
 The scope of an identifier can be either global or local. A local identifier's scope is limited to inside the braces `{ ... }` in which they are declared, whereas global identifiers are declared outside any braces.
 
-## 4 Expressions
+## 4: Expressions
 
 #### 4.1 Primary expressions
 
@@ -302,7 +303,7 @@ while(switch) {
 }
 ```
 
-## 6 Statements 
+## 6: Statements 
 
 #### 6.1 Print Statement
 
@@ -347,7 +348,7 @@ while(<condition>) {
 }
 ```
 
-### 7 Code Sample
+### 7: Code Sample
 
 The below is an example of `F.I.R.E` in action. In the snippet below, a `F.I.R.E` program is used to extract phone numbers that begin with a particular area code:
 
