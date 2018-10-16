@@ -9,12 +9,12 @@ Jason Konikow (jk4057)
 ## Table of contents
 
 1. Introduction
-1. Lexical Conventions
-1. Meaning of Identifiers
-1. Expressions
-1. Statements 
-1. Statements
-1. Code Sample
+2. Lexical Conventions
+3. Meaning of Identifiers
+4. Expressions
+5. Statements 
+6. Statements
+7. Code Sample
 
 
 ## 1: Introduction
@@ -162,6 +162,10 @@ The filter keyword takes any function that returns a boolean and applies it to e
 Example: `filter f arr1;`
 
 In the above example, arr1 contains an array of strings that are either `dog` or `cat`. func f returns true if the element is equal to `dog`. The above expression would return an array only consisting of every element in arr1 that contains `dog`.
+
+#### 4.14 void
+
+A function that does not return a type 
 
 ## 5: Declarations  
 
