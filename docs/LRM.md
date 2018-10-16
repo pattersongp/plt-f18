@@ -388,7 +388,7 @@ user:~ $ cat nj_numbers.fire
 //
 
 func string isNJ = (str phoneNumber) => {
-    return phoneNumber === "201-[0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]";
+    return phoneNumber === r'201-[0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]';
 };
 
 func array[int, str] extractRegion(func isRegion, file f) {
