@@ -1,4 +1,4 @@
-# File Input Reinterpretation Engine - (F.I.R.E.) - Language Reference Manual
+# File Input Reinterpretation Engine - (FIRE) - Language Reference Manual
 
 Graham Patterson (gpp2109)  
 Frank Spano (fas2154)  
@@ -151,7 +151,7 @@ The slice operator `[x:y]` is used on a string and returns a substring.
 
 The map keyword allows a programmer to apply a function to every element of an array. 
 
-Example: `map f arr1;` 
+Example: `map(f,arr1);` 
 
 The map keyword does not mutate the values in the provided array; it instead returns a new array with results of every element of arr1 after they are passed to func f. 
 
@@ -159,7 +159,7 @@ The map keyword does not mutate the values in the provided array; it instead ret
 
 The filter keyword takes any function that returns a boolean and applies it to elements of an array. This allows filter to quickly generate a new array that consists of elements that match whatever member criteria your function tests for.
 
-Example: `filter f arr1;`
+Example: `filter(f,arr1);`
 
 In the above example, arr1 contains an array of strings that are either `dog` or `cat`. func f returns true if the element is equal to `dog`. The above expression would return an array only consisting of every element in arr1 that contains `dog`.
 
@@ -221,12 +221,16 @@ Example:
 `func <return type> <name> = (<parameters>) => { <function body> };`
 
 Where:
+
  * `<return type>` is the type returned by the function
  * `<name>` is the variable name of the function
  * `<paramters>` are the expected parameters for the function
  * `<function body>` is the body of the function
  
 Once a function has been assigined to a `func` type it becomes a "named function" that is callable using that name e.g `funcName();`
+
+A function that does not return anything has a return type of `void`.  The void return type allows for programmers to create functions that are useful for their side effects. 
+
 
 ##### Paramaterization
 
@@ -242,11 +246,6 @@ doSomething(saySomething);
 * Fire does not support function overloading
 * Fire does not support genericity in functions
 
-##### Void
-
-A function that does not return an object or result is of type `void`.  The void type allows for programmers to create functions that are useful for their side effects. 
-
-Example: `func void saySomething = () =>{ print("something"); };`
 
 #### 5.1.4. `array`
 
@@ -373,7 +372,7 @@ while(<condition>) {
 
 ### 7: Code Sample
 
-The below is an example of `F.I.R.E` in action. In the snippet below, a `F.I.R.E` program is used to extract phone numbers that begin with a particular area code:
+The below is an example of `FIRE` in action. In the snippet below, a `FIRE` program is used to extract phone numbers that begin with a particular area code:
 
 ```
 user:~ $ cat PhoneNumbers.csv
@@ -385,22 +384,25 @@ Albert,783-444-7862
 
 user:~ $ cat nj_numbers.fire
 //
-// Program that determines if a number if from NJ based on 201 area code
+// Program that determines if a number is from NJ based on 201 area code
 //
 
-func string isNJ = (string phoneNumber) => {
-    return phoneNumber === "201-/d{3}-/d{4}";
+func string isNJ = (str phoneNumber) => {
+    return phoneNumber === "201-[0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]";
 };
 
-func array[int, string] extractRegion(func isRegion, file f) {
+func array[int, str] extractRegion(func isRegion, file f) {
     
-    array njnums[int, string];
+    array njnums[int, str];
+    
+    str number = f.readLine();
     int i = 0;
     
-    for(string number in f) {
+    while(number != "") {
         if(isNJ(number)){
             njnums[i,number].add;
-	    i = i + 1;
+	         i = i + 1;
+	         number = f.readLine();
         }
     }
     return njnums;
@@ -408,10 +410,9 @@ func array[int, string] extractRegion(func isRegion, file f) {
 
 file f = file("PhoneNumbers.csv", "rw", ",");
 
-print extractRegion(isNJ, f);
+print( extractRegion(isNJ, f) );
 
 user:~ $ cut -d' ' -f2 | fire nj_numbers.fire
 201-445-9372
 201-750-0911
 ```
-
