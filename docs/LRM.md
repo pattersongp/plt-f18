@@ -221,14 +221,30 @@ Example:
 
 `func` objects reference functions and are treated as first class citizens. The structure of `func` variable declarations is as follows:
 
-`func <name> = (<parameters>) => { <function body> };`
+`func <return type> <name> = (<parameters>) => { <function body> };`
 
-Example: 
+Where:
+ * `<return type>` is the type returned by the function
+ * `<name>` is the variable name of the function
+ * `<paramters>` are the expected parameters for the function
+ * `<function body>` is the body of the function
+ 
+Once a function has been assigined to a `func` type it becomes a "named function" that is callable using that name e.g `funcName();`
+
+#### Paramaterization
+
+Named functions can be passed to other functions as a parameter as follows\:
 ```
-func saySomething () =>{ print("something"); };
-func doSomething = (func f) => { f(); };
+func void saySomething = () =>{ print("something"); };
+func void doSomething = (func f) => { f(); };
 doSomething(saySomething);
 ```
+
+## Caveats
+
+* Fire does not support function overloading
+* Fire does not support genericity in functions
+
 #### 5.1.4. `array`
 
 The `array` type is a dynamic collection of elements. Inspired by AWK's associative arrays, an `array` collection maps keys of one type to values of one type. Keys and values do not have be the same type, but all keys must share the same type and all values must share the same type.
@@ -369,13 +385,13 @@ user:~ $ cat nj_numbers.fire
 // Program that determines if a number if from NJ based on 201 area code
 //
 
-func isNJ = (String phoneNumber) => {
+func string isNJ = (string phoneNumber) => {
     return phoneNumber === "201-/d{3}-/d{4}";
 };
 
-func extractRegion(func isRegion, file f) {
+func array[int, string] extractRegion(func isRegion, file f) {
     
-    array njnums[int,string];
+    array njnums[int, string];
     int i = 0;
     
     for(string number in f) {
