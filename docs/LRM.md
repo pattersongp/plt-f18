@@ -163,9 +163,11 @@ Example: `filter f arr1;`
 
 In the above example, arr1 contains an array of strings that are either `dog` or `cat`. func f returns true if the element is equal to `dog`. The above expression would return an array only consisting of every element in arr1 that contains `dog`.
 
-#### 4.14 void
+#### 4.14 void type
 
-A function that does not return a type 
+A function that does not return an object or result is of type `void`.  The void type allows for programmers to create functions that are useful for their side effects. 
+
+Example: `func void saySomething = () =>{ print("something"); };`
 
 ## 5: Declarations  
 
