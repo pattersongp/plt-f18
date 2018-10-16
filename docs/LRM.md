@@ -81,7 +81,7 @@ The scope of an identifier can be either global or local. A local identifier's s
 
 ## 4: Expressions
 
-#### 4.1 Primary expressions
+#### 4.1 Primary Expressions
 
 Primary expressions in FIRE can either because accessing an array type or a function call. The primary expression is followed by an expression of either asignments in the case of a function call or an accessing of the datatypes in an array.
 
@@ -89,7 +89,7 @@ Primary expressions in FIRE can either because accessing an array type or a func
 2. `Primary Expression ( expression )`
 
 
-#### 4.2 Assignement Operator
+#### 4.2 Assignment Operator
 
 The assignment operators `=` returns the value of the expression that is evaluated on its right-hand side and stores it in the identifier on the left hand side. The scope of that identifier is described in [section 3](#Identifiers)
 
@@ -147,7 +147,7 @@ str o = hello[4];
 
 The slice operator `[x:y]` is used on a string and returns a substring.
 
-#### 4.12 map keyword
+#### 4.12 Map 
 
 The map keyword allows a programmer to apply a function to every element of an array. 
 
@@ -155,7 +155,7 @@ Example: `map f arr1;`
 
 The map keyword does not mutate the values in the provided array; it instead returns a new array with results of every element of arr1 after they are passed to func f. 
 
-#### 4.13 filter keyword
+#### 4.13 Filter 
 
 The filter keyword takes any function that returns a boolean and applies it to elements of an array. This allows filter to quickly generate a new array that consists of elements that match whatever member criteria your function tests for.
 
@@ -163,11 +163,6 @@ Example: `filter f arr1;`
 
 In the above example, arr1 contains an array of strings that are either `dog` or `cat`. func f returns true if the element is equal to `dog`. The above expression would return an array only consisting of every element in arr1 that contains `dog`.
 
-#### 4.14 void type
-
-A function that does not return an object or result is of type `void`.  The void type allows for programmers to create functions that are useful for their side effects. 
-
-Example: `func void saySomething = () =>{ print("something"); };`
 
 ## 5: Declarations  
 
@@ -233,7 +228,7 @@ Where:
  
 Once a function has been assigined to a `func` type it becomes a "named function" that is callable using that name e.g `funcName();`
 
-#### Paramaterization
+##### Paramaterization
 
 Named functions can be passed to other functions as a parameter as follows\:
 ```
@@ -242,10 +237,16 @@ func void doSomething = (func f) => { f(); };
 doSomething(saySomething);
 ```
 
-## Caveats
+##### Caveats
 
 * Fire does not support function overloading
 * Fire does not support genericity in functions
+
+##### Void
+
+A function that does not return an object or result is of type `void`.  The void type allows for programmers to create functions that are useful for their side effects. 
+
+Example: `func void saySomething = () =>{ print("something"); };`
 
 #### 5.1.4. `array`
 
