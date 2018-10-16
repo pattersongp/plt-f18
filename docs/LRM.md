@@ -1,4 +1,4 @@
-# File Input Reinterpretation Engine (FIRE) Reference Manual
+# File Input Reinterpretation Engine - (F.I.R.E.) - Language Reference Manual
 
 Graham Patterson (gpp2109)  
 Frank Spano (fas2154)  
