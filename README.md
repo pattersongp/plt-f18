@@ -18,7 +18,7 @@ For help with Docker installation, see [here](https://docs.docker.com/docker-for
 
 0. Navigate to the repository root `cd plt-f18`
 1. You'll build a docker image: `docker build -t fire .`
-2. To run the container: `docker run --rm -it -v \`pwd\`:/home/fire -w=/home/fire fire`
+2. To run the container: ```docker run --rm -it -v `pwd`:/home/fire -w=/home/fire fire```
 
 Then inside the container you'll be able to run `make` and all build targets.
 <br>
