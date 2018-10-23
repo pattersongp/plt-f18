@@ -55,8 +55,8 @@ formals_opt:
   | formal_list   { List.rev $1 }
 
 formal_list:
-    typ ID                   { [($1,$2)] }
-  | formal_list COMMA typ ID { ($3,$4) :: $1 }
+    typ ID                   { [($1,$2, None)] }
+  | formal_list COMMA typ ID { ($3,$4, None) :: $1 }
 
 typ:
           INT       { Int    }
@@ -76,11 +76,11 @@ vdecl:
          typ ID assign_opt SEMI { ($1, $2, $3) }
 
 assign_opt:
-        /*nothing*/ { Noexpr }
-        | ASSN expr { $2 }
-        | LBRACKET typ COMMA typ RBRACKET { ($2, $4) }
+        /*nothing*/ { None }
+        | ASSN expr { Some($2) }
+      /*| LBRACKET typ COMMA typ RBRACKET { ($2, $4) }
         | LPAREN expr COMMA expr RPAREN   { ($2, $4) }
-        | LPAREN expr COMMA expr COMMA expr RPAREN   { ($2, $4, $6) }
+        | LPAREN expr COMMA expr COMMA expr RPAREN   { ($2, $4, $6) }*/
 
 stmt_list:
     /* nothing */  { [] }
@@ -88,21 +88,21 @@ stmt_list:
 
 stmt:
     expr SEMI { Expr $1 }
-  | RETURN SEMI { Return Noexpr }
-  | BREAK SEMI { Break Noexpr }
-  | RETURN expr SEMI { Return $2 }
+  | RETURN SEMI { Return None }
+  | BREAK SEMI { Break }
+  | RETURN expr SEMI { Return (Some $2) }
   | LBRACE stmt_list RBRACE { Block(List.rev $2) }
   | IF LPAREN expr RPAREN stmt %prec NOELSE { If($3, $5, Block([])) }
   | IF LPAREN expr RPAREN stmt ELSE stmt    { If($3, $5, $7) }
   | FOR LPAREN ID COLON ID RPAREN stmt
         { For($3, $5, $7) }
   | MAP LPAREN ID COMMA ID RPAREN { Map($3, $5)  }
-  | FILTER LPAREN ID COMMA expr RPAREN { Filter($3, $5)  }
+  | FILTER LPAREN ID COMMA ID RPAREN { Filter($3, $5)  }
   | WHILE LPAREN expr RPAREN stmt { While($3, $5) }
 
 expr:
-    INT_LIT              { IntLit($1) }
-  | STRING_LIT       { SpringLit($1) }
+    INT_LIT              { Literal($1) }
+  | STRING_LIT       { StringLit($1) }
   | TRUE             { BoolLit(true) }
   | FALSE            { BoolLit(false) }
   | ID               { Id($1) }
@@ -116,7 +116,7 @@ expr:
   | expr LTEQ   expr { Binop($1, Leq,   $3) }
   | expr GT     expr { Binop($1, Greater, $3) }
   | expr GTEQ   expr { Binop($1, Geq,   $3) }
-  | expr REQ expr    { Binop($1, Req,   $3) }
+  | expr REQ    expr { Binop($1, Req,   $3) }
   | expr AND    expr { Binop($1, And,   $3) }
   | expr OR     expr { Binop($1, Or,    $3) }
   | MINUS expr %prec NEG { Unop(Neg, $2) }
