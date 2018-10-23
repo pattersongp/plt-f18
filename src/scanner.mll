@@ -35,7 +35,6 @@ rule token = parse
 | "if"     { IF }
 | "print"  { PRINT }
 | "else"   { ELSE }
-| "elif"   { ELIF }
 | "for"    { FOR }
 | "map"    { MAP }
 | "filter" { FILTER }
@@ -49,8 +48,8 @@ rule token = parse
 | "int"    { INT }
 | "bool"    { BOOL }
 | "string" { STRING }
-| ['0'-'9']+ as lit { LITERAL(int_of_string lit) }
-| ['a'-'z']+ as id { VARIABLE(id) }
+| ['0'-'9']+ as lit { INT_LIT(int_of_string lit) }
+| ['a'-'z']+ as id { ID(id) }
 | eof { EOF }
 
 and comment = parse

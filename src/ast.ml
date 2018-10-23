@@ -1,15 +1,11 @@
 (* Abstract Syntax Tree *)
 
-(* NOT YET IMPLEMENTED *)
-
 type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq |
           And | Or  | Req
 
 type uop = Neg | Not
 
 type typ = Int | Bool | Void | String | Array | Function | File | Regx
-
-type bind = typ * string
 
 type expr =
     Literal of int
@@ -22,19 +18,19 @@ type expr =
   | Retrieve of string * expr
   | Array_Assign of string * expr * expr
   | Call of string * expr list
-  | Noexpr
+
+type bind = typ * string * expr option
 
 type stmt =
     Block of stmt list
   | Expr of expr
-  | Return of expr
+  | Return of expr option
   | If of expr * stmt * stmt
   | While of expr * stmt
   | For of string * string * stmt
   | Map of string * string
   | Filter of string * string
-
-  (* How do we represent no expr here? *)
+  | Break
 
 type func_decl = {
     typ : typ;
@@ -46,3 +42,4 @@ type func_decl = {
 
 type program = bind list * func_decl list
 
+let string_of_program (vars, funcs) = "Hello from the AST"
