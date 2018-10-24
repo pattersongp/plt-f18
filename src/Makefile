@@ -15,7 +15,7 @@ fire.native :
 .PHONY : clean
 clean :
 	ocamlbuild -clean
-	rm -rf testall.log *.diff fire scanner.ml parser.ml parser.mli
+	rm -rf testall.log *.diff fire scanner.ml parser.ml parser.mli fire.native
 	rm -rf printbig
 	rm -rf *.cmx *.cmi *.cmo *.cmx *.o *.s *.ll *.out *.exe
 
