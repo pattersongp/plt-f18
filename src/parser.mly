@@ -86,10 +86,10 @@ stmt_list:
     /* nothing */  { [] }
   | stmt_list stmt { $2 :: $1 }
 
+  /* | vdecl SEMI { $1 } */
 stmt:
     expr SEMI { Expr $1 }
   | RETURN SEMI { Return None }
-  | vdecl SEMI { $1 }
   | BREAK SEMI { Break }
   | RETURN expr SEMI { Return (Some $2) }
   | LBRACE stmt_list RBRACE { Block(List.rev $2) }

@@ -42,6 +42,10 @@ type func_decl = {
 
 type program = bind list * func_decl list
 
+let string_of_uop = function
+          Neg -> "-"
+        | Not -> "!"
+
 let string_of_typ = function
           Int -> "int"
         | String -> "str"
@@ -70,6 +74,7 @@ let string_of_op = function
 let rec string_of_expr = function
           Some Literal(l) -> string_of_int l
         | Some Id(i) -> i
+        | Some Unop(op, expr) -> string_of_uop op ^ string_of_expr (Some expr)
         | Some BoolLit(true) -> "true"
         | Some BoolLit(false) -> "false"
         | Some StringLit(s) ->  s
