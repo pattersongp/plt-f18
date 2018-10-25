@@ -77,7 +77,7 @@ vdecl:
 
 assign_opt:
         /*nothing*/ { None }
-        | ASSN expr { Some($2) }
+        | ASSN expr { Some $2 }
       /*| LBRACKET typ COMMA typ RBRACKET { ($2, $4) }
         | LPAREN expr COMMA expr RPAREN   { ($2, $4) }
         | LPAREN expr COMMA expr COMMA expr RPAREN   { ($2, $4, $6) }*/
@@ -101,7 +101,7 @@ stmt:
   | WHILE LPAREN expr RPAREN stmt { While($3, $5) }
 
 expr:
-    INT_LIT              { Literal($1) }
+    INT_LIT          { Literal($1) }
   | STRING_LIT       { StringLit($1) }
   | TRUE             { BoolLit(true) }
   | FALSE            { BoolLit(false) }

@@ -47,9 +47,10 @@ rule token = parse
 | "func"   { FUNCTION }
 | "int"    { INT }
 | "bool"    { BOOL }
-| "string" { STRING }
+| "str" { STRING }
 | ['0'-'9']+ as lit { INT_LIT(int_of_string lit) }
 | ['a'-'z']+ as id { ID(id) }
+| '"' [^ '"']* '"' as str { STRING_LIT(str) }
 | eof { EOF }
 
 and comment = parse

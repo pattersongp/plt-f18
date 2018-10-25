@@ -42,4 +42,29 @@ type func_decl = {
 
 type program = bind list * func_decl list
 
-let string_of_program (vars, funcs) = "Hello from the AST"
+let string_of_typ = function
+        Int -> "int"
+        | String -> "str"
+        | Bool -> "bool"
+        | Array -> "array"
+        | Void -> "void"
+        | Function -> "func"
+        | Regx -> "regx"
+        | File -> "file"
+
+let string_of_expr = function
+          Some Literal(l) -> " = " ^ string_of_int l
+        | Some Id(i) -> i
+        | Some BoolLit(true) -> " = " ^ "true"
+        | Some BoolLit(false) -> " = " ^ "false"
+        | Some StringLit(s) -> " = " ^ s
+
+let string_of_opt_assn = function
+        None -> ""
+        | _ as exp -> string_of_expr exp
+
+let string_of_vdecl (t, id, assn) =
+        string_of_typ t ^ " " ^ id ^ (string_of_opt_assn assn) ^ ";\n"
+
+let string_of_program (vars, _) =
+        String.concat "" (List.map string_of_vdecl vars)
