@@ -74,13 +74,14 @@ let string_of_op = function
 let rec string_of_expr = function
           Some Literal(l) -> string_of_int l
         | Some Id(i) -> i
-        | Some Unop(op, expr) -> string_of_uop op ^ string_of_expr (Some expr)
+        | Some Unop(op, e1) -> string_of_uop op ^ string_of_expr (Some e1)
         | Some BoolLit(true) -> "true"
         | Some BoolLit(false) -> "false"
         | Some StringLit(s) ->  s
-        | Some Assign(id, expr) ->  id ^ " = " ^ string_of_expr (Some expr)
+        | Some Assign(id, e1) ->  id ^ " = " ^ string_of_expr (Some e1)
         | Some Binop(e1, op, e2) ->
 			string_of_expr (Some e1) ^ " " ^ string_of_op op ^ " " ^ string_of_expr (Some e2)
+        | Some Retrieve(id, e1) -> id ^ "[" ^ string_of_expr (Some e1) ^ "]"
 
 let string_of_opt_assn = function
         None -> ""
