@@ -124,7 +124,7 @@ expr:
   | NOT expr         { Unop(Not, $2) }
   | ID ASSN expr   { Assign($1, $3) }
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
-  | LPAREN expr RPAREN { $2 }
+/*  | LPAREN expr RPAREN { $2 } */
   | ID LBRACKET expr RBRACKET { Retrieve($1, $3)}
   | ID LBRACKET expr RBRACKET ASSN expr {Array_Assign($1, $3, $6)}
 

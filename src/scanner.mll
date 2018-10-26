@@ -20,7 +20,6 @@ rule token = parse
 | ']' { RBRACKET }
 | '('      { LPAREN }
 | ')'      { RPAREN }
-| 'r'      { REGX }
 | "=="     { EQ }
 | "==="    { REQ }
 | "!="     { NEQ }
@@ -45,6 +44,7 @@ rule token = parse
 | "void"   { VOID }
 | "file"   { FILE }
 | "func"   { FUNCTION }
+| "regx"   { REGX }
 | "int"    { INT }
 | "bool"    { BOOL }
 | "str" { STRING }
