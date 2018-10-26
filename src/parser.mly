@@ -86,6 +86,7 @@ stmt_list:
     /* nothing */  { [] }
   | stmt_list stmt { $2 :: $1 }
 
+  /* | vdecl SEMI { $1 } */
 stmt:
     expr SEMI { Expr $1 }
   | RETURN SEMI { Return None }
@@ -106,16 +107,16 @@ expr:
   | TRUE             { BoolLit(true) }
   | FALSE            { BoolLit(false) }
   | ID               { Id($1) }
-  | expr PLUS   expr { Binop($1, Add,   $3) }
-  | expr MINUS  expr { Binop($1, Sub,   $3) }
-  | expr TIMES  expr { Binop($1, Mult,  $3) }
-  | expr DIVIDE expr { Binop($1, Div,   $3) }
-  | expr EQ     expr { Binop($1, Equal, $3) }
+  | expr PLUS   expr { Binop($1, Plus,   $3) }
+  | expr MINUS  expr { Binop($1, Minus,   $3) }
+  | expr TIMES  expr { Binop($1, Times,  $3) }
+  | expr DIVIDE expr { Binop($1, Divide,   $3) }
+  | expr EQ     expr { Binop($1, Eq, $3) }
   | expr NEQ    expr { Binop($1, Neq,   $3) }
-  | expr LT     expr { Binop($1, Less,  $3) }
-  | expr LTEQ   expr { Binop($1, Leq,   $3) }
-  | expr GT     expr { Binop($1, Greater, $3) }
-  | expr GTEQ   expr { Binop($1, Geq,   $3) }
+  | expr LT     expr { Binop($1, Lt,  $3) }
+  | expr LTEQ   expr { Binop($1, Lteq,   $3) }
+  | expr GT     expr { Binop($1, Gt, $3) }
+  | expr GTEQ   expr { Binop($1, Gteq,   $3) }
   | expr REQ    expr { Binop($1, Req,   $3) }
   | expr AND    expr { Binop($1, And,   $3) }
   | expr OR     expr { Binop($1, Or,    $3) }

@@ -49,7 +49,7 @@ rule token = parse
 | "bool"    { BOOL }
 | "str" { STRING }
 | ['0'-'9']+ as lit { INT_LIT(int_of_string lit) }
-| ['a'-'z']+ as id { ID(id) }
+| ['a'-'z' 'A'-'Z']['a'-'z' 'A'-'Z' '0'-'9' '_']* as id { ID(id) }
 | '"' [^ '"']* '"' as str { STRING_LIT(str) }
 | eof { EOF }
 

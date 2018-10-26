@@ -1,6 +1,6 @@
 (* Abstract Syntax Tree *)
 
-type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq |
+type op = Plus | Minus | Times | Divide | Eq | Neq | Lt | Lteq | Gt | Gteq |
           And | Or  | Req
 
 type uop = Neg | Not
@@ -42,8 +42,12 @@ type func_decl = {
 
 type program = bind list * func_decl list
 
+let string_of_uop = function
+          Neg -> "-"
+        | Not -> "!"
+
 let string_of_typ = function
-        Int -> "int"
+          Int -> "int"
         | String -> "str"
         | Bool -> "bool"
         | Array -> "array"
@@ -52,16 +56,36 @@ let string_of_typ = function
         | Regx -> "regx"
         | File -> "file"
 
-let string_of_expr = function
-          Some Literal(l) -> " = " ^ string_of_int l
+let string_of_op = function
+          Plus  -> "+"
+        | Minus -> "-"
+        | Times -> "*"
+        | Divide-> "/"
+        | Eq    -> "=="
+        | Neq   -> "!="
+        | Lt    -> "<"
+        | Lteq  -> "<="
+        | Gt    -> ">"
+        | Gteq  -> ">="
+        | Req   -> "==="
+        | And   -> "&&"
+        | Or    -> "||"
+
+let rec string_of_expr = function
+          Some Literal(l) -> string_of_int l
         | Some Id(i) -> i
-        | Some BoolLit(true) -> " = " ^ "true"
-        | Some BoolLit(false) -> " = " ^ "false"
-        | Some StringLit(s) -> " = " ^ s
+        | Some Unop(op, e1) -> string_of_uop op ^ string_of_expr (Some e1)
+        | Some BoolLit(true) -> "true"
+        | Some BoolLit(false) -> "false"
+        | Some StringLit(s) ->  s
+        | Some Assign(id, e1) ->  id ^ " = " ^ string_of_expr (Some e1)
+        | Some Binop(e1, op, e2) ->
+			string_of_expr (Some e1) ^ " " ^ string_of_op op ^ " " ^ string_of_expr (Some e2)
+        | Some Retrieve(id, e1) -> id ^ "[" ^ string_of_expr (Some e1) ^ "]"
 
 let string_of_opt_assn = function
         None -> ""
-        | _ as exp -> string_of_expr exp
+        | _ as exp -> " = " ^ string_of_expr exp
 
 let string_of_vdecl (t, id, assn) =
         string_of_typ t ^ " " ^ id ^ (string_of_opt_assn assn) ^ ";\n"
