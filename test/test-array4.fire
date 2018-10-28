@@ -1,0 +1,2 @@
+array arrstring[string, string];
+arr["firstname","John"].add;
