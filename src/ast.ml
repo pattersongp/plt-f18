@@ -97,18 +97,22 @@ let string_of_formal (typ, id, _) =
         string_of_typ typ ^ " " ^ id
 
 let rec string_of_stmt = function
-        Expr(e1) -> string_of_expr (Some e1) ^ ";"
+          Expr(e1) -> string_of_expr (Some e1) ^ ";"
         | Return(None) -> "return;"
         | Return(e1) -> "return " ^ string_of_expr e1 ^ ";"
         | Break -> "break;"
         | Block(stmts) ->
-                "{\n" ^ String.concat "" (List.map string_of_stmt stmts) ^ "\n}\n"
+                "{\n" ^ String.concat "\n" (List.map string_of_stmt stmts) ^ "\n}\n"
         | If(e1, s1, Block([])) -> "if (" ^ string_of_expr (Some e1) ^ ")\n" ^
                 string_of_stmt s1
         | If(e1, s1, s2)        -> "if (" ^ string_of_expr (Some e1) ^ ")\n" ^
                 string_of_stmt s1 ^ "else\n" ^ string_of_stmt s2
         | For(typ, id1, id2, s1) -> "for (" ^ string_of_typ typ ^ id1 ^ " : " ^
                 id2 ^ ")" ^ string_of_stmt s1
+        | While(e1, s1) -> "while (" ^ string_of_expr (Some e1) ^ ") " ^ string_of_stmt s1
+        | Map(a1, f1) -> "map(" ^ a1 ^ ", " ^ f1 ^ ");\n"
+        | Filter(a1, f1) -> "filter(" ^ a1 ^ ", " ^ f1 ^ ");\n"
+
 
 let string_of_vdecl (t, id, assn) =
         string_of_typ t ^ " " ^ id ^ (string_of_opt_assn assn) ^ ";\n"
