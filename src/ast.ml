@@ -71,6 +71,9 @@ let string_of_op = function
         | And   -> "&&"
         | Or    -> "||"
 
+let string_of_act_op = function
+        _ -> "Not implemented"
+
 let rec string_of_expr = function
           Some Literal(l) -> string_of_int l
         | Some Id(i) -> i
@@ -82,13 +85,30 @@ let rec string_of_expr = function
         | Some Binop(e1, op, e2) ->
 			string_of_expr (Some e1) ^ " " ^ string_of_op op ^ " " ^ string_of_expr (Some e2)
         | Some Retrieve(id, e1) -> id ^ "[" ^ string_of_expr (Some e1) ^ "]"
+        | Some Call(id, act) -> id ^ "(" ^ string_of_act_op act ^ ")"
+        | Some Array_Assign(id, e1, e2) ->
+                id ^ "[" ^ string_of_expr (Some e1) ^ "]" ^ " = " ^ string_of_expr (Some e2)
+
 
 let string_of_opt_assn = function
         None -> ""
         | _ as exp -> " = " ^ string_of_expr exp
 
+let string_of_formal (typ, id, _) =
+        string_of_typ typ ^ " " ^ id
+    
+let string_of_stmt = function
+    _ -> "Not implemented"
+
 let string_of_vdecl (t, id, assn) =
         string_of_typ t ^ " " ^ id ^ (string_of_opt_assn assn) ^ ";\n"
 
-let string_of_program (vars, _) =
-        String.concat "" (List.map string_of_vdecl vars)
+let string_of_fdecl fdecl =
+        "func " ^ string_of_typ fdecl.typ ^ " " ^ fdecl.fname ^ " = " ^ "(" ^ 
+        String.concat ", " (List.map string_of_formal fdecl.formals) ^
+        ") => {\n" ^ String.concat "" (List.map string_of_vdecl fdecl.locals) ^
+        "\n" ^ String.concat "" (List.map string_of_stmt fdecl.body) ^ "}\n"
+
+let string_of_program (vars, funcs) =
+        String.concat "" (List.map string_of_vdecl vars) ^ "\n" ^
+        String.concat "\n" (List.map string_of_fdecl funcs)
