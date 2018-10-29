@@ -1,0 +1,4 @@
+func foo = (array a) => {
+str b = "4";
+filter(a, "4");
+}

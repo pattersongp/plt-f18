@@ -1,0 +1,16 @@
+func bool foo = (int x) => {
+
+if (x > 10)
+{
+return true;
+}
+elif
+{
+return true;
+}
+else
+{
+return false;
+}
+
+}

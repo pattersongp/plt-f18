@@ -1,0 +1,9 @@
+func bool foo = (array a, array b) => {
+bool c = false;
+for (int x : a){
+for (int y : b){
+c = true;
+}
+}
+return c;
+}

@@ -1,0 +1,3 @@
+array arr[int, string];
+func testfunc = (array arr) => { arr[0,"value0"].add;};
+testfunc(arr);

@@ -1,0 +1,4 @@
+array arr[int, string];
+array arr[int, int];
+array arr[string, int];
+array arr[string, string];

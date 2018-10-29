@@ -1,0 +1,3 @@
+array arrstring[string, string];
+func testfunc = (array arr) => { arr["key0","value0"].add;};
+testfunc(arrstring);
