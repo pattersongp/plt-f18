@@ -133,6 +133,6 @@ actuals_opt:
   | actuals_list  { List.rev $1 }
 
 actuals_list:
-    expr                    { [$1] }
-  | actuals_list COMMA expr { $3 :: $1 }
+    expr                    { [Some $1] }
+  | actuals_list COMMA expr { Some $3 :: $1 }
 

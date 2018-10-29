@@ -17,7 +17,7 @@ type expr =
   | Assign of string * expr
   | Retrieve of string * expr
   | Array_Assign of string * expr * expr
-  | Call of string * expr list
+  | Call of string * expr option list
 
 type bind = typ * string * expr option
 
@@ -71,9 +71,6 @@ let string_of_op = function
         | And   -> "&&"
         | Or    -> "||"
 
-let string_of_act_op = function
-        _ -> "Not implemented"
-
 let rec string_of_expr = function
           Some Literal(l) -> string_of_int l
         | Some Id(i) -> i
@@ -85,7 +82,8 @@ let rec string_of_expr = function
         | Some Binop(e1, op, e2) ->
 			string_of_expr (Some e1) ^ " " ^ string_of_op op ^ " " ^ string_of_expr (Some e2)
         | Some Retrieve(id, e1) -> id ^ "[" ^ string_of_expr (Some e1) ^ "]"
-        | Some Call(id, act) -> id ^ "(" ^ string_of_act_op act ^ ")"
+        | Some Call(id, act) -> id ^ "(" ^
+                String.concat ", "(List.map string_of_expr act) ^ ")"
         | Some Array_Assign(id, e1, e2) ->
                 id ^ "[" ^ string_of_expr (Some e1) ^ "]" ^ " = " ^ string_of_expr (Some e2)
 
