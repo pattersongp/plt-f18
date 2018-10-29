@@ -1,0 +1,3 @@
+int a = 4;
+func bool testfunc = (int a) => { return a != a; };
+testfunc(a);

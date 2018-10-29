@@ -1,0 +1,3 @@
+int a = 4;
+bool b = (a == a);
+bool c = a == a;

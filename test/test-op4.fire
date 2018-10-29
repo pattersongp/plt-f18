@@ -1,0 +1,4 @@
+int i = 8/2;
+int j = 4
+func int testfunc = (int a) => { return a / a; };
+testfunc(j);
