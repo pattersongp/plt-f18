@@ -27,7 +27,7 @@ type stmt =
   | Return of expr option
   | If of expr * stmt * stmt
   | While of expr * stmt
-  | For of string * string * stmt
+  | For of typ * string * string * stmt
   | Map of string * string
   | Filter of string * string
   | Break
@@ -89,25 +89,39 @@ let rec string_of_expr = function
         | Some Array_Assign(id, e1, e2) ->
                 id ^ "[" ^ string_of_expr (Some e1) ^ "]" ^ " = " ^ string_of_expr (Some e2)
 
-
 let string_of_opt_assn = function
         None -> ""
         | _ as exp -> " = " ^ string_of_expr exp
 
 let string_of_formal (typ, id, _) =
         string_of_typ typ ^ " " ^ id
-    
-let string_of_stmt = function
-    _ -> "Not implemented"
+
+let rec string_of_stmt = function
+          Expr(e1) -> string_of_expr (Some e1) ^ ";"
+        | Return(None) -> "return;"
+        | Return(e1) -> "return " ^ string_of_expr e1 ^ ";"
+        | Break -> "break;"
+        | Block(stmts) ->
+                "{\n" ^ String.concat "\n" (List.map string_of_stmt stmts) ^ "\n}\n"
+        | If(e1, s1, Block([])) -> "if (" ^ string_of_expr (Some e1) ^ ")\n" ^
+                string_of_stmt s1
+        | If(e1, s1, s2)        -> "if (" ^ string_of_expr (Some e1) ^ ")\n" ^
+                string_of_stmt s1 ^ "else\n" ^ string_of_stmt s2
+        | For(typ, id1, id2, s1) -> "for (" ^ string_of_typ typ ^ id1 ^ " : " ^
+                id2 ^ ")" ^ string_of_stmt s1
+        | While(e1, s1) -> "while (" ^ string_of_expr (Some e1) ^ ") " ^ string_of_stmt s1
+        | Map(a1, f1) -> "map(" ^ a1 ^ ", " ^ f1 ^ ");\n"
+        | Filter(a1, f1) -> "filter(" ^ a1 ^ ", " ^ f1 ^ ");\n"
+
 
 let string_of_vdecl (t, id, assn) =
         string_of_typ t ^ " " ^ id ^ (string_of_opt_assn assn) ^ ";\n"
 
 let string_of_fdecl fdecl =
-        "func " ^ string_of_typ fdecl.typ ^ " " ^ fdecl.fname ^ " = " ^ "(" ^ 
+        "func " ^ string_of_typ fdecl.typ ^ " " ^ fdecl.fname ^ " = " ^ "(" ^
         String.concat ", " (List.map string_of_formal fdecl.formals) ^
         ") => {\n" ^ String.concat "" (List.map string_of_vdecl fdecl.locals) ^
-        "\n" ^ String.concat "" (List.map string_of_stmt fdecl.body) ^ "}\n"
+        "\n" ^ String.concat "\n" (List.map string_of_stmt fdecl.body) ^ "\n}\n"
 
 let string_of_program (vars, funcs) =
         String.concat "" (List.map string_of_vdecl vars) ^ "\n" ^

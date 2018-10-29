@@ -95,8 +95,8 @@ stmt:
   | LBRACE stmt_list RBRACE { Block(List.rev $2) }
   | IF LPAREN expr RPAREN stmt %prec NOELSE { If($3, $5, Block([])) }
   | IF LPAREN expr RPAREN stmt ELSE stmt    { If($3, $5, $7) }
-  | FOR LPAREN ID COLON ID RPAREN stmt
-        { For($3, $5, $7) }
+  | FOR LPAREN typ ID COLON ID RPAREN stmt
+        { For($3, $4, $6, $8) }
   | MAP LPAREN ID COMMA ID RPAREN { Map($3, $5)  }
   | FILTER LPAREN ID COMMA ID RPAREN { Filter($3, $5)  }
   | WHILE LPAREN expr RPAREN stmt { While($3, $5) }
@@ -124,7 +124,7 @@ expr:
   | NOT expr         { Unop(Not, $2) }
   | ID ASSN expr   { Assign($1, $3) }
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
-/*  | LPAREN expr RPAREN { $2 } */
+  | LPAREN expr RPAREN { $2 } /* this is for grouped expressions */
   | ID LBRACKET expr RBRACKET { Retrieve($1, $3)}
   | ID LBRACKET expr RBRACKET ASSN expr {Array_Assign($1, $3, $6)}
 
