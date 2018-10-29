@@ -1,2 +1,0 @@
-array arr[int, string];
-arr[0,"value0"].del;
