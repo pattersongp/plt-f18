@@ -1,0 +1,9 @@
+func foo = (array a) => {
+
+map(a, fooo);
+
+}
+
+func fooo = (int b) => {
+b = b + 1;
+}

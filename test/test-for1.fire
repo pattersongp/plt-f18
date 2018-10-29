@@ -1,0 +1,7 @@
+func foo = (array a) => {
+
+for (int y : a){
+
+}
+
+}

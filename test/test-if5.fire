@@ -1,0 +1,10 @@
+func bool foo = (int x, int y) => {
+
+if (x > 10)
+{
+if (y > 10)
+{
+return true;
+}
+}
+}
