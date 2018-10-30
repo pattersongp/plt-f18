@@ -5,7 +5,11 @@ type op = Plus | Minus | Times | Divide | Eq | Neq | Lt | Lteq | Gt | Gteq |
 
 type uop = Neg | Not
 
-type typ = Int | Bool | Void | String | Array | Function | File | Regx
+type mode = Read | Write | WriteRead
+
+type typ =
+          Int | Bool | Void | String | ArrayDecl of typ * typ
+        | Function | File of mode | Regx
 
 type expr =
     Literal of int
@@ -30,6 +34,7 @@ type stmt =
   | For of typ * string * string * stmt
   | Map of string * string
   | Filter of string * string
+  | Open of string * string
   | Break
 
 type func_decl = {
@@ -46,15 +51,21 @@ let string_of_uop = function
           Neg -> "-"
         | Not -> "!"
 
-let string_of_typ = function
+let string_of_mode = function
+          Read -> "r"
+        | Write -> "w"
+        | WriteRead -> "wr"
+
+let rec string_of_typ = function
           Int -> "int"
         | String -> "str"
         | Bool -> "bool"
-        | Array -> "array"
+        | ArrayDecl(t1, t2) -> "array" ^ "[" ^ string_of_typ t1 ^ ", " ^
+                string_of_typ t2 ^ "]"
         | Void -> "void"
         | Function -> "func"
         | Regx -> "regx"
-        | File -> "file"
+        | File(mode) -> "file[" ^ string_of_mode mode ^ "]"
 
 let string_of_op = function
           Plus  -> "+"
@@ -112,7 +123,7 @@ let rec string_of_stmt = function
                 string_of_stmt s1
         | Map(a1, f1) -> "map(" ^ a1 ^ ", " ^ f1 ^ ");\n"
         | Filter(a1, f1) -> "filter(" ^ a1 ^ ", " ^ f1 ^ ");\n"
-
+        | Open(filename, delim) -> "open(" ^ filename ^ ", " ^ delim ^ ");\n"
 
 let string_of_vdecl (t, id, assn) =
         string_of_typ t ^ " " ^ id ^ (string_of_opt_assn assn) ^ ";\n"
