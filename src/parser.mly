@@ -78,8 +78,8 @@ vdecl:
 assign_opt:
         /*nothing*/ { None }
         | ASSN expr { Some $2 }
-      /*| LBRACKET typ COMMA typ RBRACKET { ($2, $4) }
-        | LPAREN expr COMMA expr RPAREN   { ($2, $4) }
+        /*| LPAREN expr COMMA expr RPAREN   { ($2, $4) }
+        | typ ID ASSN LBRACKET typ COMMA typ RBRACKET { ArrayDecl($2, $4) }
         | LPAREN expr COMMA expr COMMA expr RPAREN   { ($2, $4, $6) }*/
 
 stmt_list:
@@ -133,6 +133,6 @@ actuals_opt:
   | actuals_list  { List.rev $1 }
 
 actuals_list:
-    expr                    { [$1] }
-  | actuals_list COMMA expr { $3 :: $1 }
+    expr                    { [Some $1] }
+  | actuals_list COMMA expr { Some $3 :: $1 }
 
