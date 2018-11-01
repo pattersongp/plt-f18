@@ -4,17 +4,19 @@
 open Ast
 %}
 
-%token SEMI LPAREN RPAREN LBRACE RBRACE COMMA    /* Grouping */
-%token PLUS MINUS TIMES DIVIDE ASSN         /* Arithmetic Operators */
+%token SEMI LPAREN RPAREN LBRACE RBRACE COMMA                      /* Grouping */
+%token PLUS MINUS TIMES DIVIDE ASSN                    /* Arithmetic Operators */
 %token EQ NEQ LT LTEQ GT GTEQ REQ OR AND NOT TRUE FALSE   /* Logical Operators */
 %token IF ELSE WHILE RETURN BREAK FOR IN
 %token LBRACKET RBRACKET CONCAT COLON
 %token REGX INT FUNCTION STRING VOID ARRAY BOOL FILE
-%token FATARROW FILTER MAP PRINT
+%token FATARROW FILTER MAP PRINT OPEN
+%token READ WRITE WRITEREAD
 
 %token <int> INT_LIT
 %token <string> ID
 %token <string> STRING_LIT
+
 %token EOF
 
 %nonassoc NOELSE
@@ -59,14 +61,17 @@ formal_list:
   | formal_list COMMA typ ID { ($3,$4, None) :: $1 }
 
 typ:
+          concrete_typ { $1 }
+        | ARRAY LBRACKET concrete_typ COMMA typ RBRACKET { ArrayDecl($3, $5) }
+
+concrete_typ:
           INT       { Int    }
         | STRING    { String }
         | BOOL      { Bool }
-        | ARRAY     { Array }
         | VOID      { Void   }
         | FUNCTION  { Function   }
         | REGX      { Regx }
-        | FILE      { File }
+        | FILE LBRACKET mode RBRACKET { File($3) }
 
 vdecl_list:
     /* nothing */    { [] }
@@ -78,28 +83,30 @@ vdecl:
 assign_opt:
         /*nothing*/ { None }
         | ASSN expr { Some $2 }
-        /*| LPAREN expr COMMA expr RPAREN   { ($2, $4) }
-        | typ ID ASSN LBRACKET typ COMMA typ RBRACKET { ArrayDecl($2, $4) }
-        | LPAREN expr COMMA expr COMMA expr RPAREN   { ($2, $4, $6) }*/
 
 stmt_list:
     /* nothing */  { [] }
   | stmt_list stmt { $2 :: $1 }
 
-  /* | vdecl SEMI { $1 } */
 stmt:
     expr SEMI { Expr $1 }
   | RETURN SEMI { Return None }
   | BREAK SEMI { Break }
+  | OPEN LPAREN STRING_LIT COMMA STRING_LIT RPAREN { Open($3, $5) }
   | RETURN expr SEMI { Return (Some $2) }
   | LBRACE stmt_list RBRACE { Block(List.rev $2) }
   | IF LPAREN expr RPAREN stmt %prec NOELSE { If($3, $5, Block([])) }
   | IF LPAREN expr RPAREN stmt ELSE stmt    { If($3, $5, $7) }
   | FOR LPAREN typ ID COLON ID RPAREN stmt
         { For($3, $4, $6, $8) }
-  | MAP LPAREN ID COMMA ID RPAREN { Map($3, $5)  }
-  | FILTER LPAREN ID COMMA ID RPAREN { Filter($3, $5)  }
+  | MAP LPAREN ID COMMA ID RPAREN SEMI { Map($3, $5)  }
+  | FILTER LPAREN ID COMMA ID RPAREN SEMI { Filter($3, $5)  }
   | WHILE LPAREN expr RPAREN stmt { While($3, $5) }
+
+mode:
+          READ { Read }
+        | WRITE { Write }
+        | WRITEREAD { WriteRead }
 
 expr:
     INT_LIT          { Literal($1) }
