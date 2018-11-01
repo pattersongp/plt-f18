@@ -1,2 +1,3 @@
+open ast
 
-let check program = "hello world"
+let check program = print_string "Hello World"
