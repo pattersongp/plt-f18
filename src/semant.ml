@@ -2,6 +2,7 @@ open Ast
 
 let check (vdec,fdec) = 
 
+  (* note, bind is a triple of typ, string and expr *)
   let check_binds (kind : string) (binds : bind list) =
     List.iter (function
 	(Void, b, c) -> raise (Failure ("illegal void " ^ kind ^ " " ^ b))
