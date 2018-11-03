@@ -33,18 +33,40 @@ let translate (globals, functions) =
      generate actual code *)
   and the_module = L.create_module context "Fire" in
 
+  let pointer_t  = L.pointer_type i8_t in
+
   (* Convert Fire types to LLVM types *)
   let ltype_of_typ = function
       A.Int   -> i32_t
     | A.Bool  -> i1_t
     | A.Void  -> void_t
+(*     | A.String -> pointer_t *)
+  in
+
+  let rec global_expr = function
+      A.Literal i -> i
+    | A.BoolLit b -> (if b then 1 else 0)
+(*     | A.StringLit s -> s *)
   in
 
   (* Declare each global variable; remember its value in a map *)
   let global_vars : L.llvalue StringMap.t =
-    let global_var m (typ, n, _) =
+    let global_var m (typ, n, v) =
       let init = match typ with
-        | _ -> L.const_int (ltype_of_typ typ) 0
+        | A.Int -> (let v' = match v with
+                None -> 0
+                | Some v -> global_expr v
+                in L.const_int (ltype_of_typ typ) v')
+        | A.Bool -> let v' = match v with
+                None -> 0
+                | Some v -> global_expr v
+                in L.const_int (ltype_of_typ typ) v'
+(*
+        | A.StringLit -> let v' = match v with
+                None -> ""
+                | Some v -> global_expr v
+                in L.const_pointer_null (ltype_of_typ typ) v'
+*)
       in StringMap.add n (L.define_global n init the_module) m in
     List.fold_left global_var StringMap.empty globals in  the_module
 
