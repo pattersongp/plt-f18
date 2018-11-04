@@ -1,0 +1,26 @@
+### Starting build.
+# Target: fire.ml.depends, tags: { package(llvm), package(llvm.analysis), extension:ml, file:fire.ml, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -package llvm.analysis -package llvm -modules fire.ml > fire.ml.depends
+# Target: ast.ml.depends, tags: { package(llvm), package(llvm.analysis), extension:ml, file:ast.ml, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -package llvm.analysis -package llvm -modules ast.ml > ast.ml.depends
+# Target: codegen.ml.depends, tags: { package(llvm), package(llvm.analysis), extension:ml, file:codegen.ml, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -package llvm.analysis -package llvm -modules codegen.ml > codegen.ml.depends
+# Target: ast.cmo, tags: { package(llvm), package(llvm.analysis), byte, compile, extension:cmo, extension:ml, file:ast.cmo, file:ast.ml, implem, ocaml, quiet }
+ocamlfind ocamlc -c -w +a-4 -package llvm.analysis -package llvm -o ast.cmo ast.ml
+# Target: parser.mly, tags: { package(llvm), package(llvm.analysis), extension:mly, file:parser.mly, infer, ocaml, ocamlyacc, parser, quiet }
+ocamlyacc parser.mly
+# Target: parser.mli.depends, tags: { package(llvm), package(llvm.analysis), extension:mli, file:parser.mli, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -package llvm.analysis -package llvm -modules parser.mli > parser.mli.depends
+# Target: scanner.mll, tags: { package(llvm), package(llvm.analysis), extension:mll, file:scanner.mll, lexer, ocaml, ocamllex, quiet }
+ocamllex.opt -q scanner.mll
+# Target: scanner.ml.depends, tags: { package(llvm), package(llvm.analysis), extension:ml, file:scanner.ml, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -package llvm.analysis -package llvm -modules scanner.ml > scanner.ml.depends
+# Target: parser.cmi, tags: { package(llvm), package(llvm.analysis), byte, compile, extension:mli, file:parser.mli, interf, ocaml, quiet }
+ocamlfind ocamlc -c -w +a-4 -package llvm.analysis -package llvm -o parser.cmi parser.mli
+# Target: semant.ml.depends, tags: { package(llvm), package(llvm.analysis), extension:ml, file:semant.ml, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -package llvm.analysis -package llvm -modules semant.ml > semant.ml.depends
++ ocamlfind ocamldep -package llvm.analysis -package llvm -modules semant.ml > semant.ml.depends
+File "semant.ml", line 53, characters 0-0:
+Error: Syntax error
+Command exited with code 2.
+# Compilation unsuccessful.
