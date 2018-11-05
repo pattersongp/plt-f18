@@ -23,12 +23,13 @@ check_binds "variable declarations" vdec;
 (* begin checking functions *)
 
 (* function declaration for built-in FIRE functions - print, map, filter *)
+(* re-write for FIRE bind type? *)
 let built_in_func_decls = 
-    let add_bind map (name, typ) = StringMap.add name {
+    let add_bind map (name, typ, expr) = StringMap.add name {
         (* object between brackets is func_decl object? *)
         typ = Void; (* all built in functions are of type void *)
         fname = name;
-        formals = [(typ, "x")];
+        formals = [(typ, "x", expr)];
         locals = []; (* empty list *)
         body = []; (* empty list *)
     } map 
@@ -43,10 +44,12 @@ let add_func map fd=
     and make_err er = raise (Failure er)
     and n = fd.fname (* Name of the function *)
     in match fd with (* No duplicate functions or redefinitions of built-ins *)
-         _ when StringMap.mem n built_in_decls -> make_err built_in_err
+         _ when StringMap.mem n built_in_func_decls -> make_err built_in_err
        | _ when StringMap.mem n map -> make_err dup_err  
        | _ ->  StringMap.add n fd map 
   in
 
   (* collect all function names into symbol table *)
-let function_decls = List.fold_left add_func built_in_decls functions
+let function_decls = List.fold_left add_func built_in_func_decls fdec
+
+in print_string function_decls;

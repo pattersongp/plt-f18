@@ -19,8 +19,26 @@ ocamlfind ocamldep -package llvm.analysis -package llvm -modules scanner.ml > sc
 ocamlfind ocamlc -c -w +a-4 -package llvm.analysis -package llvm -o parser.cmi parser.mli
 # Target: semant.ml.depends, tags: { package(llvm), package(llvm.analysis), extension:ml, file:semant.ml, ocaml, ocamldep, quiet }
 ocamlfind ocamldep -package llvm.analysis -package llvm -modules semant.ml > semant.ml.depends
-+ ocamlfind ocamldep -package llvm.analysis -package llvm -modules semant.ml > semant.ml.depends
-File "semant.ml", line 53, characters 0-0:
-Error: Syntax error
+# Target: codegen.cmo, tags: { package(llvm), package(llvm.analysis), byte, compile, extension:cmo, extension:ml, file:codegen.cmo, file:codegen.ml, implem, ocaml, quiet }
+ocamlfind ocamlc -c -w +a-4 -package llvm.analysis -package llvm -o codegen.cmo codegen.ml
++ ocamlfind ocamlc -c -w +a-4 -package llvm.analysis -package llvm -o codegen.cmo codegen.ml
+File "codegen.ml", line 37, characters 21-98:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a case that is not matched:
+(String|Function|Regx|ArrayDecl (_, _)|File _)
+File "codegen.ml", line 24, characters 24-33:
+Warning 27: unused variable functions.
+File "codegen.ml", line 29, characters 6-10:
+Warning 26: unused variable i8_t.
+File "codegen.ml", line 44, characters 6-17:
+Warning 26: unused variable global_vars.
+# Target: scanner.cmo, tags: { package(llvm), package(llvm.analysis), byte, compile, extension:cmo, extension:ml, file:scanner.cmo, file:scanner.ml, implem, ocaml, quiet }
+ocamlfind ocamlc -c -w +a-4 -package llvm.analysis -package llvm -o scanner.cmo scanner.ml
+# Target: semant.cmo, tags: { package(llvm), package(llvm.analysis), byte, compile, extension:cmo, extension:ml, file:semant.cmo, file:semant.ml, implem, ocaml, quiet }
+ocamlfind ocamlc -c -w +a-4 -package llvm.analysis -package llvm -o semant.cmo semant.ml
++ ocamlfind ocamlc -c -w +a-4 -package llvm.analysis -package llvm -o semant.cmo semant.ml
+File "semant.ml", line 37, characters 48-65:
+Error: This expression has type 'a * 'b
+       but an expression was expected of type StringMap.key = string
 Command exited with code 2.
 # Compilation unsuccessful.
