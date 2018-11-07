@@ -62,7 +62,7 @@ formal_list:
 
 typ:
           concrete_typ { $1 }
-        | ARRAY LBRACKET concrete_typ COMMA typ RBRACKET { ArrayDecl($3, $5) }
+        | ARRAY LBRACKET concrete_typ COMMA typ RBRACKET { Array($3, $5) }
 
 concrete_typ:
           INT       { Int    }
