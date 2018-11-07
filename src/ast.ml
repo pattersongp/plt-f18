@@ -8,7 +8,7 @@ type uop = Neg | Not
 type mode = Read | Write | WriteRead
 
 type typ =
-          Int | Bool | Void | String | ArrayDecl of typ * typ
+          Int | Bool | Void | String | Array of typ * typ
         | Function | File of mode | Regx
 
 type expr =
@@ -60,7 +60,7 @@ let rec string_of_typ = function
           Int -> "int"
         | String -> "str"
         | Bool -> "bool"
-        | ArrayDecl(t1, t2) -> "array" ^ "[" ^ string_of_typ t1 ^ ", " ^
+        | Array(t1, t2) -> "array" ^ "[" ^ string_of_typ t1 ^ ", " ^
                 string_of_typ t2 ^ "]"
         | Void -> "void"
         | Function -> "func"
