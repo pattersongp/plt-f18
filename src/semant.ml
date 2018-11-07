@@ -29,12 +29,12 @@ let built_in_func_decls =
         (* object between brackets is func_decl object? *)
         typ = Void; (* all built in functions are of type void *)
         fname = name;
-        formals = [(typ, "x", 0)]; 
+        formals = [(typ, "x")]; 
         locals = []; (* empty list *)
         body = []; (* empty list *)
     } map 
     (* REVISE following line !!!*)
-    in List.fold_left add_bind StringMap.empty [("print", String, 0); ("map", Void, 0); ("filter", Void, 0)]
+    in List.fold_left add_bind StringMap.empty [("print", String); ("map", (Function, Array)); ("filter", (Function, Array))]
 in
 
 (* build up symbol table - global scope ONLY for now *)
