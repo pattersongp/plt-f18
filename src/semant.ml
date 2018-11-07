@@ -25,7 +25,7 @@ check_binds "variable declarations" vdec;
 (* function declaration for built-in FIRE functions - print, map, filter *)
 (* re-write for FIRE bind type? *)
 let built_in_func_decls = 
-    let add_bind map (name, typ, expr) = StringMap.add name {
+    let add_bind map (name, typ) = StringMap.add name {
         (* object between brackets is func_decl object? *)
         typ = Void; (* all built in functions are of type void *)
         fname = name;
