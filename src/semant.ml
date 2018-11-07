@@ -34,7 +34,7 @@ let built_in_func_decls =
         body = []; (* empty list *)
     } map 
     (* REVISE following line !!!*)
-    in List.fold_left add_bind StringMap.empty [("print", String); ("map", Void); ("filter", Void)]
+    in List.fold_left add_bind StringMap.empty [("print", String); ("map", String); ("filter", String)]
 in
 
 (* build up symbol table - global scope ONLY for now *)
@@ -52,5 +52,16 @@ let add_func map fd=
   (* collect all function names into symbol table *)
 let function_decls = List.fold_left add_func built_in_func_decls fdec
 
+in
+
+  (* Return a function from our symbol table *)
+let find_func s = 
+  try StringMap.find s function_decls
+  with Not_found -> raise (Failure ("unrecognized function " ^ s))
+in
+
+let _ = find_func "main" in (* Ensure "main" is defined *)
+
 (* dud statement to resolve let...in express *)
-in print_string "It worked"; 
+print_string "It worked"; 
+
