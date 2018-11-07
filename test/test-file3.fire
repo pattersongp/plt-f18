@@ -1,0 +1,5 @@
+file["report.csv",","] f;
+
+func void foo = () => {
+	f.open(rw);
+}
