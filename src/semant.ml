@@ -29,7 +29,7 @@ let built_in_func_decls =
         (* object between brackets is func_decl object? *)
         typ = Void; (* all built in functions are of type void *)
         fname = name;
-        formals = [(typ, "x", 0)]; 
+        formals = [(typ, "x",0)]; 
         locals = []; (* empty list *)
         body = []; (* empty list *)
     } map 
