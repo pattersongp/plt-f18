@@ -29,12 +29,12 @@ let built_in_func_decls =
         (* object between brackets is func_decl object? *)
         typ = Void; (* all built in functions are of type void *)
         fname = name;
-        formals = [(typ, "x", expr)];
+        formals = [(typ, "x", 0)]; 
         locals = []; (* empty list *)
         body = []; (* empty list *)
     } map 
     (* REVISE following line !!!*)
-    in List.fold_left add_bind StringMap.empty [("print", String), ("map", Void), ("filter", Void)]
+    in List.fold_left add_bind StringMap.empty [("print", String, 0); ("map", Void, 0); ("filter", Void, 0)]
 in
 
 (* build up symbol table - global scope ONLY for now *)
@@ -52,4 +52,5 @@ let add_func map fd=
   (* collect all function names into symbol table *)
 let function_decls = List.fold_left add_func built_in_func_decls fdec
 
+(* dud statement to resolve let...in express *)
 in print_string function_decls;
