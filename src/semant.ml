@@ -25,16 +25,16 @@ check_binds "variable declarations" vdec;
 (* function declaration for built-in FIRE functions - print, map, filter *)
 (* re-write for FIRE bind type? *)
 let built_in_func_decls = 
-    let add_bind map (name, typ, expr) = StringMap.add name {
+    let add_bind map (name, typ) = StringMap.add name {
         (* object between brackets is func_decl object? *)
         typ = Void; (* all built in functions are of type void *)
         fname = name;
-        formals = [(typ, "x", expr)];
+        formals = [(typ, "x")];
         locals = []; (* empty list *)
         body = []; (* empty list *)
     } map 
     (* REVISE following line !!!*)
-    in List.fold_left add_bind StringMap.empty [("print", String), ("map", Void), ("filter", Void)]
+    in List.fold_left add_bind StringMap.empty [("print", String), ("map", (Function, Array)), ("filter", (Function, Array))]
 in
 
 (* build up symbol table - global scope ONLY for now *)
