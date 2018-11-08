@@ -1,1 +1,1 @@
-func testfunc = (int a) => { print(a); };
+func testfunc = (int a) => { print(a); }
