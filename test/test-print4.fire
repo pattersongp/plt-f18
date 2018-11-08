@@ -1,3 +1,1 @@
-func void foo = () => {
-print(1);
-}
+func void main = () => { print(); } /*print array*/

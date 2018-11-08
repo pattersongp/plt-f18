@@ -1,4 +1,0 @@
-func foo = () => {
-int a = 10;
-map(a, foo);
-}
