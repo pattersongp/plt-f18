@@ -45,7 +45,7 @@ decls:
  | decls fdecl { fst $1, ($2 :: snd $1) }
 
 fdecl:
-   FUNCTION typ ID ASSN LPAREN formals_opt RPAREN FATARROW LBRACE vdecl_list stmt_list RBRACE SEMI
+   FUNCTION typ ID ASSN LPAREN formals_opt RPAREN FATARROW LBRACE vdecl_list stmt_list RBRACE
      { { typ = $2;
 	 fname = $3;
 	 formals = $6;
