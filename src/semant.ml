@@ -62,6 +62,18 @@ in
 
 let _ = find_func "main" in (* Ensure "main" is defined *)
 
+(* code that vets functions below *)
+
+let check_function func =
+  (* Make sure no formals or locals are void or duplicates *)
+  check_binds "formal" func.formals;
+  check_binds "local" func.locals; 
+
+in (* placeholder in statement *)
+
 (* dud statement to resolve let...in express *)
-print_string "It worked"; 
+
+List.map check_function fdec;
+
+print_string "It worked \n"; 
 
