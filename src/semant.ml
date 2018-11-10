@@ -1,4 +1,5 @@
 open Ast
+open Sast
 
 module StringMap = Map.Make(String)
 
@@ -69,14 +70,24 @@ let check_function func =
   check_binds "formal" func.formals;
   check_binds "local" func.locals; 
 
+ (* if expressions are symmetric, it is invalid; e.g. int x = int x; *)
+  let check_assign lvaluet rvaluet err =
+    if lvaluet = rvaluet then lvaluet else raise (Failure err)
+  in  
+
+  (* build local symbol table - '@' in OCaml represents list concat *)
+  let symbols = List.fold_left (fun m (typ, name) -> StringMap.add name typ m)
+                StringMap.empty (vdec @ func.formals @ func.locals )
   in 
 
-  (* next line will eventually become final line of semant *)
-  List.map check_function fdec;
- (* if expressions are symmetric, it is invalid; e.g. int x = int x; *)
- let check_assign lvaluet rvaluet err =
-       if lvaluet = rvaluet then lvaluet else raise (Failure err)
-    in   
+  let type_of_identifier s =
+    try StringMap.find s symbols
+    with Not_found -> raise (Failure ("undeclared identifier " ^ s))
+  in
+
+(* next line will eventually become final line of semant *)
+List.map check_function fdec;
+
 
 (* dud statement to resolve let...in express *)
 print_string "It worked \n"; 
