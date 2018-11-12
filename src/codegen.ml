@@ -76,7 +76,7 @@ let translate (globals, functions) =
 
   (* ---------------------- External Functions ---------------------- *)
   let print_t : L.lltype =
-    L.var_arg_function_type i32_t [| L.pointer_type i8_t |] in
+    L.var_arg_function_type i32_t [| i32_t |] in (* L.pointer_type i8_t is what we really want*)
   let print_func : L.llvalue =
     L.declare_function "print" print_t the_module in
 
@@ -121,6 +121,8 @@ let translate (globals, functions) =
         A.Literal i           -> L.const_int i32_t i
       | A.StringLit s         -> L.build_global_stringptr (Scanf.unescaped s) "str" builder
       | A.BoolLit b           -> L.const_int i1_t (if b then 1 else 0)
+      | Call("print", [e]) ->
+        L.build_call print_func [| (expr builder (O.get(e))) |] "print" builder
     in
 
     let rec elevate builder e = match e with
@@ -139,6 +141,7 @@ let translate (globals, functions) =
  *)
     let rec stmt builder = function
       Block sl -> List.fold_left stmt builder sl
+      | Expr e -> ignore(expr builder e); builder
       | Return e -> ignore(match fdecl.typ with
                               (* Special "return nothing" instr *)
                               A.Void -> L.build_ret_void builder

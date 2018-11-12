@@ -32,7 +32,6 @@ rule token = parse
 | "true"   { TRUE }
 | "false"  { FALSE }
 | "if"     { IF }
-| "print"  { PRINT }
 | "else"   { ELSE }
 | "for"    { FOR }
 | "map"    { MAP }
