@@ -84,6 +84,29 @@ let check_function func =
     try StringMap.find s symbols
     with Not_found -> raise (Failure ("undeclared identifier " ^ s))
   in
+  (* if expression is type none, provide default values for basic types,
+   * raise error for complex types *)
+  let elevate lt = function
+      None as e -> if string_of_typ lt = "int" then expr Literal 0
+                    else if string_of_typ lt = "str" then expr StringLit ""
+                    else if string_of_typ lt = "bool" then expr BoolLit false
+                    else raise (Failure ("must provide rvalue to complex types"))
+    | Some as e -> (expr O.get(e))
+  in
+
+  let rec expr = function
+      Literal l -> (Int, SLiteral l)
+    | BoolLit l -> (Bool, SBoolLit l)
+    | StringLit l -> (String, SStringLit l)
+    | Id s -> (type_of_identifier s, SId s)
+    | Assign(var, e) as ex -> 
+        let lt = type_of_identifier var
+        and (rt, e') = elevate lt e
+        let err = "illegal assignment " ^ string_of_typ lt ^ " = " ^ 
+          string_of_typ rt ^ " in " ^ string_of_expr ex
+        in (check_assign lt rt err, SAssign(var, (rt, e')))
+    | Unop
+ 
 
 (* next line will eventually become final line of semant *)
 List.map check_function fdec;
