@@ -1,3 +1,2 @@
 int i = 10;
-func int testfunc = (int a) => { return a; };
-testfunc(i);
+func int main = () => { return i; }

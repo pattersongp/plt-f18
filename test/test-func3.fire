@@ -1,1 +1,1 @@
-func int testfunc = (int a) => { return 1; };
+func int main = (int a) => { return 1; }

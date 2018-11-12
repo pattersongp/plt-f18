@@ -1,9 +1,9 @@
-func foo = (array a) => {
+func void main = (array a) => {
 
-map(a, fooo);
+map(a, foo);
 
 }
 
-func fooo = (int b) => {
-
+func void foo = (int x) =>{
+		x = x + 4;
 }

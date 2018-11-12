@@ -1,1 +1,1 @@
-func testfunc = (int a) => { print(a); };
+func void main = (int a) => { print(a); }

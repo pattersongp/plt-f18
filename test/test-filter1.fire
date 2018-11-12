@@ -1,4 +1,3 @@
-func foo = (array a) => {
-int b = 4;
+func void main = (array a) => {
 filter(a, 4);
 }
