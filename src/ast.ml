@@ -18,9 +18,7 @@ type expr =
   | Id of string
   | Binop of expr * op * expr
   | Unop of uop * expr
-  | Assign of string * expr
   | Retrieve of string * expr
-  | Array_Assign of string * expr * expr
   | Call of string * expr option list
 
 type bind = typ * string * expr option
@@ -28,6 +26,8 @@ type bind = typ * string * expr option
 type stmt =
     Block of stmt list
   | Expr of expr
+  | Assign of string * expr
+  | Array_Assign of string * expr * expr
   | Return of expr option
   | If of expr * stmt * stmt
   | While of expr * stmt
