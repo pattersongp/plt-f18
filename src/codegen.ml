@@ -111,6 +111,7 @@ let translate (globals, functions) =
     (Array.to_list (L.params the_function)) in
     List.fold_left add_local formals fdecl.locals                               (* Change for Sast *)
   in
+
     (* Return the value for a variable or formal argument.
        Check local names first, then global names *)
     let lookup n = try StringMap.find n local_vars
@@ -121,8 +122,37 @@ let translate (globals, functions) =
         A.Literal i           -> L.const_int i32_t i
       | A.StringLit s         -> L.build_global_stringptr (Scanf.unescaped s) "str" builder
       | A.BoolLit b           -> L.const_int i1_t (if b then 1 else 0)
+      | A.Id s                -> L.build_load (lookup s) s builder
+      | A.Assign (s, e)       -> let e' = expr builder e in
+                                  ignore(L.build_store e' (lookup s) builder); e'
       | Call("print", [e]) ->
         L.build_call print_func [| (expr builder (O.get(e))) |] "print" builder
+      | Call (f, args) ->
+         let (fdef, fdecl) = StringMap.find f function_decls in
+         let llargs = List.rev (List.map (expr builder) (List.rev (List.map O.get args))) in (* Will remove map o.get *)
+         let result = (match fdecl.typ with
+                        A.Void -> ""
+                      | _ -> f ^ "_result") in
+         L.build_call fdef (Array.of_list llargs) result builder
+      | Binop (e1, op, e2) ->
+        let e1' = expr builder e1
+        and e2' = expr builder e2 in
+        (match op with
+          Plus      -> L.build_add
+        | Minus     -> L.build_sub
+        | Times     -> L.build_mul
+        | Divide    -> L.build_sdiv
+        | And       -> L.build_and
+        | Or        -> L.build_or
+        | Eq        -> L.build_icmp L.Icmp.Eq
+        | Neq       -> L.build_icmp L.Icmp.Ne
+        | Lt        -> L.build_icmp L.Icmp.Slt
+        | Lteq      -> L.build_icmp L.Icmp.Sle
+        | Gt        -> L.build_icmp L.Icmp.Sgt
+        | Gteq      -> L.build_icmp L.Icmp.Sge
+(*      | Req     -> L.build_icmp L.Icmp.Ne  REGEX COMPARE *)
+        ) e1' e2' "tmp" builder
+      | _ -> raise (Failure "FAILURE at expr builder")
     in
 
     let rec elevate builder e = match e with
@@ -148,11 +178,41 @@ let translate (globals, functions) =
                               (* Build return statement *)
                             | _ -> L.build_ret (elevate builder e) builder );
                      builder
+      | If (predicate, then_stmt, else_stmt) ->
+         let bool_val = expr builder predicate in
+         let merge_bb = L.append_block context "merge" the_function in
+         let build_br_merge = L.build_br merge_bb in (* partial function *)
+         let then_bb = L.append_block context "then" the_function in
+           add_terminal (stmt (L.builder_at_end context then_bb) then_stmt)
+             build_br_merge;
+         let else_bb = L.append_block context "else" the_function in
+           add_terminal (stmt (L.builder_at_end context else_bb) else_stmt)
+             build_br_merge;
+           ignore(L.build_cond_br bool_val then_bb else_bb builder);
+           L.builder_at_end context merge_bb
+      | While (predicate, body) ->
+        let pred_bb = L.append_block context "while" the_function in
+          ignore(L.build_br pred_bb builder);
+
+        let body_bb = L.append_block context "while_body" the_function in
+          add_terminal (stmt (L.builder_at_end context body_bb) body)
+            (L.build_br pred_bb);
+
+        let pred_builder = L.builder_at_end context pred_bb in
+        let bool_val = expr pred_builder predicate in
+
+        let merge_bb = L.append_block context "merge" the_function in
+          ignore(L.build_cond_br bool_val body_bb merge_bb pred_builder);
+          L.builder_at_end context merge_bb
+(*
+ * This is a special case because we have to get the array to iterate over it
+      | For (e1, e2, e3, body) -> stmt builder
+        ( Block [Expr e1 ; While (e2, Block [body ; Expr e3]) ] )
+*)
       | _ -> raise (Failure "FAILURE at stmt builder")
     in
     (* Build the code for each statement in the function *)
     let builder = stmt builder (Block fdecl.body) in                           (* Change for Sast *)
-
 
     (* Add a return if the last block falls off the end *)
     add_terminal builder (match fdecl.typ with

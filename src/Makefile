@@ -16,7 +16,7 @@ fire.native :
 clean :
 	ocamlbuild -clean
 	rm -rf testall.log *.diff fire scanner.ml parser.ml parser.mli fire.native
-	rm -rf arrlib
+	rm -rf arrlib printlib
 	rm -rf *.cmx *.cmi *.cmo *.cmx *.o *.s *.ll *.out *.exe
 
 # More detailed: build using ocamlc/ocamlopt + ocamlfind to locate LLVM
