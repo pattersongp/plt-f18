@@ -23,7 +23,8 @@ RUN ln -s /usr/bin/llc-6.0 /usr/bin/llc
 RUN opam init
 RUN opam install \
     llvm.6.0.0 \
-    ocamlfind
+    ocamlfind  \
+	batteries
 
 WORKDIR /root
 

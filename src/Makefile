@@ -7,7 +7,7 @@
 all : fire.native arrlib.o
 
 fire.native :
-	ocamlbuild -use-ocamlfind -pkgs llvm,llvm.analysis -cflags -w,+a-4 \
+	ocamlbuild -use-ocamlfind -pkgs llvm,llvm.analysis,batteries -cflags -w,+a-4 \
 		fire.native
 
 # "make clean" removes all generated files
