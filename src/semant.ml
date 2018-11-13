@@ -105,9 +105,34 @@ let check_function func =
         let err = "illegal assignment " ^ string_of_typ lt ^ " = " ^ 
           string_of_typ rt ^ " in " ^ string_of_expr ex
         in (check_assign lt rt err, SAssign(var, (rt, e')))
-    | Unop
+    | Unop(op, e) as ex -> 
+       let (t, e') = expr e in
+       let ty = match op with
+         Neg when t = Int -> t
+       | Not when t = Bool -> Bool
+       | _ -> raise (Failure ("illegal unary operator " ^ 
+                              string_of_uop op ^ string_of_typ t ^
+                              " in " ^ string_of_expr ex))
+       in (ty, SUnop(op, (t, e')))
+   | Binop(e1, op, e2) as e -> 
+       let (t1, e1') = expr e1 
+       and (t2, e2') = expr e2 in
+       (* All binary operators require operands of the same type *)
+       let same = t1 = t2 in
+       (* Determine expression type based on operator and operand types *)
+       let ty = match op with
+         Add | Sub | Mult | Div when same && t1 = Int   -> Int
+       | Equal | Neq            when same               -> Bool
+       | Less | Leq | Greater | Geq
+                  when same && (t1 = Int ) -> Bool
+       | And | Or when same && t1 = Bool -> Bool
+       | _ -> raise (
+ 	  Failure ("illegal binary operator " ^
+                    string_of_typ t1 ^ " " ^ string_of_op op ^ " " ^
+                    string_of_typ t2 ^ " in " ^ string_of_expr e))
+       in (ty, SBinop((t1, e1'), op, (t2, e2')))
+  
  
-
 (* next line will eventually become final line of semant *)
 List.map check_function fdec;
 
