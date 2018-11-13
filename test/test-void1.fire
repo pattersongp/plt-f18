@@ -1,1 +1,1 @@
-void c;
+void c; /*illegal*/

@@ -1,3 +1,2 @@
-func testfunc = () => { print("hello"); };
-func testfunc2 = (func f) => { f(); };
-testfunc2(testfunc);
+func void foo = () => { print(0); }
+func void main = () => { foo(); }

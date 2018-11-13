@@ -1,4 +1,4 @@
-func bool foo = (int x) => {
+func void main = (int x) => {
 
 if (x > 10)
 {

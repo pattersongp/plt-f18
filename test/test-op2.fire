@@ -1,4 +1,3 @@
 int i = 2-1;
 int j = 1
-func int testfunc = (int a) => { return a - a; };
-testfunc(j);
+func int main = () => { return 3 - 3; }
