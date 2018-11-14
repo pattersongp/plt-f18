@@ -4,7 +4,7 @@
 
 # Easiest way to build: using ocamlbuild, which in turn uses ocamlfind
 
-all : fire.native arrlib.o
+all : fire.native arrlib.o printlib.o
 
 fire.native :
 	ocamlbuild -use-ocamlfind -pkgs llvm,llvm.analysis,batteries -cflags -w,+a-4 \
@@ -16,7 +16,7 @@ fire.native :
 clean :
 	ocamlbuild -clean
 	rm -rf testall.log *.diff fire scanner.ml parser.ml parser.mli fire.native
-	rm -rf arrlib
+	rm -rf arrlib printlib
 	rm -rf *.cmx *.cmi *.cmo *.cmx *.o *.s *.ll *.out *.exe
 
 # More detailed: build using ocamlc/ocamlopt + ocamlfind to locate LLVM
@@ -40,6 +40,9 @@ parser.ml parser.mli : parser.mly
 
 %.cmx : %.ml
 	ocamlfind ocamlopt -c -package llvm $<
+
+printlib: printlib.c
+	cc -o printlib -DBUILD_TEST printlib.c
 
 arrlib: arrlib.c
 	cc -o arralib -DBUILD_TEST arrlib.c
