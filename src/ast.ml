@@ -35,6 +35,7 @@ type stmt =
   | Map of string * string
   | Filter of string * string
   | Open of string * string
+  | Vdecl of typ * string
   | Break
 
 type func_decl = {
