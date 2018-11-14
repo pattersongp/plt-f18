@@ -85,28 +85,25 @@ assign_opt:
         | ASSN expr { Some $2 }
 
 stmt_list:
-    /* nothing */  { [] }
+    stmt { [$1] } /* THE FIX IS HERE */
   | stmt_list stmt { $2 :: $1 }
 
 stmt:
     expr SEMI { Expr $1 }
   | RETURN SEMI { Return None }
-  | ID ASSN expr   { Assign($1, $3) }
-  | typ ID ASSN expr   { Vdecl($1, $2, $4) }
+  | ID ASSN expr SEMI { Assign($1, $3) }
   | BREAK SEMI { Break }
   | OPEN LPAREN STRING_LIT COMMA STRING_LIT RPAREN { Open($3, $5) }
   | RETURN expr SEMI { Return (Some $2) }
   | LBRACE stmt_list RBRACE { Block(List.rev $2) }
   | IF LPAREN expr RPAREN stmt %prec NOELSE { If($3, $5, Block([])) }
   | IF LPAREN expr RPAREN stmt ELSE stmt    { If($3, $5, $7) }
-  | FOR LPAREN typ ID COLON ID RPAREN stmt
-        { For($3, $4, $6, $8) }
+  | FOR LPAREN typ ID COLON ID RPAREN stmt { For($3, $4, $6, $8) }
   | MAP LPAREN ID COMMA ID RPAREN SEMI { Map($3, $5)  }
   | FILTER LPAREN ID COMMA ID RPAREN SEMI { Filter($3, $5)  }
   | WHILE LPAREN expr RPAREN stmt { While($3, $5) }
-  | ID LBRACKET expr RBRACKET ASSN expr {Array_Assign($1, $3, $6)}
-
-/*   | typ ID assign_opt SEMI { Vdecl($1, $2, $3) } */
+  | ID LBRACKET expr RBRACKET ASSN expr SEMI {Array_Assign($1, $3, $6)}
+  | typ ID ASSN expr SEMI { Vdecl($1, $2, $4) }
 
 mode:
           READ { Read }
@@ -134,9 +131,9 @@ expr:
   | expr OR     expr { Binop($1, Or,    $3) }
   | MINUS expr %prec NEG { Unop(Neg, $2) }
   | NOT expr         { Unop(Not, $2) }
-  | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
-  | LPAREN expr RPAREN { $2 } /* this is for grouped expressions */
   | ID LBRACKET expr RBRACKET { Retrieve($1, $3)}
+  | LPAREN expr RPAREN { $2 } /* this is for grouped expressions */
+  | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
 
 actuals_opt:
     /* nothing */ { [] }

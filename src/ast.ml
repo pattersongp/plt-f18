@@ -35,7 +35,7 @@ type stmt =
   | Map of string * string
   | Filter of string * string
   | Open of string * string
-  | Vdecl of typ * string * stmt
+  | Vdecl of typ * string * expr
   | Break
 
 type func_decl = {
@@ -125,7 +125,7 @@ let rec string_of_stmt = function
         | Map(a1, f1) -> "map(" ^ a1 ^ ", " ^ f1 ^ ");\n"
         | Filter(a1, f1) -> "filter(" ^ a1 ^ ", " ^ f1 ^ ");\n"
         | Open(filename, delim) -> "open(" ^ filename ^ ", " ^ delim ^ ");\n"
-        | Vdecl(t, id, e) -> string_of_typ t ^ " " ^ id ^ string_of_stmt e ^ ";\n"
+        | Vdecl(t, id, e) -> string_of_typ t ^ " " ^ id ^ " = " ^ string_of_expr (Some e) ^ ";"
 
 let string_of_vdecl (t, id, assn) =
         string_of_typ t ^ " " ^ id ^ (string_of_opt_assn assn) ^ ";\n"
