@@ -82,29 +82,17 @@ The scope of an identifier can be either global or local. A local identifier's s
 
 ## 4: Expressions
 
-#### 4.1 Primary Expressions
-
-Primary expressions in FIRE can either because accessing an array type or a function call. The primary expression is followed by an expression of either asignments in the case of a function call or an accessing of the datatypes in an array.
-
-1. `Primary Expression [ expression ]`
-2. `Primary Expression ( expression )`
-
-
-#### 4.2 Assignment Operator
+#### 4.1 Assignment Operator
 
 The assignment operators `=` returns the value of the expression that is evaluated on its right-hand side and stores it in the identifier on the left hand side. The scope of that identifier is described in [section 3](#Identifiers)
 
-#### 4.3 Function Calls
+#### 4.2 Function Calls
 
-Functions take in arguments by value except in the case of other functions which are passed by reference. Functions need to be assigned before being called but can be declared anonymously. An anonymous function's scope is within the function that it is declared.
+Functions take in arguments by value except in the case of other functions which are passed by reference. Functions need to be assigned before being called, but FIRE does not support prototyping. The scope of a function is the top level.
 
-#### 4.4 Logical Negation
+#### 4.3 Logical Negation
 
-TODO We're considering adding booleans, its easier to parse.
-
-Although FIRE does not directly support a boolean type, it equates `true` expressions to `1` and false expressions to `0`. As such, the logical negation operator `!` will convert the result of the logical expression on which it is applied to the inverse of what would normally be expected.
-
-All non-zero integers are evaluated as `true` where as `0` is false.
+FIRE provides `true` and `false` values. The logical negation operator `!` evalutates to the parity of the operand.
 
 #### 4.5 Logical AND Operator
 
@@ -134,9 +122,9 @@ The string concatenation `^` operator returns a new string that is the concatena
 
 #### 4.10 Bracket Operator
 
-The bracket operator `[]` can be used with either`string` or `array`.
+The bracket operator `[]` can operator on either `string` or `array`.
 
-When used on`array` it is supplied a key and returns the corresponding element, or `-1` if it does not exist.
+When used on`array` it is supplied a key and returns the corresponding element. Indexing a key using the bracket operator that does not exist raises a runtime exception.
 
 When used on `string` it functions in a similar manner to character arrays in C. The r-value in brackets is an integer and returns the letter of that index, however unlike C, FIRE does not support chars so it returns a string of length 1.
 
@@ -144,9 +132,16 @@ When used on `string` it functions in a similar manner to character arrays in C.
 str hello = "hello";
 str o = hello[4]; 
 ```
-#### 4.11 Slice operator 
 
-The slice operator `[x:y]` is used on a string and returns a substring.
+##### Bracket Op Typing
+
+The type enforcement for the bracket operator is as follows:
+
+```
+v':v = (a:array[k':k, v])[i:k]
+```
+
+where `i` and `k'` are type `k`, which evaluates to type `v`.
 
 #### 4.12 Map 
 
@@ -154,7 +149,20 @@ The map keyword allows a programmer to apply a function to every element of an a
 
 Example: `map(f,arr1);` 
 
-The map keyword does not mutate the values in the provided array; it instead returns a new array with results of every element of arr1 after they are passed to func f. 
+The `map` keyword applies the function to the array passed as the second argument and mutates that array.
+
+The return type of `map` is `void`.
+
+##### Typing
+
+The return type of the function `f` in `map(f,a);` must match the the type of the value in `array[v, v'] a`. Additionally, the only argument of `f` must be the type of the value in the array. A function used in `map` must take exactly 1 argument. It is also the case that the return type and only argument type of `f` are the same. A valid `function`, `map`, and `array` use might be:
+
+```
+func int f = (int i) => { ... }
+array[string, int] a;
+...
+map(f, a);
+```
 
 #### 4.13 Filter 
 
@@ -164,6 +172,17 @@ Example: `filter(f,arr1);`
 
 
 In the above example, arr1 contains an array of strings that are either `dog` or `cat`. func f returns true if the element is equal to `dog`. The above expression would return an array only consisting of every element in arr1 that contains `dog`.
+
+##### Typing
+
+The return type of the function `f` in `filter(f,a);` must be `bool`. Additionally, the only argument of `f` must be the type of the value in the array. A function used in `filter` must take exactly 1 argument. A valid `function`, `filter`, and `array` use might be:
+
+```
+func bool f = (int i) => { ... }
+array[string, int] a;
+...
+filter(f, a);
+```
 
 
 ## 5: Declarations  
