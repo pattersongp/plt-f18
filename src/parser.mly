@@ -62,7 +62,7 @@ formal_list:
 
 typ:
           concrete_typ { $1 }
-        | ARRAY LBRACKET concrete_typ COMMA typ RBRACKET { ArrayDecl($3, $5) }
+        | ARRAY LBRACKET concrete_typ COMMA typ RBRACKET { Array($3, $5) }
 
 concrete_typ:
           INT       { Int    }
@@ -91,6 +91,8 @@ stmt_list:
 stmt:
     expr SEMI { Expr $1 }
   | RETURN SEMI { Return None }
+  | ID ASSN expr   { Assign($1, $3) }
+  | typ ID ASSN expr   { Vdecl($1, $2, $4) }
   | BREAK SEMI { Break }
   | OPEN LPAREN STRING_LIT COMMA STRING_LIT RPAREN { Open($3, $5) }
   | RETURN expr SEMI { Return (Some $2) }
@@ -102,6 +104,9 @@ stmt:
   | MAP LPAREN ID COMMA ID RPAREN SEMI { Map($3, $5)  }
   | FILTER LPAREN ID COMMA ID RPAREN SEMI { Filter($3, $5)  }
   | WHILE LPAREN expr RPAREN stmt { While($3, $5) }
+  | ID LBRACKET expr RBRACKET ASSN expr {Array_Assign($1, $3, $6)}
+
+/*   | typ ID assign_opt SEMI { Vdecl($1, $2, $3) } */
 
 mode:
           READ { Read }
@@ -129,11 +134,9 @@ expr:
   | expr OR     expr { Binop($1, Or,    $3) }
   | MINUS expr %prec NEG { Unop(Neg, $2) }
   | NOT expr         { Unop(Not, $2) }
-  | ID ASSN expr   { Assign($1, $3) }
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
   | LPAREN expr RPAREN { $2 } /* this is for grouped expressions */
   | ID LBRACKET expr RBRACKET { Retrieve($1, $3)}
-  | ID LBRACKET expr RBRACKET ASSN expr {Array_Assign($1, $3, $6)}
 
 actuals_opt:
     /* nothing */ { [] }

@@ -35,7 +35,7 @@ type stmt =
   | Map of string * string
   | Filter of string * string
   | Open of string * string
-  | Vdecl of typ * string
+  | Vdecl of typ * string * stmt
   | Break
 
 type func_decl = {
@@ -91,14 +91,11 @@ let rec string_of_expr = function
         | Some BoolLit(true) -> "true"
         | Some BoolLit(false) -> "false"
         | Some StringLit(s) ->  s
-        | Some Assign(id, e1) ->  id ^ " = " ^ string_of_expr (Some e1)
         | Some Binop(e1, op, e2) -> string_of_expr (Some e1) ^ " " ^
                 string_of_op op ^ " " ^ string_of_expr (Some e2)
         | Some Retrieve(id, e1) -> id ^ "[" ^ string_of_expr (Some e1) ^ "]"
         | Some Call(id, act) -> id ^ "(" ^
                 String.concat ", "(List.map string_of_expr act) ^ ")"
-        | Some Array_Assign(id, e1, e2) -> id ^ "[" ^ string_of_expr (Some e1) ^
-                "]" ^ " = " ^ string_of_expr (Some e2)
 
 let string_of_opt_assn = function
         None -> ""
@@ -110,7 +107,10 @@ let string_of_formal (typ, id, _) =
 let rec string_of_stmt = function
           Expr(e1) -> string_of_expr (Some e1) ^ ";"
         | Return(None) -> "return;"
+        | Array_Assign(id, e1, e2) -> id ^ "[" ^ string_of_expr (Some e1) ^
+                "]" ^ " = " ^ string_of_expr (Some e2)
         | Return(e1) -> "return " ^ string_of_expr e1 ^ ";"
+        | Assign(id, e1) ->  id ^ " = " ^ string_of_expr (Some e1)
         | Break -> "break;"
         | Block(stmts) ->  "{\n" ^
                 String.concat "\n" (List.map string_of_stmt stmts) ^ "\n}\n"
@@ -125,6 +125,7 @@ let rec string_of_stmt = function
         | Map(a1, f1) -> "map(" ^ a1 ^ ", " ^ f1 ^ ");\n"
         | Filter(a1, f1) -> "filter(" ^ a1 ^ ", " ^ f1 ^ ");\n"
         | Open(filename, delim) -> "open(" ^ filename ^ ", " ^ delim ^ ");\n"
+        | Vdecl(t, id, e) -> string_of_typ t ^ " " ^ id ^ string_of_stmt e ^ ";\n"
 
 let string_of_vdecl (t, id, assn) =
         string_of_typ t ^ " " ^ id ^ (string_of_opt_assn assn) ^ ";\n"
