@@ -40,25 +40,23 @@ program:
   decls EOF { $1 }
 
 decls:
-   /* nothing */ { [], [] }
- | decls vdecl { ($2 :: fst $1), snd $1 }
- | decls fdecl { fst $1, ($2 :: snd $1) }
+   /* nothing */ { [] }
+ | decls fdecl { $2 :: $1 }
 
 fdecl:
-   FUNCTION typ ID ASSN LPAREN formals_opt RPAREN FATARROW LBRACE vdecl_list stmt_list RBRACE
+   FUNCTION typ ID ASSN LPAREN formals_opt RPAREN FATARROW LBRACE stmt_list RBRACE
      { { typ = $2;
 	 fname = $3;
 	 formals = $6;
-	 locals = List.rev $10;
-	 body = List.rev $11 } }
+	 body = List.rev $10 } }
 
 formals_opt:
     /* nothing */ { [] }
   | formal_list   { List.rev $1 }
 
 formal_list:
-    typ ID                   { [($1,$2, None)] }
-  | formal_list COMMA typ ID { ($3,$4, None) :: $1 }
+    typ ID                   { [($1,$2, Noexpr)] }
+  | formal_list COMMA typ ID { ($3,$4, Noexpr) :: $1 }
 
 typ:
           concrete_typ { $1 }
@@ -73,37 +71,28 @@ concrete_typ:
         | REGX      { Regx }
         | FILE LBRACKET mode RBRACKET { File($3) }
 
-vdecl_list:
-    /* nothing */    { [] }
-  | vdecl_list vdecl { $2 :: $1 }
-
-vdecl:
-         typ ID assign_opt SEMI { ($1, $2, $3) }
-
-assign_opt:
-        /*nothing*/ { None }
-        | ASSN expr { Some $2 }
-
 stmt_list:
-    stmt { [$1] } /* THE FIX IS HERE */
+    /* nothing */  { [] }
   | stmt_list stmt { $2 :: $1 }
 
 stmt:
     expr SEMI { Expr $1 }
-  | RETURN SEMI { Return None }
-  | ID ASSN expr SEMI { Assign($1, $3) }
+  | RETURN SEMI { Return Noexpr }
   | BREAK SEMI { Break }
   | OPEN LPAREN STRING_LIT COMMA STRING_LIT RPAREN { Open($3, $5) }
-  | RETURN expr SEMI { Return (Some $2) }
+  | RETURN expr SEMI { Return $2 }
   | LBRACE stmt_list RBRACE { Block(List.rev $2) }
   | IF LPAREN expr RPAREN stmt %prec NOELSE { If($3, $5, Block([])) }
   | IF LPAREN expr RPAREN stmt ELSE stmt    { If($3, $5, $7) }
-  | FOR LPAREN typ ID COLON ID RPAREN stmt { For($3, $4, $6, $8) }
+  | FOR LPAREN typ ID COLON ID RPAREN stmt
+        { For($3, $4, $6, $8) }
   | MAP LPAREN ID COMMA ID RPAREN SEMI { Map($3, $5)  }
   | FILTER LPAREN ID COMMA ID RPAREN SEMI { Filter($3, $5)  }
   | WHILE LPAREN expr RPAREN stmt { While($3, $5) }
-  | ID LBRACKET expr RBRACKET ASSN expr SEMI {Array_Assign($1, $3, $6)}
+  | ID ASSN expr SEMI { Assign($1, $3) }
   | typ ID ASSN expr SEMI { Vdecl($1, $2, $4) }
+  | typ ID SEMI { Vdecl($1, $2, Noexpr) }
+  | ID LBRACKET expr RBRACKET ASSN expr SEMI {Array_Assign($1, $3, $6)}
 
 mode:
           READ { Read }
@@ -131,15 +120,15 @@ expr:
   | expr OR     expr { Binop($1, Or,    $3) }
   | MINUS expr %prec NEG { Unop(Neg, $2) }
   | NOT expr         { Unop(Not, $2) }
-  | ID LBRACKET expr RBRACKET { Retrieve($1, $3)}
-  | LPAREN expr RPAREN { $2 } /* this is for grouped expressions */
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
+  | LPAREN expr RPAREN { $2 } /* this is for grouped expressions */
+  | ID LBRACKET expr RBRACKET { Retrieve($1, $3)}
 
 actuals_opt:
     /* nothing */ { [] }
   | actuals_list  { List.rev $1 }
 
 actuals_list:
-    expr                    { [Some $1] }
-  | actuals_list COMMA expr { Some $3 :: $1 }
+    expr                    { [$1] }
+  | actuals_list COMMA expr { $3 :: $1 }
 
