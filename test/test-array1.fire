@@ -1,4 +1,4 @@
-array arr[int, string];
-array arr[int, int];
-array arr[string, int];
-array arr[string, string];
+array[int, string] arr;
+array[int, int] arr;
+array[string, int] arr;
+array[string, string] arr;
