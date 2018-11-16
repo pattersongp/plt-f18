@@ -81,14 +81,13 @@ let check_function func =
     with Not_found -> raise (Failure ("undeclared identifier " ^ s))
   in
   
-
+(* need to implement Req for regular expression matching in binop *)
   let rec expr = function
       Literal l -> (Int, SLiteral l)
     | BoolLit l -> (Bool, SBoolLit l)
     | StringLit l -> (String, SStringLit l)
     | Id s -> (type_of_identifier s, SId s)
-(*PLACEHOLDER entire line*) in print_string "testing" in
-   (* | Unop(op, e) as ex -> 
+    | Unop(op, e) as ex -> 
        let (t, e') = expr e in
        let ty = match op with
          Neg when t = Int -> t
@@ -104,9 +103,9 @@ let check_function func =
        let same = t1 = t2 in
        (* Determine expression type based on operator and operand types *)
        let ty = match op with
-         Add | Sub | Mult | Div when same && t1 = Int   -> Int
-       | Equal | Neq            when same               -> Bool
-       | Less | Leq | Greater | Geq
+         Plus | Minus | Times | Divide when same && t1 = Int   -> Int
+       | Eq | Neq            when same               -> Bool
+       | Lt | Lteq | Gt | Gteq
                   when same && (t1 = Int ) -> Bool
        | And | Or when same && t1 = Bool -> Bool
        | _ -> raise (
@@ -115,7 +114,8 @@ let check_function func =
                     string_of_typ t2 ^ " in " ^ string_of_expr e))
        in (ty, SBinop((t1, e1'), op, (t2, e2')))
 
-
+(*PLACEHOLDER entire line*) in print_string "testing" in
+(*
         | Call(fname, args) as call -> 
             let fd = find_func fname in
             let param_length = List.length fd.formals in
