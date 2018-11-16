@@ -23,7 +23,7 @@ module StringMap = Map.Make(String)
 
 (* Code Generation from the SAST. Returns an LLVM module if successful,
    throws an exception if something is wrong. *)
-let translate (globals, functions) =
+let translate functions =
   let context    = L.global_context () in
   let the_module = L.create_module context "Fire" in
 
@@ -46,34 +46,6 @@ let translate (globals, functions) =
     | A.String -> string_t
   in
 
-(* need to revisit this *)
-  let rec global_expr = function
-      A.Literal i -> i
-    | A.BoolLit b -> (if b then 1 else 0)
-(*     | A.StringLit s -> s *)
-  in
-
-  (* Declare each global variable; remember its value in a map *)
-  let global_vars : L.llvalue StringMap.t =
-    let global_var m (typ, n, v) =
-      let init = match typ with
-        | A.Int -> (let v' = match v with
-                None -> 0
-                | Some v -> global_expr v
-                in L.const_int (ltype_of_typ typ) v')
-        | A.Bool -> let v' = match v with
-                None -> 0
-                | Some v -> global_expr v
-                in L.const_int (ltype_of_typ typ) v'
-(*
-        | A.StringLit -> let v' = match v with
-                None -> ""
-                | Some v -> global_expr v
-                in L.const_pointer_null (ltype_of_typ typ) v'
-*)
-      in StringMap.add n (L.define_global n init the_module) m in
-    List.fold_left global_var StringMap.empty globals in
-
   (* ---------------------- External Functions ---------------------- *)
   let print_t : L.lltype =
     L.var_arg_function_type i32_t [| i32_t |] in (* L.pointer_type i8_t is what we really want*)
@@ -81,19 +53,19 @@ let translate (globals, functions) =
     L.declare_function "print" print_t the_module in
 
   (* ---------------------- User Functions ---------------------- *)
-  let function_decls : (L.llvalue * func_decl) StringMap.t =                    (* Will become sfunc_decl *)
+  let function_decls : (L.llvalue * func_decl) StringMap.t =
     let function_decl m fdecl =
-      let name = fdecl.fname                                                    (* will become sfname *)
+      let name = fdecl.fname
       and formal_types =
-        Array.of_list (List.map (fun (t,_,_) -> ltype_of_typ t) fdecl.formals)  (* will become sformals*)
+        Array.of_list (List.map (fun (t,_,_) -> ltype_of_typ t) fdecl.formals)
       in
-        let ftype = L.function_type (ltype_of_typ fdecl.typ) formal_types in    (* will become styp *)
+        let ftype = L.function_type (ltype_of_typ fdecl.typ) formal_types in
           StringMap.add name (L.define_function name ftype the_module, fdecl) m
         in
     List.fold_left function_decl StringMap.empty functions
   in
   let build_function_body fdecl =
-    let (the_function, _) = StringMap.find fdecl.fname function_decls  in        (* Change for Sast *)
+    let (the_function, _) = StringMap.find fdecl.fname function_decls  in
     let builder = L.builder_at_end context (L.entry_block the_function) in
 
   (* Local variables for a function *)
@@ -102,34 +74,39 @@ let translate (globals, functions) =
     let local = L.build_alloca (ltype_of_typ t) n builder
     in
       ignore (L.build_store p local builder); StringMap.add n local m
-    and add_local m (t, n, _) =                                                 (* Underscore wildcard here is Some value *)
+    and add_local m (t, n, _) =
       let local_var = L.build_alloca (ltype_of_typ t) n builder
       in
         StringMap.add n local_var m
     in
-  let formals = List.fold_left2 add_formal StringMap.empty fdecl.formals        (* Change for Sast *)
+  let formals = List.fold_left2 add_formal StringMap.empty fdecl.formals
     (Array.to_list (L.params the_function)) in
-    List.fold_left add_local formals fdecl.locals                               (* Change for Sast *)
+    List.fold_left add_local formals fdecl.formals
   in
 
     (* Return the value for a variable or formal argument.
        Check local names first, then global names *)
     let lookup n = try StringMap.find n local_vars
-                   with Not_found -> StringMap.find n global_vars
+                   with Not_found -> StringMap.find n local_vars
     in
+
+    let add_local (t, n, _) =
+      let local_var = L.build_alloca (ltype_of_typ t) n builder
+      in
+        StringMap.add n local_var local_vars
+    in
+
 
     let rec expr builder ((e) : expr) = match e with
         A.Literal i           -> L.const_int i32_t i
       | A.StringLit s         -> L.build_global_stringptr (Scanf.unescaped s) "str" builder
       | A.BoolLit b           -> L.const_int i1_t (if b then 1 else 0)
       | A.Id s                -> L.build_load (lookup s) s builder
-      | A.Assign (s, e)       -> let e' = expr builder e in
-                                  ignore(L.build_store e' (lookup s) builder); e'
       | Call("print", [e]) ->
-        L.build_call print_func [| (expr builder (O.get(e))) |] "print" builder
+        L.build_call print_func [| (expr builder e) |] "print" builder
       | Call (f, args) ->
          let (fdef, fdecl) = StringMap.find f function_decls in
-         let llargs = List.rev (List.map (expr builder) (List.rev (List.map O.get args))) in (* Will remove map o.get *)
+         let llargs = List.rev (List.map (expr builder) (List.rev args)) in (* Will remove map o.get *)
          let result = (match fdecl.typ with
                         A.Void -> ""
                       | _ -> f ^ "_result") in
@@ -155,11 +132,6 @@ let translate (globals, functions) =
       | _ -> raise (Failure "FAILURE at expr builder")
     in
 
-    let rec elevate builder e = match e with
-      Some _ -> expr builder (O.get e)
-      | None -> L.const_int i1_t 0
-    in
-
   let add_terminal builder instr =
       match L.block_terminator (L.insertion_block builder) with
         Some _ -> ()
@@ -172,11 +144,14 @@ let translate (globals, functions) =
     let rec stmt builder = function
       Block sl -> List.fold_left stmt builder sl
       | Expr e -> ignore(expr builder e); builder
+      | Vdecl (t, n, e) -> add_local (t, n, e); stmt builder (Assign(n,e))
+      | A.Assign (s, e) -> let e' = expr builder e in
+                           ignore(L.build_store e' (lookup s) builder); builder
       | Return e -> ignore(match fdecl.typ with
                               (* Special "return nothing" instr *)
                               A.Void -> L.build_ret_void builder
                               (* Build return statement *)
-                            | _ -> L.build_ret (elevate builder e) builder );
+                            | _ -> L.build_ret (expr builder e) builder );
                      builder
       | If (predicate, then_stmt, else_stmt) ->
          let bool_val = expr builder predicate in
