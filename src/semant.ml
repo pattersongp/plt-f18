@@ -3,7 +3,7 @@ open Sast
 
 module StringMap = Map.Make(String)
 
-let check (vdec,fdec) = 
+let check (fdec) = 
 
   (* note, bind is a triple of typ, string and expr *)
   let check_binds (kind : string) (binds : bind list) =
@@ -139,6 +139,92 @@ let check_function func =
           let args' = List.map2 check_call fd.formals args
           in (fd.typ, SCall(fname, args'))
   *)
+
+let check_bool_expr e =
+      let (t', e') = expr e
+      and err = "expected Boolean expression in " ^ string_of_expr e
+      in if t' != Bool then raise (Failure err) else (t', e')
+    in
+
+let check_array_mappable id  = 
+    let t = type_of_identifier id in
+    match t with
+    (t1, t2) -> (t1, t2)
+    | _ -> raise (Failure ( id ^ " is not of type array" )
+in 
+
+let rec check_stmt = function
+        Expr e -> SExpr (expr e)
+      | If(p, b1, b2) -> SIf(check_bool_expr p, check_stmt b1, check_stmt b2)
+      | For(t1, id1, id2, st) ->
+	  SFor(t1, id1, id2, check_stmt st)
+      | While(p, s) -> SWhile(check_bool_expr p, check_stmt s)
+      | Return e -> let (t, e') = expr e in
+        if t = func.typ then SReturn (t, e')
+        else raise (
+	  Failure ("return gives " ^ string_of_typ t ^ " expected " ^
+		   string_of_typ func.typ ^ " in " ^ string_of_expr e))
+
+	    (* A block is correct if each statement is correct and nothing
+	       follows any Return statement.  Nested blocks are flattened. *)
+      | Block sl ->
+          let rec check_stmt_list = function
+              [Return _ as s] -> [check_stmt s]
+            | Return _ :: _   -> raise (Failure "nothing may follow a return")
+            | Block sl :: ss  -> check_stmt_list (sl @ ss) (* Flatten blocks *)
+            | s :: ss         -> check_stmt s :: check_stmt_list ss
+            | []              -> []
+          in SBlock(check_stmt_list sl)
+      | Break b -> SBreak
+      | Open (s1, s2) -> SOpen(s1, s2)
+      | Map(id, f1) -> 
+        let fd = find_func f1 in
+        let param_length = List.length fd.formals in
+        if 1 != param_length then
+            raise (Failure ("expecting " ^ "1" ^ 
+                        " arguments in " ^ "usage of map"))
+        else 
+            let t1 = type_of_identifier fd.typ 
+            and (t2, _, _) = List.hd fd.formals
+            and (_, t3) = check_array_mappable in
+            if t1 = t2 and t2 = t3 then Map(id, f1)
+            else raise (Failure (" Map called with out matching types ") )
+      | Filter(id, f1 -> 
+        let fd = find_func f1 in
+        let param_length = List.length fd.formals in
+        if 1 != param_length then
+          raise (Failure ("expecting " ^ "1" ^ 
+                        " arguments in " ^ "usage of map"))
+        else 
+            let t1 = type_of_identifier fd.typ in
+            match t1 with
+            Bool -> let (t2, _, _) = List.hd fd.formals
+                    and t3 = check_filter id in
+                    if t2 = t3 then Map(id, f1)
+                    else raise (Failure (" Map called with out matching types ") )
+            | _ -> raise (Failure (" Function must return Bool to be applied with Filer"))
+      | Assign(var, e) as ex -> 
+        let lt = type_of_identifier var
+        and (rt, e') = expr e in
+        let err = "illegal assignment " ^ string_of_typ lt ^ " = " ^ 
+          string_of_typ rt ^ " in " ^ string_of_expr ex
+        in (check_assign lt rt err, SAssign(var, (rt, e')))
+      | Vdecl(t, id, e) -> //
+      | Array_Assign(id, e1, e2) -> 
+            let (t1, t2) = check_mappable_function
+            // workin ghere
+
+
+    in (* body of check_function *)
+    { styp = func.typ;
+      sfname = func.fname;
+      sformals = func.formals;
+      sbody = match check_stmt (Block func.body) with
+	SBlock(sl) -> sl
+      | _ -> raise (Failure ("internal error: block didn't become a block?"))
+    }
+
+
  
 (* next line will eventually become final line of semant *)
 in List.map check_function fdec
