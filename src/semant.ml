@@ -63,17 +63,17 @@ let _ = find_func "main" in (* Ensure "main" is defined *)
 (* code that vets functions below *)
 
 let check_function func =
-  (* Make sure no formals or locals are void or duplicates *)
+  (* Make sure no formals are void or duplicates *)
   check_binds "formal" func.formals;
-(* PLACEHOLDER IN *) in
-(* (* if expressions are symmetric, it is invalid; e.g. int x = int x; *)
+
+ (* if expressions are symmetric, it is invalid; e.g. int x = int x; *)
   let check_assign lvaluet rvaluet err =
     if lvaluet = rvaluet then lvaluet else raise (Failure err)
   in  
 
   (* build local symbol table - '@' in OCaml represents list concat *)
-  let symbols = List.fold_left (fun m (typ, name) -> StringMap.add name typ m)
-                StringMap.empty (vdec @ func.formals @ func.locals )
+  let symbols = List.fold_left (fun m (typ, name, _ ) -> StringMap.add name typ m)
+                StringMap.empty func.formals
   in 
 
   let type_of_identifier s =
@@ -87,12 +87,7 @@ let check_function func =
     | BoolLit l -> (Bool, SBoolLit l)
     | StringLit l -> (String, SStringLit l)
     | Id s -> (type_of_identifier s, SId s)
-    | Assign(var, e) as ex -> 
-        let lt = type_of_identifier var
-        and (rt, e') = expr e in
-        let err = "illegal assignment " ^ string_of_typ lt ^ " = " ^ 
-          string_of_typ rt ^ " in " ^ string_of_expr ex
-        in (check_assign lt rt err, SAssign(var, (rt, e')))
+(*PLACEHOLDER entire line*) in print_string "testing" in
    (* | Unop(op, e) as ex -> 
        let (t, e') = expr e in
        let ty = match op with
@@ -137,7 +132,7 @@ let check_function func =
           in (fd.typ, SCall(fname, args'))
 *)  
  
-next line will eventually become final line of semant *)
+(* next line will eventually become final line of semant *)
 List.map check_function fdec;
 
 
