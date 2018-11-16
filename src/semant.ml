@@ -3,7 +3,7 @@ open Sast
 
 module StringMap = Map.Make(String)
 
-let check (vdec,fdec) = 
+let check fdec = 
 
   (* note, bind is a triple of typ, string and expr *)
   let check_binds (kind : string) (binds : bind list) =
@@ -18,9 +18,6 @@ let check (vdec,fdec) =
     in dups (List.sort (fun (_,a,_) (_,b,_) -> compare a b) binds)
 in
 
-(* check variable declarations *)
-check_binds "variable declarations" vdec;
-
 (* begin checking functions *)
 
 (* function declaration for built-in FIRE functions - print, map, filter *)
@@ -30,12 +27,12 @@ let built_in_func_decls =
         (* object between brackets is func_decl object? *)
         typ = Void; (* all built in functions are of type void *)
         fname = name;
-        formals = [(rType, "x", None)]; 
-        locals = []; (* empty list *)
+        formals = [(rType, "x", Noexpr)]; 
         body = []; (* empty list *)
     } map 
     (* REVISE following line !!!*)
     in List.fold_left add_bind StringMap.empty [("print", String); ("map", String); ("filter", String)]
+
 in
 
 (* build up symbol table - global scope ONLY for now *)
@@ -68,9 +65,8 @@ let _ = find_func "main" in (* Ensure "main" is defined *)
 let check_function func =
   (* Make sure no formals or locals are void or duplicates *)
   check_binds "formal" func.formals;
-  check_binds "local" func.locals; 
-
- (* if expressions are symmetric, it is invalid; e.g. int x = int x; *)
+(* PLACEHOLDER IN *) in
+(* (* if expressions are symmetric, it is invalid; e.g. int x = int x; *)
   let check_assign lvaluet rvaluet err =
     if lvaluet = rvaluet then lvaluet else raise (Failure err)
   in  
@@ -85,6 +81,7 @@ let check_function func =
     with Not_found -> raise (Failure ("undeclared identifier " ^ s))
   in
   
+
   let rec expr = function
       Literal l -> (Int, SLiteral l)
     | BoolLit l -> (Bool, SBoolLit l)
@@ -96,7 +93,7 @@ let check_function func =
         let err = "illegal assignment " ^ string_of_typ lt ^ " = " ^ 
           string_of_typ rt ^ " in " ^ string_of_expr ex
         in (check_assign lt rt err, SAssign(var, (rt, e')))
-    | Unop(op, e) as ex -> 
+   (* | Unop(op, e) as ex -> 
        let (t, e') = expr e in
        let ty = match op with
          Neg when t = Int -> t
@@ -124,7 +121,7 @@ let check_function func =
        in (ty, SBinop((t1, e1'), op, (t2, e2')))
 
 
-(*        | Call(fname, args) as call -> 
+        | Call(fname, args) as call -> 
             let fd = find_func fname in
             let param_length = List.length fd.formals in
             if List.length args != param_length then
@@ -138,11 +135,10 @@ let check_function func =
           in 
           let args' = List.map2 check_call fd.formals args
           in (fd.typ, SCall(fname, args'))
-  *)
+*)  
  
-(* next line will eventually become final line of semant *)
-in List.map check_function fdec
+next line will eventually become final line of semant *)
+List.map check_function fdec;
 
 
-(* dud statement to resolve let...in express *)
-print_string "It worked \n" 
+print_string "fucking work\n"
