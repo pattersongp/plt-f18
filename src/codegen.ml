@@ -81,39 +81,39 @@ let translate functions =
     in
   let formals = List.fold_left2 add_formal StringMap.empty fdecl.formals
     (Array.to_list (L.params the_function)) in
-    List.fold_left add_local formals fdecl.formals
+  List.fold_left add_local formals []
   in
 
     (* Return the value for a variable or formal argument.
        Check local names first, then global names *)
-    let lookup n = try StringMap.find n local_vars
-                   with Not_found -> StringMap.find n local_vars
+    let lookup n m = try StringMap.find n m
+                   with Not_found -> raise (Failure "Variable not declared")
     in
 
-    let add_local (t, n, _) =
+    let add_local (t, n) =
       let local_var = L.build_alloca (ltype_of_typ t) n builder
       in
         StringMap.add n local_var local_vars
     in
 
-
-    let rec expr builder ((e) : expr) = match e with
+    let rec expr (builder, lvs) ((e) : expr) = match e with
         A.Literal i           -> L.const_int i32_t i
       | A.StringLit s         -> L.build_global_stringptr (Scanf.unescaped s) "str" builder
+      | A.Noexpr              -> L.const_int i32_t 0
       | A.BoolLit b           -> L.const_int i1_t (if b then 1 else 0)
-      | A.Id s                -> L.build_load (lookup s) s builder
-      | Call("print", [e]) ->
-        L.build_call print_func [| (expr builder e) |] "print" builder
+      | A.Id s                -> L.build_load (lookup s lvs) s builder
+      | Call("print", [e])    ->
+        L.build_call print_func [| (expr (builder, lvs) e) |] "print" builder
       | Call (f, args) ->
          let (fdef, fdecl) = StringMap.find f function_decls in
-         let llargs = List.rev (List.map (expr builder) (List.rev args)) in (* Will remove map o.get *)
+         let llargs = List.rev (List.map (expr (builder, lvs)) (List.rev args)) in
          let result = (match fdecl.typ with
                         A.Void -> ""
                       | _ -> f ^ "_result") in
          L.build_call fdef (Array.of_list llargs) result builder
       | Binop (e1, op, e2) ->
-        let e1' = expr builder e1
-        and e2' = expr builder e2 in
+        let e1' = expr (builder, lvs) e1
+        and e2' = expr (builder, lvs) e2 in
         (match op with
           Plus      -> L.build_add
         | Minus     -> L.build_sub
@@ -132,53 +132,49 @@ let translate functions =
       | _ -> raise (Failure "FAILURE at expr builder")
     in
 
-  let add_terminal builder instr =
+  let add_terminal (builder, _) instr =
       match L.block_terminator (L.insertion_block builder) with
         Some _ -> ()
       | None -> ignore (instr builder) in
-(*
- * ...
-     Lots more code here to parse expressions and statements etc...
- * ...
- *)
-    let rec stmt builder = function
-      Block sl -> List.fold_left stmt builder sl
-      | Expr e -> ignore(expr builder e); builder
-      | Vdecl (t, n, e) -> add_local (t, n, e); stmt builder (Assign(n,e))
-      | A.Assign (s, e) -> let e' = expr builder e in
-                           ignore(L.build_store e' (lookup s) builder); builder
+
+    let rec stmt (builder, lvs) = function
+        Block sl -> List.fold_left stmt (builder, lvs) sl
+      | Expr e -> ignore(expr (builder, lvs) e); builder, lvs
+      | A.Vdecl (t, n, e) -> let lvs' = add_local (t, n) in stmt (builder, lvs') (Assign(n,e))
+      | A.Assign (s, e) -> let e' = expr (builder, lvs) e in
+                           ignore(L.build_store e' (lookup s lvs) builder); builder, lvs
       | Return e -> ignore(match fdecl.typ with
                               (* Special "return nothing" instr *)
                               A.Void -> L.build_ret_void builder
                               (* Build return statement *)
-                            | _ -> L.build_ret (expr builder e) builder );
-                     builder
+                            | _ -> L.build_ret (expr (builder, lvs) e) builder );
+                     builder, lvs
       | If (predicate, then_stmt, else_stmt) ->
-         let bool_val = expr builder predicate in
+         let bool_val = expr (builder, lvs) predicate in
          let merge_bb = L.append_block context "merge" the_function in
          let build_br_merge = L.build_br merge_bb in (* partial function *)
          let then_bb = L.append_block context "then" the_function in
-           add_terminal (stmt (L.builder_at_end context then_bb) then_stmt)
+           add_terminal (stmt ((L.builder_at_end context then_bb), lvs) then_stmt)
              build_br_merge;
          let else_bb = L.append_block context "else" the_function in
-           add_terminal (stmt (L.builder_at_end context else_bb) else_stmt)
+           add_terminal (stmt ((L.builder_at_end context else_bb), lvs) else_stmt)
              build_br_merge;
            ignore(L.build_cond_br bool_val then_bb else_bb builder);
-           L.builder_at_end context merge_bb
+          (L.builder_at_end context merge_bb), lvs
       | While (predicate, body) ->
         let pred_bb = L.append_block context "while" the_function in
           ignore(L.build_br pred_bb builder);
 
         let body_bb = L.append_block context "while_body" the_function in
-          add_terminal (stmt (L.builder_at_end context body_bb) body)
+          add_terminal (stmt ((L.builder_at_end context body_bb), lvs) body)
             (L.build_br pred_bb);
 
         let pred_builder = L.builder_at_end context pred_bb in
-        let bool_val = expr pred_builder predicate in
+        let bool_val = expr (pred_builder, lvs) predicate in
 
         let merge_bb = L.append_block context "merge" the_function in
           ignore(L.build_cond_br bool_val body_bb merge_bb pred_builder);
-          L.builder_at_end context merge_bb
+          (L.builder_at_end context merge_bb), lvs
 (*
  * This is a special case because we have to get the array to iterate over it
       | For (e1, e2, e3, body) -> stmt builder
@@ -187,10 +183,10 @@ let translate functions =
       | _ -> raise (Failure "FAILURE at stmt builder")
     in
     (* Build the code for each statement in the function *)
-    let builder = stmt builder (Block fdecl.body) in                           (* Change for Sast *)
+    let builder, _ = stmt (builder, local_vars) (Block fdecl.body) in
 
     (* Add a return if the last block falls off the end *)
-    add_terminal builder (match fdecl.typ with
+    add_terminal (builder, local_vars) (match fdecl.typ with
         A.Void -> L.build_ret_void
       | t -> L.build_ret (L.const_int (ltype_of_typ t) 0))
   in
