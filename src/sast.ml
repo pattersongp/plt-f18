@@ -33,7 +33,7 @@ type sfunc_decl = {
     styp : typ;
     sfname : string;
     sformals : bind list;
-    sbody : stmt list;
+    sbody : sstmt list;
 }
 
 type sprogram = bind list * sfunc_decl list
@@ -44,15 +44,15 @@ let rec string_of_sexpr (t, e) =
     SLiteral(l) -> string_of_int l
   | SBoolLit(true) -> "true"
   | SBoolLit(false) -> "false"
-  | SFliteral(l) -> l
   | SId(s) -> s
   | SBinop(e1, o, e2) ->
       string_of_sexpr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_sexpr e2
   | SUnop(o, e) -> string_of_uop o ^ string_of_sexpr e
   | SCall(f, el) ->
       f ^ "(" ^ String.concat ", " (List.map string_of_sexpr el) ^ ")"
-  | SRetrieve(id, e1) -> id ^ "[" ^ string_of_expr e1 ^ "]"
+  | SRetrieve(id, e1) -> id ^ "[" ^ string_of_sexpr e1 ^ "]"
   | SNoexpr -> ""
+                ) ^ ")"
 
 let rec string_of_sstmt = function
     SBlock(stmts) ->
@@ -63,25 +63,24 @@ let rec string_of_sstmt = function
       "if (" ^ string_of_sexpr e ^ ")\n" ^ string_of_sstmt s
   | SIf(e, s1, s2) ->  "if (" ^ string_of_sexpr e ^ ")\n" ^
       string_of_sstmt s1 ^ "else\n" ^ string_of_sstmt s2
-  | SFor(e1, e2, e3, s) ->
-      "for (" ^ string_of_sexpr e1  ^ " ; " ^ string_of_sexpr e2 ^ " ; " ^
-      string_of_sexpr e3  ^ ") " ^ string_of_sstmt s
+  | SFor(typ, id1, id2, s) ->
+      "for (" ^ string_of_typ typ ^ id1  ^ " : " ^ id2 ^ ")" ^ string_of_sstmt s
   | SWhile(e, s) -> "while (" ^ string_of_sexpr e ^ ") " ^ string_of_sstmt s
-  | SMap(s1, s1) -> "map(" ^ s1 ", " ^ s2 ");\n"
+  | SMap(a1, f1) -> "map(" ^ a1 ^ ", " ^ f1 ^ ");\n"
   | SFilter(a1, f1) -> "filter(" ^ a1 ^ ", " ^ f1 ^ ");\n"
   | SOpen(filename, delim) -> "open(" ^ filename ^ ", " ^ delim ^ ");\n"
-  | Break -> "break;"
-  | SArray_Assign(id, e1, e2) -> id ^ "[" ^ string_of_expr e1 ^
-                "]" ^ " = " ^ string_of_expr e2
+  | SBreak -> "break;"
+  | SArray_Assign(id, e1, e2) -> id ^ "[" ^ string_of_sexpr e1 ^
+                "]" ^ " = " ^ string_of_sexpr e2
   | SAssign(v, e) -> v ^ " = " ^ string_of_sexpr e
-  | Vdecl(t, id, e) -> string_of_vdecl (t, id, e)
+  | SVdecl(t, id, e) -> string_of_vdecl (t, id, e)
+
 
 let string_of_sfdecl fdecl =
-  string_of_typ fdecl.styp ^ " " ^
-  fdecl.sfname ^ "(" ^ String.concat ", " (List.map snd fdecl.sformals) ^
-  ")\n{\n" ^
-  String.concat "" (List.map string_of_sstmt fdecl.sbody) ^
-  "}\n"
+"func " ^ string_of_typ fdecl.styp ^ " " ^ fdecl.sfname ^ " = " ^ "(" ^
+        String.concat ", " (List.map string_of_formal fdecl.sformals) ^
+        ") => {\n" ^
+        "\n" ^ String.concat "\n" (List.map string_of_sstmt fdecl.sbody) ^ "\n}\n"
 
-let string_of_program (vars, funcs) =
+let string_of_program (funcs) =
         String.concat "\n" (List.map string_of_fdecl funcs)
