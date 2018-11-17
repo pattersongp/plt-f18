@@ -146,10 +146,10 @@ let check_bool_expr e =
       in if t' != Bool then raise (Failure err) else (t', e')
     in
 
-let check_array_mappable id  = 
+let check_array id  = 
     let t = type_of_identifier id in
     match t with
-    (t1, t2) -> (t1, t2)
+    Array -> t 
     | _ -> raise (Failure ( id ^ " is not of type array" )
 in 
 
@@ -186,8 +186,8 @@ let rec check_stmt = function
         else 
             let t1 = type_of_identifier fd.typ 
             and (t2, _, _) = List.hd fd.formals
-            and (_, t3) = check_array_mappable in
-            if t1 = t2 and t2 = t3 then Map(id, f1)
+            and (_, t3) = check_array in
+            if t1 = t2 && t2 = t3 then Map(id, f1)
             else raise (Failure (" Map called with out matching types ") )
       | Filter(id, f1 -> 
         let fd = find_func f1 in
@@ -209,11 +209,21 @@ let rec check_stmt = function
         let err = "illegal assignment " ^ string_of_typ lt ^ " = " ^ 
           string_of_typ rt ^ " in " ^ string_of_expr ex
         in (check_assign lt rt err, SAssign(var, (rt, e')))
-      | Vdecl(t, id, e) -> //
-      | Array_Assign(id, e1, e2) -> 
-            let (t1, t2) = check_mappable_function
-            // workin ghere
+      | Vdecl(t, id, e) -> 
+          match e with
+          Noexpr -> 
+              match StringMap.find id symbols with
+              Some t -> raise (Failure ("trying to redeclare variable"))
+              | None -> SVdecl(t, id, e)
+          | e' -> 
+// working here
 
+      | Array_Assign(id, e1, e2) -> 
+          let (t1, t2) = check_array id 
+          and (rt1, e1') = expr e1
+          and (rt2, e2') = expr e2 in
+          if rt1 = t1 and rt2 = t2 then SArray_Assign(id, e1', e2')
+          else raise (Failure (" Improper types for Array Assign")
 
     in (* body of check_function *)
     { styp = func.typ;
