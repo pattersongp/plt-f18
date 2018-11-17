@@ -8,7 +8,7 @@ let check fdec =
   (* note, bind is a triple of typ, string and expr *)
   let check_binds (kind : string) (binds : bind list) =
     List.iter (function
-	(Void, b, c) -> raise (Failure ("illegal void " ^ kind ^ " " ^ b))
+	(Void, b, _ ) -> raise (Failure ("illegal void " ^ kind ^ " " ^ b))
       | _ -> ()) binds; 
     let rec dups = function
         [] -> ()
