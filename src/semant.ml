@@ -96,7 +96,7 @@ let check_function func =
                               string_of_uop op ^ string_of_typ t ^
                               " in " ^ string_of_expr ex))
        in (ty, SUnop(op, (t, e')))
-   | Binop(e1, op, e2) as e -> 
+    | Binop(e1, op, e2) as e -> 
        let (t1, e1') = expr e1 
        and (t2, e2') = expr e2 in
        (* All binary operators require operands of the same type *)
@@ -127,6 +127,14 @@ let check_function func =
         in 
         let args' = List.map2 check_call fd.formals args
         in (fd.typ, SCall(fname, args'))
+  in
+
+  let check_bool_expr e = 
+    let (t', e') = expr e
+    and err = "expected Boolean expression in " ^ string_of_expr e
+    in if t' != Bool then raise (Failure err) else (t', e') 
+    
+
   
 (*PLACEHOLDER entire line*) in print_string "testing" in
  
