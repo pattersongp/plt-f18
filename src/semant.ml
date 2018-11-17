@@ -113,24 +113,22 @@ let check_function func =
                     string_of_typ t1 ^ " " ^ string_of_op op ^ " " ^
                     string_of_typ t2 ^ " in " ^ string_of_expr e))
        in (ty, SBinop((t1, e1'), op, (t2, e2')))
-
-(*PLACEHOLDER entire line*) in print_string "testing" in
-(*
-        | Call(fname, args) as call -> 
-            let fd = find_func fname in
-            let param_length = List.length fd.formals in
-            if List.length args != param_length then
-                raise (Failure ("expecting " ^ string_of_int param_length ^ 
+    | Call(fname, args) as call -> 
+        let fd = find_func fname in
+        let param_length = List.length fd.formals in
+        if List.length args != param_length then
+            raise (Failure ("expecting " ^ string_of_int param_length ^ 
                             " arguments in " ^ string_of_expr call))
-            else let check_call (ft, _) e = 
-                let (et, e') = expr e in 
-                let err = "illegal argument found " ^ string_of_typ et ^
-                " expected " ^ string_of_typ ft ^ " in " ^ string_of_expr e
+        else let check_call (ft, _ , _) e = 
+            let (et, e') = expr e in
+            let err = "illegal argument found " ^ string_of_typ et ^
+                    " expected " ^ string_of_typ ft ^ " in " ^ string_of_expr e
             in (check_assign ft et err, e')
-          in 
-          let args' = List.map2 check_call fd.formals args
-          in (fd.typ, SCall(fname, args'))
-*)  
+        in 
+        let args' = List.map2 check_call fd.formals args
+        in (fd.typ, SCall(fname, args'))
+  
+(*PLACEHOLDER entire line*) in print_string "testing" in
  
 (* next line will eventually become final line of semant *)
 List.map check_function fdec;
