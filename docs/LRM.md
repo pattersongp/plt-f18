@@ -349,13 +349,14 @@ func void main = () => {
 
 #### 6.1 Print Statement
 
-The print statement prints integers, strings but not array and regx.
-```
-print("i will be printed to stdout");
-```
+The print statement prints integers and strings but not array and regx. To give more explicit typing constraints, print() can only print integers and sprint() can only print strings.
 ```
 print(10);
 ```
+```
+sprint("i will be printed to stdout");
+```
+
 
 #### 6.2 Conditional Statements
 
