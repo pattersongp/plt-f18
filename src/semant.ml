@@ -199,8 +199,8 @@ let rec check_stmt = function
             let t1 = type_of_identifier fd.typ in
             match t1 with
             Bool -> let (t2, _, _) = List.hd fd.formals
-                    and t3 = check_filter id in
-                    if t2 = t3 then Map(id, f1)
+                    and (_, t3) = check_array id in
+                    if t2 = t3 then Filter(id, f1)
                     else raise (Failure (" Map called with out matching types ") )
             | _ -> raise (Failure (" Function must return Bool to be applied with Filer"))
       | Assign(var, e) as ex -> 
@@ -214,10 +214,20 @@ let rec check_stmt = function
           Noexpr -> 
               match StringMap.find id symbols with
               Some t -> raise (Failure ("trying to redeclare variable"))
-              | None -> SVdecl(t, id, e)
-          | e' -> 
-// working here
-
+              | None -> 
+                match t with
+                Array as (t1, t2) -> if (t1 = Int || t1 = String) && 
+                (t2 = Int || t2 = String) then 
+                StringMap.add id t symbols;  SVDecl(t, id, e) 
+                else raise (Failure (" array type has to be int or string"))
+                | _ -> StringMap.add id t symbols; SVDecl(t, id, e)
+          | _ -> 
+              match Stringmap.find id symbols with
+              Some t -> raise (Failure ("trying to redeclare variable"))
+              | None -> 
+                match t with
+                Array -> raise (Failure("cant assign and declare array"))
+                | _ -> String.add id t symbols; check_stmt Assign(id, e); SVDecl(t, id, e) 
       | Array_Assign(id, e1, e2) -> 
           let (t1, t2) = check_array id 
           and (rt1, e1') = expr e1
