@@ -52,6 +52,11 @@ let translate functions =
   let print_func : L.llvalue =
     L.declare_function "print" print_t the_module in
 
+  let sprint_t : L.lltype =
+    L.var_arg_function_type i32_t [| string_t |] in (* L.pointer_type i8_t is what we really want*)
+  let sprint_func : L.llvalue =
+    L.declare_function "sprint" sprint_t the_module in
+
   (* ---------------------- User Functions ---------------------- *)
   let function_decls : (L.llvalue * func_decl) StringMap.t =
     let function_decl m fdecl =
@@ -98,14 +103,16 @@ let translate functions =
 
     let rec expr (builder, lvs) ((e) : expr) = match e with
         A.Literal i           -> L.const_int i32_t i
-      | A.StringLit s         -> L.build_global_stringptr (Scanf.unescaped s) "str" builder
+      | A.StringLit s         -> L.build_global_stringptr s "str" builder
       | A.Noexpr              -> L.const_int i32_t 0
       | A.BoolLit b           -> L.const_int i1_t (if b then 1 else 0)
       | A.Id s                -> L.build_load (lookup s lvs) s builder
       | Call("print", [e])    ->
         L.build_call print_func [| (expr (builder, lvs) e) |] "print" builder
+      | Call("sprint", [e])    ->
+        L.build_call sprint_func [| (expr (builder, lvs) e) |] "print" builder
       | Call (f, args) ->
-         let (fdef, fdecl) = StringMap.find f function_decls in
+         let (fdef, fdecl) = try StringMap.find f function_decls with Not_found -> raise (Failure "Function not found" )in
          let llargs = List.rev (List.map (expr (builder, lvs)) (List.rev args)) in
          let result = (match fdecl.typ with
                         A.Void -> ""

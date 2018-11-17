@@ -4,8 +4,6 @@ void print(int x) {
 	printf("%d\n", x);
 }
 
-#ifdef BUILD_TEST
-int main() {
-	return 0;
+void sprint(char *x) {
+	printf("%s\n", x);
 }
-#endif
