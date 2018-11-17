@@ -271,27 +271,27 @@ The `array` type is a dynamic collection of elements. Inspired by AWK's associat
 
 The structure of `array` variable declarations is as follows:
 
-`array arr[<key_type>, <value_type>];`
+`array[<key_type>, <value_type>] arr;`
 
 Example:
 
-`array arr[int, string];` 
+`array[int, string] arr;` 
 
 The assignment of variables has the following structure:
 
-`arr[<key_value>] = <element>;` 
+`arr[<key_value>].set = <element>;` 
 
 Example:
 
- `arr[17] = "age17";`
+ `arr[17].set = null;`
  
  Finally, a programmer can retrieve a value associated with a key with the below syntax:
  
- `int element = arr[<key_value>];`
+ `int element = arr[<key_value>].get;`
  
  Example:
  
- `int age = arr["age"];`
+ `int age = arr["age"].get;`
  
 #### 5.1.5. `regx`
 
@@ -334,12 +334,14 @@ bool switch = true; // or false
 Example: 
 
 ```
-int x = 0;
-bool switch = true;
+func void main = () => {
+	int x = 0;
+	bool switch = true;
 
-// infinite loop
-while(switch) {
-	x = x + 1;
+	// infinite loop
+	while(switch) {
+		x = x + 1;
+	}
 }
 ```
 
@@ -347,9 +349,13 @@ while(switch) {
 
 #### 6.1 Print Statement
 
-The print statement prints a literal value, or the value returned by an expression.
-
-`print("i will be printed to stdout");`
+The print statement prints integers, strings but not array and regx.
+```
+print("i will be printed to stdout");
+```
+```
+print(10);
+```
 
 #### 6.2 Conditional Statements
 
@@ -359,7 +365,7 @@ Conditional statements evaluate expressions and execute code based on the truth 
 if (<expression>) {
 	<code block>
 }
-elif {
+elif(<expression>) {
 	<code block>
 }
 else {
@@ -402,17 +408,17 @@ Thomas,201-750-0911
 Albert,783-444-7862
 
 user:~ $ cat nj_numbers.fire
-//
-// Program that determines if a number is from NJ based on 201 area code
-//
+/*
+ Program that determines if a number is from NJ based on 201 area code
+*/
 
 func string isNJ = (str phoneNumber) => {
     return phoneNumber === r'201-[0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]';
 };
 
-func array[int, str] extractRegion(func isRegion, file f) {
+func array[int, str] extractRegion = (func isRegion, file f) {
     
-    array njnums[int, str];
+    array[int, str] njnums;
     
     str number = f.readLine();
     int i = 0;
@@ -427,12 +433,17 @@ func array[int, str] extractRegion(func isRegion, file f) {
     return njnums;
 }
 
-file f = file("PhoneNumbers.csv", "rw", ",");
+func void main = () => {
 
-print( extractRegion(isNJ, f) );
+	file[rw] f;
+	f = open("PhoneNumbers.csv", ",");
 
+	/* Calling a function */
+	extractRegion(isNJ, f);
+}
 
-user:~ $ cut -d' ' -f2 | fire nj_numbers.fire
+user:~ $ make
+user:~ $ ./fire.native < nj_numbers.fire
 201-445-9372
 201-750-0911
 ```
