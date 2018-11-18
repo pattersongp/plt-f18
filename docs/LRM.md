@@ -62,7 +62,6 @@ The following identifiers are restricted from use:
 * `filter`
 * `true`
 * `false`
-* `null`
 * `void`
 
 
@@ -96,21 +95,21 @@ FIRE provides `true` and `false` values. The logical negation operator `!` evalu
 
 #### 4.5 Logical AND Operator
 
-The logical AND `&&` is a short circuit operator, and returns 1 if and only if the expressions on its left and right both evaluate to 1.
+The logical AND `&&` is a short circuit operator, and returns `true` if and only if the expressions on its left and right both evaluate to `true`, otherwise `false`.
 
 #### 4.6 Logical OR Operator
 
-The logical OR `||` operator is a short circuit operator and returns 1 if either of the expressions on its left or right return 1.
+The logical OR `||` operator is a short circuit operator and returns `true` if either of the expressions on its left or right return `true`, otherwise `false`.
 
 #### 4.7 Relational Operators
 
-The relational operators `<, >, <=, <=, ==` return `1` if the expression on the left side of the operator has the expected relation to the operator on the right-hand side.
+The relational operators `<, >, <=, <=, ==` return `true` if the expression on the left side of the operator has the expected relation to the operator on the right-hand side, otherwise `false`.
 
 These relationships amongst ints are determined by natural ordering. Strings can only be evaluated using the `==` operator.
 
 #### 4.8 Pattern Match Operator
 
-The pattern match operator `===` returns `1` if the regular expression or string on its right side conforms to the rules laid out by the regular expression on its left side and returns `0` otherwise.
+The pattern match operator `===` returns `true` if the regular expression or string on its right side conforms to the rules laid out by the regular expression on its left side and returns `false` otherwise.
 
 Pattern matching operator l-values must be type `regx` and r-values must be type `string`.
 
@@ -122,16 +121,10 @@ The string concatenation `^` operator returns a new string that is the concatena
 
 #### 4.10 Bracket Operator
 
-The bracket operator `[]` can operator on either `string` or `array`.
+The bracket operator `[]` can operator on `array`.
 
-When used on`array` it is supplied a key and returns the corresponding element. Indexing a key using the bracket operator that does not exist raises a runtime exception.
+When used on `array` it is supplied a key and returns the corresponding element. Indexing a key using the bracket operator that does not exist raises a runtime exception.
 
-When used on `string` it functions in a similar manner to character arrays in C. The r-value in brackets is an integer and returns the letter of that index, however unlike C, FIRE does not support chars so it returns a string of length 1.
-
-```
-str hello = "hello";
-str o = hello[4]; 
-```
 
 ##### Bracket Op Typing
 
@@ -219,21 +212,16 @@ Files are regarded as first-class citizens in FIRE. This is made apparent by the
 
 The syntax for instantiating a `file` object is as follows:
 
-`file f = file("filename.csv", "<mode>");`
+`file["<mode>"] f;
+f.open("filename.csv", "<delimiter>");
+`
 
-In the example provided above, two arguments are fed into the `file(...)` argument: *filename* for reading, writing or both, and *mode*. The *mode* argument can be `r` for read only, `w` for write only, and `rw` for both.
-
-Example:
-
-`file f = file("test.csv", "rw");` will open the File named test.csv in the current directory for both reading and writing.
-  
-`file f = file("filename.csv", "<mode>", "<delim>");`
-
-An optional third argument *delim* may be provided to the constructor specifying a delimiter for reading. If the *delim* argument is not supplied it will default to `\n`.
+In the example provided above, two argument are fed into the `open[...]` argument: *filename* for reading, writing or both, and *delimiter*. *delimiter* may be provided to the constructor specifying a delimiter for reading. The *mode* passing in `file[...]` can be `r` for read only, `w` for write only, and `rw` for both.
 
 Example:
 
-`file f = file("Program.java", "rw", ";");` will open the File named `Program.Java` in the current directory for both reading and writing. Calls to `read()` will read in chunks of the file delimited by the `;` character.
+`file[rw] f; f.open("test.csv", ",");` will open the File named `test.csv` in the current directory for both reading and writing, and delimited by the `,` character.
+
 
 #### 5.1.4. `func`
 
@@ -255,7 +243,7 @@ A function that does not return anything has a return type of `void`.  The void 
 
 Named functions can be passed to other functions as a parameter as follows\:
 ```
-func void saySomething = () =>{ print("something"); };
+func void saySomething = () => { print("something"); };
 func void doSomething = (func f) => { f(); };
 doSomething(saySomething);
 ```
@@ -279,19 +267,21 @@ Example:
 
 The assignment of variables has the following structure:
 
-`arr[<key_value>].set = <element>;` 
+`arr[<key_value>] = <element>;` 
 
 Example:
 
- `arr[17].set = null;`
+ `arr[17] = null;`
  
  Finally, a programmer can retrieve a value associated with a key with the below syntax:
  
- `int element = arr[<key_value>].get;`
+ `int element = arr[<key_value>];`
  
  Example:
  
- `int age = arr["age"].get;`
+ `int age = arr["age"];`
+ 
+ Throws an error if `"age"` does not exit.
  
 #### 5.1.5. `regx`
 
@@ -305,7 +295,6 @@ Example:
 
 ```
 regx myPattern = r'[a-z]';
-myFunction(someString, myPattern);
 ```
 
 The syntax for the regex patterns are as follows:
@@ -417,7 +406,7 @@ func string isNJ = (str phoneNumber) => {
     return phoneNumber === r'201-[0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]';
 };
 
-func array[int, str] extractRegion = (func isRegion, file f) {
+func array extractRegion = (func isRegion, file f) {
     
     array[int, str] njnums;
     
