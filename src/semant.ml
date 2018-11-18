@@ -207,23 +207,27 @@ let rec check_stmt = function
       | Vdecl(t, id, e) -> 
           let f = function
           Noexpr -> 
-              match StringMap.find id symbols with
+            let f2 = function
               Some t -> raise (Failure ("trying to redeclare variable"))
               | None -> 
-                match t with
-                Array(t1, t2) -> 
-                  if ((t1 = Int || t1 = String) && 
-                  (t2 = Int || t2 = String)) then 
-                  StringMap.add id t symbols;  SVDecl(t, id, e);
-                  else raise (Failure (" array type has to be int or string"))
-                | _ -> StringMap.add id t symbols; SVDecl(t, id, e)
+                let f3 = function
+                  Array(t1, t2) -> 
+                    if ((t1 = Int || t1 = String) && 
+                    (t2 = Int || t2 = String)) then 
+                    StringMap.add id t symbols;  SVdecl(t, id, e)
+                    else raise (Failure (" array type has to be int or string"))
+                  | _ -> StringMap.add id t symbols; SVdecl(t, id, e);
+                in f3 t
+            in f2 (StringMap.find_opt id symbols)
           | _ -> 
-              match Stringmap.find id symbols with
+              let f4 = function
               Some t -> raise (Failure ("trying to redeclare variable"))
               | None -> 
-                match t with
-                Array(_, _) -> raise (Failure("cant assign and declare array"))
-                | _ -> String.add id t symbols; check_stmt Assign(id, e); SVDecl(t, id, e)
+                  let f5 = function
+                    Array(_, _) -> raise (Failure("cant assign and declare array"))
+                    | _ -> StringMap.add id t symbols; check_stmt (Assign(id, e)); SVdecl(t, id, e)
+                  in f5 t
+              in f4 (StringMap.find_opt id symbols)
           in f e
 
 
