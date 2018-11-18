@@ -23,10 +23,11 @@ let _ =
   let lexbuf = Lexing.from_channel stdin in
 
   let ast = Parser.program Scanner.token lexbuf in
+  let sast = Semant.check ast in
   match !action with
     Ast -> print_string (Ast.string_of_program ast)
     (*goal -> to eventually support the following logic: | _ -> let sast = Semant.check ast in *)
     | Sast -> print_string "Sast Code is not complete. \n"
-     | SastDebug -> ignore(Semant.check ast)   (* ignore function takes an argument and forces a return of unit *) 
+     | SastDebug -> print_string (Sast.string_of_sprogram sast)   (* ignore function takes an argument and forces a return of unit *) 
 (*     | LLVM_IR -> print_string (Llvm.string_of_llmodule (Codegen.translate ast)) *)
 

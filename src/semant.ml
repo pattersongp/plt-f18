@@ -141,6 +141,11 @@ let check_function func =
     Array(t1, t2)  -> (t1, t2)
     | _ -> raise (Failure ( id ^ " is not of type array" ))
   in 
+
+  let check_array_type (t1, t2) =
+    if ((t1 = Int || t1 = String) && (t2 = Int || t2 = String) ) then true else false
+  in
+
 let rec check_stmt = function
         Expr e -> SExpr (expr e)
       | If(p, b1, b2) -> SIf(check_bool_expr p, check_stmt b1, check_stmt b2)
@@ -203,7 +208,7 @@ let rec check_stmt = function
         and (rt, e') = expr e in
         let err = "illegal assignment " ^ string_of_typ lt ^ " = " ^ 
           string_of_typ rt ^ " in " ^  string_of_stmt ex
-        in (check_assign lt rt err; SAssign(var, (rt, e')))
+        in check_assign lt rt err; SAssign(var, (rt, e'))
       | Vdecl(t, id, e) -> 
           let f = function
           Noexpr -> 
@@ -212,11 +217,9 @@ let rec check_stmt = function
               | None -> 
                 let f3 = function
                   Array(t1, t2) -> 
-                    if ((t1 = Int || t1 = String) && 
-                    (t2 = Int || t2 = String)) then 
-                    StringMap.add id t symbols;  SVdecl(t, id, e)
-                    else raise (Failure (" array type has to be int or string"))
-                  | _ -> StringMap.add id t symbols; SVdecl(t, id, e);
+                    if (check_array_type (t1, t2)) then (StringMap.add id t symbols; SVdecl(t, id, e))
+                    else raise(Failure("array key must be int or string"))
+                  | _ ->  StringMap.add id t symbols; SVdecl(t, id, e)
                 in f3 t
             in f2 (StringMap.find_opt id symbols)
           | _ -> 
@@ -229,13 +232,15 @@ let rec check_stmt = function
                   in f5 t
               in f4 (StringMap.find_opt id symbols)
           in f e
-
-
-
-(*PLACEHOLDER entire line*) in print_string "testing" in
- 
+    in (* body of check_function *)
+    { styp = func.typ;
+      sfname = func.fname;
+      sformals = func.formals;
+      sbody = match check_stmt (Block func.body) with
+	SBlock(sl) -> sl
+      | _ -> raise (Failure ("internal error: block didn't become a block?"))
+    }
+in
 (* next line will eventually become final line of semant *)
 List.map check_function fdec;
 
-
-print_string "fucking work\n"

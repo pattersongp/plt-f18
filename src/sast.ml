@@ -83,5 +83,5 @@ let string_of_sfdecl fdecl =
         ") => {\n" ^
         "\n" ^ String.concat "\n" (List.map string_of_sstmt fdecl.sbody) ^ "\n}\n"
 
-let string_of_program (funcs) =
+let string_of_sprogram (funcs) =
         String.concat "\n" (List.map string_of_fdecl funcs)
