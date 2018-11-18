@@ -133,9 +133,79 @@ let check_function func =
     let (t', e') = expr e
     and err = "expected Boolean expression in " ^ string_of_expr e
     in if t' != Bool then raise (Failure err) else (t', e') 
-    
+  in
 
-  
+  let check_array id  = 
+    let t = type_of_identifier id in
+    match t with
+    Array(t1, t2)  -> (t1, t2)
+    | _ -> raise (Failure ( id ^ " is not of type array" ))
+  in 
+let rec check_stmt = function
+        Expr e -> SExpr (expr e)
+      | If(p, b1, b2) -> SIf(check_bool_expr p, check_stmt b1, check_stmt b2)
+      | For(t1, id1, id2, st) ->
+	  SFor(t1, id1, id2, check_stmt st)
+      | While(p, s) -> SWhile(check_bool_expr p, check_stmt s)
+      | Return e -> let (t, e') = expr e in
+        if t = func.typ then SReturn (t, e')
+        else raise (
+	  Failure ("return gives " ^ string_of_typ t ^ " expected " ^
+		   string_of_typ func.typ ^ " in " ^ string_of_expr e))
+
+	    (* A block is correct if each statement is correct and nothing
+	       follows any Return statement.  Nested blocks are flattened. *)
+      | Block sl ->
+          let rec check_stmt_list = function
+              [Return _ as s] -> [check_stmt s]
+            | Return _ :: _   -> raise (Failure "nothing may follow a return")
+            | Block sl :: ss  -> check_stmt_list (sl @ ss) (* Flatten blocks *)
+            | s :: ss         -> check_stmt s :: check_stmt_list ss
+            | []              -> []
+          in SBlock(check_stmt_list sl)
+      | Break -> SBreak
+      | Open (s1, s2) -> SOpen(s1, s2)
+      | Map(id, f1) -> 
+        let fd = find_func f1 in
+        let param_length = List.length fd.formals in
+        if 1 != param_length then
+            raise (Failure ("expecting " ^ "1" ^ 
+                        " arguments in " ^ "usage of map"))
+        else 
+            let t1 = fd.typ
+            and (t2, _, _) = List.hd fd.formals
+            and (_, t3) = check_array id in
+            if t1 = t2 && t2 = t3 then SMap(id, f1)
+            else raise (Failure (" Map called with out matching types ") )
+      | Filter(id, f1) -> 
+        let fd = find_func f1 in
+        let param_length = List.length fd.formals in
+        if 1 != param_length then
+          raise (Failure ("expecting " ^ "1" ^ 
+                        " arguments in " ^ "usage of map"))
+        else 
+            let t1 = fd.typ in
+            match t1 with
+            Bool -> let (t2, _, _) = List.hd fd.formals
+                    and (_, t3) = check_array id in
+                    if (t2 = t3) then SFilter(id, f1)
+                    else raise (Failure (" Map called with out matching types ") )
+            | _ -> raise (Failure (" Function must return Bool to be applied with Filter"))
+      | Array_Assign(id, e1, e2) -> 
+        let (t1, t2) = check_array id 
+        and (rt1, e1') = expr e1
+        and (rt2, e2') = expr e2 in
+        if rt1 = t1 && rt2 = t2 then SArray_Assign(id, (rt1, e1'), (rt2, e2'))
+        else raise (Failure (" Improper types for Array Assign"))
+      | Assign(var, e) as ex -> 
+        let lt = type_of_identifier var
+        and (rt, e') = expr e in
+        let err = "illegal assignment " ^ string_of_typ lt ^ " = " ^ 
+          string_of_typ rt ^ " in " ^  string_of_stmt ex
+        in (check_assign lt rt err; SAssign(var, (rt, e')))
+
+
+
 (*PLACEHOLDER entire line*) in print_string "testing" in
  
 (* next line will eventually become final line of semant *)
