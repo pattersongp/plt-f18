@@ -183,14 +183,15 @@ let rec check_stmt = function
         if 1 != param_length then
           raise (Failure ("expecting " ^ "1" ^ 
                         " arguments in " ^ "usage of map"))
-        else 
+        else
             let t1 = fd.typ in
-            match t1 with
+            let m2 = function
             Bool -> let (t2, _, _) = List.hd fd.formals
                     and (_, t3) = check_array id in
                     if (t2 = t3) then SFilter(id, f1)
-                    else raise (Failure (" Map called with out matching types ") )
+                    else raise (Failure (" Map called with out matching types ") ) 
             | _ -> raise (Failure (" Function must return Bool to be applied with Filter"))
+            in m2 t1
       | Array_Assign(id, e1, e2) -> 
         let (t1, t2) = check_array id 
         and (rt1, e1') = expr e1
@@ -203,6 +204,27 @@ let rec check_stmt = function
         let err = "illegal assignment " ^ string_of_typ lt ^ " = " ^ 
           string_of_typ rt ^ " in " ^  string_of_stmt ex
         in (check_assign lt rt err; SAssign(var, (rt, e')))
+      | Vdecl(t, id, e) -> 
+          let f = function
+          Noexpr -> 
+              match StringMap.find id symbols with
+              Some t -> raise (Failure ("trying to redeclare variable"))
+              | None -> 
+                match t with
+                Array(t1, t2) -> 
+                  if ((t1 = Int || t1 = String) && 
+                  (t2 = Int || t2 = String)) then 
+                  StringMap.add id t symbols;  SVDecl(t, id, e);
+                  else raise (Failure (" array type has to be int or string"))
+                | _ -> StringMap.add id t symbols; SVDecl(t, id, e)
+          | _ -> 
+              match Stringmap.find id symbols with
+              Some t -> raise (Failure ("trying to redeclare variable"))
+              | None -> 
+                match t with
+                Array(_, _) -> raise (Failure("cant assign and declare array"))
+                | _ -> String.add id t symbols; check_stmt Assign(id, e); SVDecl(t, id, e)
+          in f e
 
 
 
