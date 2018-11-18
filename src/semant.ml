@@ -146,7 +146,7 @@ let check_function func =
     if ((t1 = Int || t1 = String) && (t2 = Int || t2 = String) ) then true else false
   in
 
-let rec check_stmt s2 = function
+let rec check_stmt = function
         Expr e -> SExpr (expr e)
       | If(p, b1, b2) -> SIf(check_bool_expr p, check_stmt b1, check_stmt b2)
       | For(t1, id1, id2, st) ->
@@ -228,7 +228,7 @@ let rec check_stmt s2 = function
               | None -> 
                   let f5 = function
                     Array(_, _) -> raise (Failure("cant assign and declare array"))
-                    | _ -> StringMap.add id t symbols; print_string("past"); check_stmt (Assign(id, e)) symbols; SVdecl(t, id, e)
+                    | _ -> StringMap.add id t symbols; print_string("past"); check_stmt (Assign(id, e)); (*symbols;*) SVdecl(t, id, e)
                   in f5 t
               in f4 (StringMap.find_opt id symbols)
           in f e
