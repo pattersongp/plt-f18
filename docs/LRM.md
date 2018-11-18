@@ -62,7 +62,6 @@ The following identifiers are restricted from use:
 * `filter`
 * `true`
 * `false`
-* `null`
 * `void`
 
 
@@ -82,47 +81,35 @@ The scope of an identifier can be either global or local. A local identifier's s
 
 ## 4: Expressions
 
-#### 4.1 Primary Expressions
-
-Primary expressions in FIRE can either because accessing an array type or a function call. The primary expression is followed by an expression of either asignments in the case of a function call or an accessing of the datatypes in an array.
-
-1. `Primary Expression [ expression ]`
-2. `Primary Expression ( expression )`
-
-
-#### 4.2 Assignment Operator
+#### 4.1 Assignment Operator
 
 The assignment operators `=` returns the value of the expression that is evaluated on its right-hand side and stores it in the identifier on the left hand side. The scope of that identifier is described in [section 3](#Identifiers)
 
-#### 4.3 Function Calls
+#### 4.2 Function Calls
 
-Functions take in arguments by value except in the case of other functions which are passed by reference. Functions need to be assigned before being called but can be declared anonymously. An anonymous function's scope is within the function that it is declared.
+Functions take in arguments by value except in the case of other functions which are passed by reference. Functions need to be assigned before being called, but FIRE does not support prototyping. The scope of a function is the top level.
 
-#### 4.4 Logical Negation
+#### 4.3 Logical Negation
 
-TODO We're considering adding booleans, its easier to parse.
-
-Although FIRE does not directly support a boolean type, it equates `true` expressions to `1` and false expressions to `0`. As such, the logical negation operator `!` will convert the result of the logical expression on which it is applied to the inverse of what would normally be expected.
-
-All non-zero integers are evaluated as `true` where as `0` is false.
+FIRE provides `true` and `false` values. The logical negation operator `!` evalutates to the parity of the operand.
 
 #### 4.5 Logical AND Operator
 
-The logical AND `&&` is a short circuit operator, and returns 1 if and only if the expressions on its left and right both evaluate to 1.
+The logical AND `&&` is a short circuit operator, and returns `true` if and only if the expressions on its left and right both evaluate to `true`, otherwise `false`.
 
 #### 4.6 Logical OR Operator
 
-The logical OR `||` operator is a short circuit operator and returns 1 if either of the expressions on its left or right return 1.
+The logical OR `||` operator is a short circuit operator and returns `true` if either of the expressions on its left or right return `true`, otherwise `false`.
 
 #### 4.7 Relational Operators
 
-The relational operators `<, >, <=, <=, ==` return `1` if the expression on the left side of the operator has the expected relation to the operator on the right-hand side.
+The relational operators `<, >, <=, <=, ==` return `true` if the expression on the left side of the operator has the expected relation to the operator on the right-hand side, otherwise `false`.
 
 These relationships amongst ints are determined by natural ordering. Strings can only be evaluated using the `==` operator.
 
 #### 4.8 Pattern Match Operator
 
-The pattern match operator `===` returns `1` if the regular expression or string on its right side conforms to the rules laid out by the regular expression on its left side and returns `0` otherwise.
+The pattern match operator `===` returns `true` if the regular expression or string on its right side conforms to the rules laid out by the regular expression on its left side and returns `false` otherwise.
 
 Pattern matching operator l-values must be type `regx` and r-values must be type `string`.
 
@@ -134,19 +121,20 @@ The string concatenation `^` operator returns a new string that is the concatena
 
 #### 4.10 Bracket Operator
 
-The bracket operator `[]` can be used with either`string` or `array`.
+The bracket operator `[]` can operator on `array`.
 
-When used on`array` it is supplied a key and returns the corresponding element, or `-1` if it does not exist.
+When used on `array` it is supplied a key and returns the corresponding element. Indexing a key using the bracket operator that does not exist raises a runtime exception.
 
-When used on `string` it functions in a similar manner to character arrays in C. The r-value in brackets is an integer and returns the letter of that index, however unlike C, FIRE does not support chars so it returns a string of length 1.
+
+##### Bracket Op Typing
+
+The type enforcement for the bracket operator is as follows:
 
 ```
-str hello = "hello";
-str o = hello[4]; 
+v':v = (a:array[k':k, v])[i:k]
 ```
-#### 4.11 Slice operator 
 
-The slice operator `[x:y]` is used on a string and returns a substring.
+where `i` and `k'` are type `k`, which evaluates to type `v`.
 
 #### 4.12 Map 
 
@@ -154,7 +142,20 @@ The map keyword allows a programmer to apply a function to every element of an a
 
 Example: `map(f,arr1);` 
 
-The map keyword does not mutate the values in the provided array; it instead returns a new array with results of every element of arr1 after they are passed to func f. 
+The `map` keyword applies the function to the array passed as the second argument and mutates that array.
+
+The return type of `map` is `void`.
+
+##### Typing
+
+The return type of the function `f` in `map(f,a);` must match the the type of the value in `array[v, v'] a`. Additionally, the only argument of `f` must be the type of the value in the array. A function used in `map` must take exactly 1 argument. It is also the case that the return type and only argument type of `f` are the same. A valid `function`, `map`, and `array` use might be:
+
+```
+func int f = (int i) => { ... }
+array[string, int] a;
+...
+map(f, a);
+```
 
 #### 4.13 Filter 
 
@@ -164,6 +165,17 @@ Example: `filter(f,arr1);`
 
 
 In the above example, arr1 contains an array of strings that are either `dog` or `cat`. func f returns true if the element is equal to `dog`. The above expression would return an array only consisting of every element in arr1 that contains `dog`.
+
+##### Typing
+
+The return type of the function `f` in `filter(f,a);` must be `bool`. Additionally, the only argument of `f` must be the type of the value in the array. A function used in `filter` must take exactly 1 argument. A valid `function`, `filter`, and `array` use might be:
+
+```
+func bool f = (int i) => { ... }
+array[string, int] a;
+...
+filter(f, a);
+```
 
 
 ## 5: Declarations  
@@ -200,21 +212,16 @@ Files are regarded as first-class citizens in FIRE. This is made apparent by the
 
 The syntax for instantiating a `file` object is as follows:
 
-`file f = file("filename.csv", "<mode>");`
+`file["<mode>"] f;
+f.open("filename.csv", "<delimiter>");
+`
 
-In the example provided above, two arguments are fed into the `file(...)` argument: *filename* for reading, writing or both, and *mode*. The *mode* argument can be `r` for read only, `w` for write only, and `rw` for both.
-
-Example:
-
-`file f = file("test.csv", "rw");` will open the File named test.csv in the current directory for both reading and writing.
-  
-`file f = file("filename.csv", "<mode>", "<delim>");`
-
-An optional third argument *delim* may be provided to the constructor specifying a delimiter for reading. If the *delim* argument is not supplied it will default to `\n`.
+In the example provided above, two argument are fed into the `open[...]` argument: *filename* for reading, writing or both, and *delimiter*. *delimiter* may be provided to the constructor specifying a delimiter for reading. The *mode* passing in `file[...]` can be `r` for read only, `w` for write only, and `rw` for both.
 
 Example:
 
-`file f = file("Program.java", "rw", ";");` will open the File named `Program.Java` in the current directory for both reading and writing. Calls to `read()` will read in chunks of the file delimited by the `;` character.
+`file[rw] f; f.open("test.csv", ",");` will open the File named `test.csv` in the current directory for both reading and writing, and delimited by the `,` character.
+
 
 #### 5.1.4. `func`
 
@@ -236,7 +243,7 @@ A function that does not return anything has a return type of `void`.  The void 
 
 Named functions can be passed to other functions as a parameter as follows\:
 ```
-func void saySomething = () =>{ print("something"); };
+func void saySomething = () => { print("something"); };
 func void doSomething = (func f) => { f(); };
 doSomething(saySomething);
 ```
@@ -252,11 +259,11 @@ The `array` type is a dynamic collection of elements. Inspired by AWK's associat
 
 The structure of `array` variable declarations is as follows:
 
-`array arr[<key_type>, <value_type>];`
+`array[<key_type>, <value_type>] arr;`
 
 Example:
 
-`array arr[int, string];` 
+`array[int, string] arr;` 
 
 The assignment of variables has the following structure:
 
@@ -264,7 +271,7 @@ The assignment of variables has the following structure:
 
 Example:
 
- `arr[17] = "age17";`
+ `arr[17] = null;`
  
  Finally, a programmer can retrieve a value associated with a key with the below syntax:
  
@@ -273,6 +280,8 @@ Example:
  Example:
  
  `int age = arr["age"];`
+ 
+ Throws an error if `"age"` does not exit.
  
 #### 5.1.5. `regx`
 
@@ -286,7 +295,6 @@ Example:
 
 ```
 regx myPattern = r'[a-z]';
-myFunction(someString, myPattern);
 ```
 
 The syntax for the regex patterns are as follows:
@@ -315,12 +323,14 @@ bool switch = true; // or false
 Example: 
 
 ```
-int x = 0;
-bool switch = true;
+func void main = () => {
+	int x = 0;
+	bool switch = true;
 
-// infinite loop
-while(switch) {
-	x = x + 1;
+	// infinite loop
+	while(switch) {
+		x = x + 1;
+	}
 }
 ```
 
@@ -328,9 +338,14 @@ while(switch) {
 
 #### 6.1 Print Statement
 
-The print statement prints a literal value, or the value returned by an expression.
+The print statement prints integers and strings but not array and regx. To give more explicit typing constraints, print() can only print integers and sprint() can only print strings.
+```
+print(10);
+```
+```
+sprint("i will be printed to stdout");
+```
 
-`print("i will be printed to stdout");`
 
 #### 6.2 Conditional Statements
 
@@ -340,7 +355,7 @@ Conditional statements evaluate expressions and execute code based on the truth 
 if (<expression>) {
 	<code block>
 }
-elif {
+elif(<expression>) {
 	<code block>
 }
 else {
@@ -383,17 +398,17 @@ Thomas,201-750-0911
 Albert,783-444-7862
 
 user:~ $ cat nj_numbers.fire
-//
-// Program that determines if a number is from NJ based on 201 area code
-//
+/*
+ Program that determines if a number is from NJ based on 201 area code
+*/
 
 func string isNJ = (str phoneNumber) => {
     return phoneNumber === r'201-[0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]';
 };
 
-func array[int, str] extractRegion(func isRegion, file f) {
+func array extractRegion = (func isRegion, file f) {
     
-    array njnums[int, str];
+    array[int, str] njnums;
     
     str number = f.readLine();
     int i = 0;
@@ -408,12 +423,17 @@ func array[int, str] extractRegion(func isRegion, file f) {
     return njnums;
 }
 
-file f = file("PhoneNumbers.csv", "rw", ",");
+func void main = () => {
 
-print( extractRegion(isNJ, f) );
+	file[rw] f;
+	f = open("PhoneNumbers.csv", ",");
 
+	/* Calling a function */
+	extractRegion(isNJ, f);
+}
 
-user:~ $ cut -d' ' -f2 | fire nj_numbers.fire
+user:~ $ make
+user:~ $ ./fire.native < nj_numbers.fire
 201-445-9372
 201-750-0911
 ```
