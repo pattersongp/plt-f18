@@ -92,13 +92,13 @@ let translate functions =
     (* Return the value for a variable or formal argument.
        Check local names first, then global names *)
     let lookup n m = try StringMap.find n m
-                   with Not_found -> raise (Failure "Variable not declared")
+      with Not_found -> raise (Failure ("Variable [ " ^ n ^ " ] not declared"))
     in
 
-    let add_local (t, n) =
+    let add_vdecl (t, n, lvs) =
       let local_var = L.build_alloca (ltype_of_typ t) n builder
       in
-        StringMap.add n local_var local_vars
+        StringMap.add n local_var lvs
     in
 
     let rec expr (builder, lvs) ((e) : expr) = match e with
@@ -134,7 +134,6 @@ let translate functions =
         | Lteq      -> L.build_icmp L.Icmp.Sle
         | Gt        -> L.build_icmp L.Icmp.Sgt
         | Gteq      -> L.build_icmp L.Icmp.Sge
-(*      | Req     -> L.build_icmp L.Icmp.Ne  REGEX COMPARE *)
         ) e1' e2' "tmp" builder
       | _ -> raise (Failure "FAILURE at expr builder")
     in
@@ -147,7 +146,7 @@ let translate functions =
     let rec stmt (builder, lvs) = function
         Block sl -> List.fold_left stmt (builder, lvs) sl
       | Expr e -> ignore(expr (builder, lvs) e); builder, lvs
-      | A.Vdecl (t, n, e) -> let lvs' = add_local (t, n) in stmt (builder, lvs') (Assign(n,e))
+      | A.Vdecl (t, n, e) -> let lvs' = add_vdecl (t, n, lvs) in stmt (builder, lvs') (Assign(n,e))
       | A.Assign (s, e) -> let e' = expr (builder, lvs) e in
                            ignore(L.build_store e' (lookup s lvs) builder); builder, lvs
       | Return e -> ignore(match fdecl.typ with
