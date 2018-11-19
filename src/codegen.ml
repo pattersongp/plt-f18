@@ -40,10 +40,11 @@ let translate functions =
 
   (* Convert Fire types to LLVM types *)
   let ltype_of_typ = function
-      A.Int   -> i32_t
-    | A.Bool  -> i1_t
-    | A.Void  -> void_t
+      A.Int    -> i32_t
+    | A.Bool   -> i1_t
+    | A.Void   -> void_t
     | A.String -> string_t
+    | A.Regx   -> string_t
   in
 
   (* ---------------------- External Functions ---------------------- *)
@@ -56,6 +57,11 @@ let translate functions =
     L.var_arg_function_type i32_t [| string_t |] in (* L.pointer_type i8_t is what we really want*)
   let sprint_func : L.llvalue =
     L.declare_function "sprint" sprint_t the_module in
+
+  let regex_cmp_t : L.lltype =
+    L.var_arg_function_type i1_t [| string_t; string_t |] in (* L.pointer_type i8_t is what we really want*)
+  let regex_cmp_func : L.llvalue =
+    L.declare_function "regex_compare" regex_cmp_t the_module in
 
   (* ---------------------- User Functions ---------------------- *)
   let function_decls : (L.llvalue * func_decl) StringMap.t =
@@ -118,6 +124,10 @@ let translate functions =
                         A.Void -> ""
                       | _ -> f ^ "_result") in
          L.build_call fdef (Array.of_list llargs) result builder
+      | RegexComp(e1, e2) ->
+          let e1' = expr (builder, lvs) e1
+          and e2' = expr (builder, lvs) e2 in
+          L.build_call regex_cmp_func [| e1'; e2' |] "regex_compare" builder
       | Binop (e1, op, e2) ->
         let e1' = expr (builder, lvs) e1
         and e2' = expr (builder, lvs) e2 in
