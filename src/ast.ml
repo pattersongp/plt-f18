@@ -20,14 +20,15 @@ type expr =
   | Unop of uop * expr
   | Retrieve of string * expr
   | Call of string * expr list
+  | RegexComp of expr * expr
   | Noexpr
 
-type bind = typ * string * expr 
+type bind = typ * string * expr
 
 type stmt =
     Block of stmt list
   | Expr of expr
-  | Return of expr 
+  | Return of expr
   | If of expr * stmt * stmt
   | While of expr * stmt
   | For of typ * string * string * stmt

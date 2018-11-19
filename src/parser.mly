@@ -115,9 +115,9 @@ expr:
   | expr LTEQ   expr { Binop($1, Lteq,   $3) }
   | expr GT     expr { Binop($1, Gt, $3) }
   | expr GTEQ   expr { Binop($1, Gteq,   $3) }
-  | expr REQ    expr { Binop($1, Req,   $3) }
   | expr AND    expr { Binop($1, And,   $3) }
   | expr OR     expr { Binop($1, Or,    $3) }
+  | expr REQ    expr { RegexComp($1, $3) }
   | MINUS expr %prec NEG { Unop(Neg, $2) }
   | NOT expr         { Unop(Not, $2) }
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }

@@ -4,7 +4,7 @@
 
 # Easiest way to build: using ocamlbuild, which in turn uses ocamlfind
 
-all : fire.native arrlib.o printlib.o
+all : fire.native arrlib.o printlib.o regexlib.o
 
 fire.native :
 	ocamlbuild -use-ocamlfind -pkgs llvm,llvm.analysis,batteries -cflags -w,+a-4 \
@@ -40,6 +40,9 @@ parser.ml parser.mli : parser.mly
 
 %.cmx : %.ml
 	ocamlfind ocamlopt -c -package llvm $<
+
+regexlib: regexlib.c
+	cc -o regexlib -DBUILD_TEST regexlib.c
 
 printlib: printlib.c
 	cc -o printlib -DBUILD_TEST printlib.c
