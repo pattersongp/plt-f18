@@ -11,7 +11,7 @@ open Ast
 %token LBRACKET RBRACKET CONCAT COLON
 %token REGX INT FUNCTION STRING VOID ARRAY BOOL FILE
 %token FATARROW FILTER MAP OPEN
-%token READ WRITE WRITEREAD
+%token READ WRITE WRITEREAD READFILE DOT
 
 %token <int> INT_LIT
 %token <string> ID
@@ -79,7 +79,6 @@ stmt:
     expr SEMI { Expr $1 }
   | RETURN SEMI { Return Noexpr }
   | BREAK SEMI { Break }
-  | OPEN LPAREN STRING_LIT COMMA STRING_LIT RPAREN { Open($3, $5) }
   | RETURN expr SEMI { Return $2 }
   | LBRACE stmt_list RBRACE { Block(List.rev $2) }
   | IF LPAREN expr RPAREN stmt %prec NOELSE { If($3, $5, Block([])) }
@@ -105,6 +104,8 @@ expr:
   | TRUE             { BoolLit(true) }
   | FALSE            { BoolLit(false) }
   | ID               { Id($1) }
+  | ID DOT READFILE LPAREN RPAREN { ReadFile($1) }
+  | OPEN LPAREN expr COMMA expr RPAREN { Open($3, $5) }
   | expr PLUS   expr { Binop($1, Plus,   $3) }
   | expr MINUS  expr { Binop($1, Minus,   $3) }
   | expr TIMES  expr { Binop($1, Times,  $3) }
