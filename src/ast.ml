@@ -1,15 +1,13 @@
 (* Abstract Syntax Tree *)
 
 type op = Plus | Minus | Times | Divide | Eq | Neq | Lt | Lteq | Gt | Gteq |
-          And | Or  | Req
+          And | Or
 
 type uop = Neg | Not
 
-type mode = Read | Write | WriteRead
-
 type typ =
           Int | Bool | Void | String | Array of typ * typ
-        | Function | File of mode | Regx
+        | Function | File | Regx
 
 type expr =
     Literal of int
@@ -21,6 +19,8 @@ type expr =
   | Retrieve of string * expr
   | Call of string * expr list
   | RegexComp of expr * expr
+  | Open of expr * expr
+  | ReadFile of string
   | Noexpr
 
 type bind = typ * string * expr
@@ -34,7 +34,6 @@ type stmt =
   | For of typ * string * string * stmt
   | Map of string * string
   | Filter of string * string
-  | Open of string * string
   | Break
   | Vdecl of typ * string * expr
   | Assign of string * expr
@@ -53,11 +52,6 @@ let string_of_uop = function
           Neg -> "-"
         | Not -> "!"
 
-let string_of_mode = function
-          Read -> "r"
-        | Write -> "w"
-        | WriteRead -> "wr"
-
 let rec string_of_typ = function
           Int -> "int"
         | String -> "str"
@@ -67,7 +61,7 @@ let rec string_of_typ = function
         | Void -> "void"
         | Function -> "func"
         | Regx -> "regx"
-        | File(mode) -> "file[" ^ string_of_mode mode ^ "]"
+        | File -> "file"
 
 let string_of_op = function
           Plus  -> "+"
@@ -80,7 +74,6 @@ let string_of_op = function
         | Lteq  -> "<="
         | Gt    -> ">"
         | Gteq  -> ">="
-        | Req   -> "==="
         | And   -> "&&"
         | Or    -> "||"
 
@@ -88,13 +81,16 @@ let rec string_of_expr = function
           Noexpr -> ""
         |  Literal(l) -> string_of_int l
         |  Id(i) -> i
-        |  Unop(op, e1) -> string_of_uop op ^ string_of_expr ( e1)
+        |  Unop(op, e1) -> string_of_uop op ^ string_of_expr e1
+        |  RegexComp(e1, e2) -> string_of_expr e1 ^ "===" ^ string_of_expr e2
+        |  ReadFile(id) -> id ^ ".read();\n"
         |  BoolLit(true) -> "true"
         |  BoolLit(false) -> "false"
         |  StringLit(s) ->  s
         |  Binop(e1, op, e2) -> string_of_expr ( e1) ^ " " ^
                 string_of_op op ^ " " ^ string_of_expr ( e2)
         |  Retrieve(id, e1) -> id ^ "[" ^ string_of_expr ( e1) ^ "]"
+        |  Open(filename, delim) -> "open(" ^ string_of_expr filename ^ ", " ^ string_of_expr delim ^ ");\n"
         |  Call(id, act) -> id ^ "(" ^
                 String.concat ", "(List.map string_of_expr act) ^ ")"
 
@@ -125,7 +121,6 @@ let rec string_of_stmt = function
                 string_of_stmt s1
         | Map(a1, f1) -> "map(" ^ a1 ^ ", " ^ f1 ^ ");\n"
         | Filter(a1, f1) -> "filter(" ^ a1 ^ ", " ^ f1 ^ ");\n"
-        | Open(filename, delim) -> "open(" ^ filename ^ ", " ^ delim ^ ");\n"
         | Array_Assign(id, e1, e2) -> id ^ "[" ^ string_of_expr ( e1) ^
                 "]" ^ " = " ^ string_of_expr ( e2)
         | Assign(id, e1) ->  id ^ " = " ^ string_of_expr ( e1)
