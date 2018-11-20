@@ -44,6 +44,8 @@ rule token = parse
 | "file"   { FILE }
 | 'w' { WRITE }
 | 'r' { READ }
+| '.' { DOT }
+| "read" { READFILE }
 | "wr" { WRITEREAD }
 | "func"   { FUNCTION }
 | "regx"   { REGX }
