@@ -45,8 +45,10 @@ let translate functions =
     | A.Void        -> void_t
     | A.String      -> string_t
     | A.Regx        -> string_t
-    | A.File (m)    -> i8_ptr_t
+    | A.File (m)    -> i32_ptr_t
   in
+
+
 
   (* ---------------------- External Functions ---------------------- *)
   let print_t : L.lltype =
@@ -63,16 +65,26 @@ let translate functions =
     L.var_arg_function_type i1_t [| string_t; string_t |] in
   let regex_cmp_func : L.llvalue =
     L.declare_function "regex_compare" regex_cmp_t the_module in
+(*
+
+  let printf_t = L.var_arg_function_type i32_t [| i32_ptr_t |] in
+  let printf_func = L.declare_function "printf" printf_t the_module in
+
+*)
+  let printf_t : L.lltype =
+      L.var_arg_function_type i32_t [| L.pointer_type i8_t |] in
+  let printf_func : L.llvalue =
+      L.declare_function "printf" printf_t the_module in
 
   let open_file_t : L.lltype =
-    L.function_type i8_ptr_t [| L.pointer_type i8_t ; L.pointer_type i8_t|] in
+    L.function_type i32_ptr_t [| string_t; string_t |] in
   let open_file_func : L.llvalue =
     L.declare_function "open" open_file_t the_module in
 
   let read_file_t : L.lltype =
-    L.function_type string_t [| L.pointer_type i8_t |] in
+    L.function_type string_t [| i32_ptr_t |] in
   let read_file_func : L.llvalue =
-    L.declare_function "read" read_file_t the_module in
+    L.declare_function "readFire" read_file_t the_module in
 
   (* ---------------------- User Functions ---------------------- *)
   let function_decls : (L.llvalue * func_decl) StringMap.t =
@@ -87,8 +99,11 @@ let translate functions =
     List.fold_left function_decl StringMap.empty functions
   in
   let build_function_body fdecl =
+
     let (the_function, _) = StringMap.find fdecl.fname function_decls  in
     let builder = L.builder_at_end context (L.entry_block the_function) in
+
+    let str_format_str = L.build_global_stringptr "%s\n" "fmt" builder in
 
   (* Local variables for a function *)
   let local_vars =
@@ -125,16 +140,20 @@ let translate functions =
       | A.BoolLit b           -> L.const_int i1_t (if b then 1 else 0)
       | A.Id s                -> L.build_load (lookup s lvs) s builder
       | A.ReadFile (id)       ->
-        L.build_call read_file_func [| (expr (builder, lvs) (Id(id))) |] "read" builder
+        L.build_call read_file_func [| (expr (builder, lvs) (Id(id))) |] "readFire" builder
 (* might be best to move this as an implicit argument on an id, so we can know what pointer we're dealing with *)
       | A.Open (e1, e2)    ->
           let e1' = expr (builder, lvs) e1
           and e2' = expr (builder, lvs) e2 in
           L.build_call open_file_func [| e1'; e2' |] "open" builder
+      | Call("sprint", [e])    ->
+          L.build_call printf_func [| str_format_str; (expr (builder, lvs) e) |] "printf" builder
+(*
       | Call("print", [e])    ->
         L.build_call print_func [| (expr (builder, lvs) e) |] "print" builder
       | Call("sprint", [e])   ->
-        L.build_call sprint_func [| (expr (builder, lvs) e) |] "print" builder
+        L.build_call sprint_func [| (expr (builder, lvs) e) |] "sprint" builder
+*)
       | Call (f, args) ->
          let (fdef, fdecl) = try StringMap.find f function_decls with Not_found -> raise (Failure "Function not found" )in
          let llargs = List.rev (List.map (expr (builder, lvs)) (List.rev args)) in

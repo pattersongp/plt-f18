@@ -12,23 +12,34 @@ typedef struct fileData {
 	FILE *fd;
 } file_t;
 
+
+char *strip(char *s) {
+	int i;
+	char *clean = (char *)malloc(strlen(s)-2);
+	for(i=1; i < strlen(s)-1; i++) { clean[i-1] = s[i]; }
+	clean[i-1] = '\0';
+	return clean;
+}
+
 file_t *open(char *filename, char *delim) {
-	printf("entered function\n");
+	filename = strip(filename);
+	delim = strip(delim);
 	file_t *ft = malloc(sizeof(file_t));
-	printf("malloced\n");
 	ft->delim = delim;
 	ft->filename = filename;
 	ft->fd = fopen(filename, "rw");
+#ifdef DEBUG
 	printf("ft->delim: %s\nft->filename: %s\n", ft->delim, ft->filename);
+#endif
 	return ft;
 }
 
 /*
  * Note: This function removes the delimiter from the chunk read
  */
-char *read(file_t *ft) {
+char *readFire(file_t *ft) {
 	int i = 0;
-	char *buff = malloc(1024);
+	char *buff = (char *)malloc(1024);
 	fread(buff+i, 1, 1, ft->fd);
 
 #ifdef DEBUG
