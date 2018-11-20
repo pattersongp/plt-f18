@@ -11,7 +11,7 @@ open Ast
 %token LBRACKET RBRACKET CONCAT COLON
 %token REGX INT FUNCTION STRING VOID ARRAY BOOL FILE
 %token FATARROW FILTER MAP OPEN
-%token READ WRITE WRITEREAD READFILE DOT
+%token READFILE DOT
 
 %token <int> INT_LIT
 %token <string> ID
@@ -69,7 +69,7 @@ concrete_typ:
         | VOID      { Void   }
         | FUNCTION  { Function   }
         | REGX      { Regx }
-        | FILE LBRACKET mode RBRACKET { File($3) }
+        | FILE { File }
 
 stmt_list:
     /* nothing */  { [] }
@@ -92,11 +92,6 @@ stmt:
   | typ ID ASSN expr SEMI { Vdecl($1, $2, $4) }
   | typ ID SEMI { Vdecl($1, $2, Noexpr) }
   | ID LBRACKET expr RBRACKET ASSN expr SEMI {Array_Assign($1, $3, $6)}
-
-mode:
-          READ { Read }
-        | WRITE { Write }
-        | WRITEREAD { WriteRead }
 
 expr:
     INT_LIT          { Literal($1) }

@@ -1,7 +1,9 @@
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 #include <stdio.h>
 #include <sys/types.h>
+
+#include "util.h"
 
 #define DEFAULT_DELIM \n
 
@@ -12,18 +14,7 @@ typedef struct fileData {
 	FILE *fd;
 } file_t;
 
-
-char *strip(char *s) {
-	int i;
-	char *clean = (char *)malloc(strlen(s)-2);
-	for(i=1; i < strlen(s)-1; i++) { clean[i-1] = s[i]; }
-	clean[i-1] = '\0';
-	return clean;
-}
-
 file_t *open(char *filename, char *delim) {
-	filename = strip(filename);
-	delim = strip(delim);
 	file_t *ft = malloc(sizeof(file_t));
 	ft->delim = delim;
 	ft->filename = filename;
@@ -39,16 +30,17 @@ file_t *open(char *filename, char *delim) {
  */
 char *readFire(file_t *ft) {
 	int i = 0;
+	int n = 0;
 	char *buff = (char *)malloc(1024);
-	fread(buff+i, 1, 1, ft->fd);
+	n = fread(buff+i, 1, 1, ft->fd);
 
 #ifdef DEBUG
 	printf("fread: %s\n", buff);
 #endif
 
-	while (buff[i] != *ft->delim) {
+	while (n > 0 && buff[i] != *ft->delim) {
 		i ++;
-		fread(buff+i, 1, 1, ft->fd);
+		n = fread(buff+i, 1, 1, ft->fd);
 #ifdef DEBUG
 		printf("fread: %s\n", buff);
 #endif
@@ -62,7 +54,7 @@ int main() {
 	file_t *ft = open("Makefile", "\n");
 	printf("ft->delim: %s\nft->filename: %s\n", ft->delim, ft->filename);
 
-	char *ret = read(ft);
+	char *ret = readFire(ft);
 
 	printf("read() returned: %s\n", ret);
 

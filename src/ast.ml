@@ -1,15 +1,13 @@
 (* Abstract Syntax Tree *)
 
 type op = Plus | Minus | Times | Divide | Eq | Neq | Lt | Lteq | Gt | Gteq |
-          And | Or  | Req
+          And | Or
 
 type uop = Neg | Not
 
-type mode = Read | Write | WriteRead
-
 type typ =
           Int | Bool | Void | String | Array of typ * typ
-        | Function | File of mode | Regx
+        | Function | File | Regx
 
 type expr =
     Literal of int
@@ -54,11 +52,6 @@ let string_of_uop = function
           Neg -> "-"
         | Not -> "!"
 
-let string_of_mode = function
-          Read -> "r"
-        | Write -> "w"
-        | WriteRead -> "wr"
-
 let rec string_of_typ = function
           Int -> "int"
         | String -> "str"
@@ -68,7 +61,7 @@ let rec string_of_typ = function
         | Void -> "void"
         | Function -> "func"
         | Regx -> "regx"
-        | File(mode) -> "file[" ^ string_of_mode mode ^ "]"
+        | File -> "file"
 
 let string_of_op = function
           Plus  -> "+"
@@ -81,7 +74,6 @@ let string_of_op = function
         | Lteq  -> "<="
         | Gt    -> ">"
         | Gteq  -> ">="
-        | Req   -> "==="
         | And   -> "&&"
         | Or    -> "||"
 
@@ -89,7 +81,9 @@ let rec string_of_expr = function
           Noexpr -> ""
         |  Literal(l) -> string_of_int l
         |  Id(i) -> i
-        |  Unop(op, e1) -> string_of_uop op ^ string_of_expr ( e1)
+        |  Unop(op, e1) -> string_of_uop op ^ string_of_expr e1
+        |  RegexComp(e1, e2) -> string_of_expr e1 ^ "===" ^ string_of_expr e2
+        |  ReadFile(id) -> id ^ ".read();\n"
         |  BoolLit(true) -> "true"
         |  BoolLit(false) -> "false"
         |  StringLit(s) ->  s

@@ -36,7 +36,8 @@ let translate functions =
 
   let string_t = L.pointer_type i8_t
   and i32_ptr_t = L.pointer_type i32_t
-  and i8_ptr_t = L.pointer_type i8_t in
+(*   and i8_ptr_t = L.pointer_type i8_t  *)
+  in
 
   (* Convert Fire types to LLVM types *)
   let ltype_of_typ = function
@@ -45,36 +46,31 @@ let translate functions =
     | A.Void        -> void_t
     | A.String      -> string_t
     | A.Regx        -> string_t
-    | A.File (m)    -> i32_ptr_t
+    | A.File        -> i32_ptr_t
+    | A.Array(_, _) -> i32_ptr_t (* Not implemented*)
+    | A.Function    -> i32_ptr_t (* Not implemented*)
   in
 
-
-
   (* ---------------------- External Functions ---------------------- *)
-  let print_t : L.lltype =
-    L.var_arg_function_type i32_t [| i32_t |] in
-  let print_func : L.llvalue =
-    L.declare_function "print" print_t the_module in
+  let regex_cmp_t : L.lltype =
+    L.var_arg_function_type i1_t [| string_t; string_t |] in
+  let regex_cmp_func : L.llvalue =
+    L.declare_function "regex_compare" regex_cmp_t the_module in
 
   let sprint_t : L.lltype =
     L.var_arg_function_type i32_t [| string_t |] in
   let sprint_func : L.llvalue =
     L.declare_function "sprint" sprint_t the_module in
 
-  let regex_cmp_t : L.lltype =
-    L.var_arg_function_type i1_t [| string_t; string_t |] in
-  let regex_cmp_func : L.llvalue =
-    L.declare_function "regex_compare" regex_cmp_t the_module in
-(*
-
-  let printf_t = L.var_arg_function_type i32_t [| i32_ptr_t |] in
-  let printf_func = L.declare_function "printf" printf_t the_module in
-
-*)
   let printf_t : L.lltype =
       L.var_arg_function_type i32_t [| L.pointer_type i8_t |] in
   let printf_func : L.llvalue =
       L.declare_function "printf" printf_t the_module in
+
+  let strlen_t : L.lltype =
+      L.var_arg_function_type i32_t [| L.pointer_type i8_t |] in
+  let strlen_func : L.llvalue =
+      L.declare_function "strlen" strlen_t the_module in
 
   let open_file_t : L.lltype =
     L.function_type i32_ptr_t [| string_t; string_t |] in
@@ -103,7 +99,8 @@ let translate functions =
     let (the_function, _) = StringMap.find fdecl.fname function_decls  in
     let builder = L.builder_at_end context (L.entry_block the_function) in
 
-    let str_format_str = L.build_global_stringptr "%s\n" "fmt" builder in
+  (* ---------------------- Formatters ---------------------- *)
+    let int_format_str = L.build_global_stringptr "%d\n" "fmt" builder in
 
   (* Local variables for a function *)
   let local_vars =
@@ -141,19 +138,16 @@ let translate functions =
       | A.Id s                -> L.build_load (lookup s lvs) s builder
       | A.ReadFile (id)       ->
         L.build_call read_file_func [| (expr (builder, lvs) (Id(id))) |] "readFire" builder
-(* might be best to move this as an implicit argument on an id, so we can know what pointer we're dealing with *)
-      | A.Open (e1, e2)    ->
+      | A.Open (e1, e2)       ->
           let e1' = expr (builder, lvs) e1
           and e2' = expr (builder, lvs) e2 in
           L.build_call open_file_func [| e1'; e2' |] "open" builder
+      | Call("strlen", [e])    ->
+          L.build_call strlen_func [| (expr (builder, lvs) e) |] "strlen" builder
       | Call("sprint", [e])    ->
-          L.build_call printf_func [| str_format_str; (expr (builder, lvs) e) |] "printf" builder
-(*
-      | Call("print", [e])    ->
-        L.build_call print_func [| (expr (builder, lvs) e) |] "print" builder
-      | Call("sprint", [e])   ->
-        L.build_call sprint_func [| (expr (builder, lvs) e) |] "sprint" builder
-*)
+          L.build_call sprint_func [| (expr (builder, lvs) e) |] "sprint" builder
+      | Call("print", [e])     ->
+          L.build_call printf_func [| int_format_str; (expr (builder, lvs) e) |] "printf" builder
       | Call (f, args) ->
          let (fdef, fdecl) = try StringMap.find f function_decls with Not_found -> raise (Failure "Function not found" )in
          let llargs = List.rev (List.map (expr (builder, lvs)) (List.rev args)) in

@@ -1,7 +1,10 @@
+#include <stdlib.h>
 #include <stdio.h>
 #include <regex.h>
 #include <string.h>
 #include <sys/types.h>
+
+#include "util.h"
 
 /*
  * Simple wrapper for the regex GNU C interface
@@ -14,26 +17,11 @@ int regex_compare(char *regex, char *operand) {
 	int i;
 	regex_t preg;
 
-#ifdef DEBUG
-	printf("{%s}\n", regex);
-	printf("{%s}\n", operand);
-#endif
-
-	for(i=1; i < strlen(regex)-1; i++) { clean_regex[i-1] = regex[i]; }
-	clean_regex[i-1] = '\0';
-	for(i=1; i < strlen(operand)-1; i++) { clean_operand[i-1] = operand[i]; }
-	clean_operand[i-1] = '\0';
-
-#ifdef DEBUG
-	printf("{%s}\n", clean_regex);
-	printf("{%s}\n", clean_operand);
-#endif
-
-	if(regcomp(&preg, (const char *)clean_regex, 0) != 0) {
+	if(regcomp(&preg, (const char *)regex, 0) != 0) {
 		printf("regcomp() failed");
 	}
 
-	int ret = regexec((const regex_t *)&preg, clean_operand, 0, 0, 0);
+	int ret = regexec((const regex_t *)&preg, operand, 0, 0, 0);
 
 #ifdef DEBUG
 	if(ret == 0) {
@@ -48,6 +36,6 @@ int regex_compare(char *regex, char *operand) {
 
 #ifdef BUILD_TEST
 int main() {
-	regex_compare("\"[:alpha:]\"", "4115hello4115");
+	regex_compare("[:alpha:]", "4115hello4115");
 }
 #endif

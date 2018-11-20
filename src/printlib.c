@@ -1,5 +1,7 @@
 #include <stdio.h>
 
+#include "util.h"
+
 void print(int x) {
 	printf("%d\n", x);
 }
