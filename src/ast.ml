@@ -19,6 +19,7 @@ type expr =
   | Retrieve of string * expr
   | Call of string * expr list
   | RegexComp of expr * expr
+  | StrCat of expr * expr
   | Open of expr * expr
   | ReadFile of string
   | Noexpr
@@ -82,6 +83,7 @@ let rec string_of_expr = function
         |  Literal(l) -> string_of_int l
         |  Id(i) -> i
         |  Unop(op, e1) -> string_of_uop op ^ string_of_expr e1
+        |  StrCat(e1, e2) -> string_of_expr e1 ^ " ^ " ^ string_of_expr e2
         |  RegexComp(e1, e2) -> string_of_expr e1 ^ "===" ^ string_of_expr e2
         |  ReadFile(id) -> id ^ ".read();\n"
         |  BoolLit(true) -> "true"

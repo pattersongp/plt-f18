@@ -63,14 +63,19 @@ let translate functions =
     L.declare_function "sprint" sprint_t the_module in
 
   let printf_t : L.lltype =
-      L.var_arg_function_type i32_t [| L.pointer_type i8_t |] in
+    L.var_arg_function_type i32_t [| L.pointer_type i8_t |] in
   let printf_func : L.llvalue =
-      L.declare_function "printf" printf_t the_module in
+    L.declare_function "printf" printf_t the_module in
+
+  let strcat_t : L.lltype =
+    L.function_type string_t [| string_t; string_t |] in
+  let strcat_func : L.llvalue =
+    L.declare_function "strcat_fire" strcat_t the_module in
 
   let strlen_t : L.lltype =
-      L.var_arg_function_type i32_t [| L.pointer_type i8_t |] in
+    L.function_type i32_t [| L.pointer_type i8_t |] in
   let strlen_func : L.llvalue =
-      L.declare_function "strlen" strlen_t the_module in
+    L.declare_function "strlen" strlen_t the_module in
 
   let open_file_t : L.lltype =
     L.function_type i32_ptr_t [| string_t; string_t |] in
@@ -159,6 +164,10 @@ let translate functions =
           let e1' = expr (builder, lvs) e1
           and e2' = expr (builder, lvs) e2 in
           L.build_call regex_cmp_func [| e1'; e2' |] "regex_compare" builder
+      | StrCat(e1, e2) ->
+          let e1' = expr (builder, lvs) e1
+          and e2' = expr (builder, lvs) e2 in
+          L.build_call strcat_func [| e1'; e2' |] "strcat_fire" builder
       | Binop (e1, op, e2) ->
         let e1' = expr (builder, lvs) e1
         and e2' = expr (builder, lvs) e2 in
