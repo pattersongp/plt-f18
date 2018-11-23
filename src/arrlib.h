@@ -1,14 +1,31 @@
-#include <stdio.h>
-#include <string.h>
-#include <sys/types.h>
+#ifndef ARRLIB_H_
+#define ARRLIB_H_
 
-using namespace std;
+#include <iostream>
 
-class Array{
+class Array {
 public:
-    //no default constructors
-    Array(void,void);
+    template<typename AnyType>
+    Array(AnyType key1, AnyType key2);
+    template<typename AnyType>
+    void add(AnyType data1, AnyType data2);
+    
+    ~Array();
 private:
-    void key1;
-    void key2;
-}
+    template<typename AnyType>
+    AnyType key1;
+    template<typename AnyType>
+    AnyType key2;
+    struct Node *head;
+};
+
+
+template<typename AnyType>
+struct Node {
+    AnyType *data1;
+    AnyType *data2;
+    struct Node *next;
+};
+
+
+#endif /* defined(__TemplatesClass__Template__) */
