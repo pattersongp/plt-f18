@@ -1,29 +1,18 @@
-//Array Library C++ for Fire Language
-#include <cstdlib>
-#include <iostream>
 #include "arrlib.h"
+#include <sstream>
+#include <fstream>
+#include <cmath>
 
-using namespace std;
-
-int main(){
-    
+Array::Array(){
 }
 
-template<typename AnyType>
-void Array::add(AnyType data1, AnyType data2){
-    struct Node newNode = malloc(sizeof(struct Node));
-    
-    //check malloc
-    if(newNode == NULL){
-        thow "melloc return NULL";
-        exit(1);
+Array::Value::~Value(){
+    switch(type){
+        case TYPE_STRING:
+            delete value.val_str;
+            break;
+        default:
+            break;
     }
-    
-    //assign new node's all property
-    newNode->data1 = data1;
-    newNode->data2 = data2;
-    newNode->next = this->head;    //pointing to same as head's
-    
-    //assign head
-    this->head = newNode;
 }
+

@@ -1,31 +1,35 @@
-#ifndef ARRLIB_H_
-#define ARRLIB_H_
 
-#include <iostream>
+#ifndef arrlib_h
+#define arrlib_h
 
-class Array {
-public:
-    template<typename AnyType>
-    Array(AnyType key1, AnyType key2);
-    template<typename AnyType>
-    void add(AnyType data1, AnyType data2);
+#include <string>
+#include <stdio.h>
+
+class Array{
+    // The type of a value
+    enum Type{
+        TYPE_INT,     // integer
+        TYPE_STRING,  // string
+    };
+    enum KeyType{
+        KEY_INT,
+        KEY_STRING
+    };
     
-    ~Array();
-private:
-    template<typename AnyType>
-    AnyType key1;
-    template<typename AnyType>
-    AnyType key2;
-    struct Node *head;
+    struct Value{
+        Type type;
+        union{
+            int val_int;
+            std::string *val_str;
+        } value;
+        
+        Value();
+        
+        ~Value();
+    };
+    
+public:
+    Array();
 };
+#endif /* arrlib_h */
 
-
-template<typename AnyType>
-struct Node {
-    AnyType *data1;
-    AnyType *data2;
-    struct Node *next;
-};
-
-
-#endif /* defined(__TemplatesClass__Template__) */
