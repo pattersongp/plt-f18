@@ -25,7 +25,7 @@ open Ast
 %right ASSN
 %left OR
 %left AND
-%left EQ NEQ REQ
+%left EQ NEQ REQ CONCAT
 %left LT GT LTEQ GTEQ
 %left PLUS MINUS
 %left TIMES DIVIDE
@@ -114,6 +114,7 @@ expr:
   | expr AND    expr { Binop($1, And,   $3) }
   | expr OR     expr { Binop($1, Or,    $3) }
   | expr REQ    expr { RegexComp($1, $3) }
+  | expr CONCAT expr { StrCat($1, $3) }
   | MINUS expr %prec NEG { Unop(Neg, $2) }
   | NOT expr         { Unop(Not, $2) }
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
