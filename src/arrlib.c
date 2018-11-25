@@ -12,6 +12,7 @@ typedef struct Node {
 
 struct Array {
     struct Node *head;
+    
 };
 
 static inline void initArray(struct Array *array)
@@ -51,13 +52,6 @@ struct Node *findNode(struct Array *array, const void *dataSought, int (*compar)
     return NULL;
 }
 
-int compareInt(const void *data1, const void *data2)
-{
-    if (*(int *)data1 == *(int *)data2)
-        return 0;
-    else
-        return 1;
-}
 
 const char * get(struct Array *array, const void *dataSought){
     //Lookup key
@@ -68,63 +62,33 @@ const char * get(struct Array *array, const void *dataSought){
     return value;
 }
 
+void set(struct Array *array, const void *dataSought, char *valueSet){
+    //lookup key
+    struct Node *node;
+    node = findNode(array, dataSought, (char (*)(const void *, const void *))&strcmp);
+    node->data2 = valueSet;
+}
+
+//#ifdef BUILD_TEST
 int main() {
     //No default constructor
     struct Array arr;
     initArray(&arr);
     
     //Adding an element
-    add(&arr,"hey","1");
+    add(&arr,"Age","17");
+    add(&arr,"Birthday","");
     
-    //Retrieve an value
-    char *c = get(&arr,"hey");
+    //Retrieve a value
+    char *c = get(&arr,"Age");
     printf(c);
+    
+    //Assign a value
+    char *d = "2000-11-28";
+    set(&arr,"Birthday",d);
+    
     return 0;
 }
+//#endif
 
-
-
-/*long* init_arr(int* dims, int dimc){
- int static_offsets[dimc];
- int total = 0;
- for(int i = 0; i < dimc; i++) {
- static_offsets[i] = 1;
- for(int j = 0; j < i; j++) {
- static_offsets[i] *= dims[j];
- }
- static_offsets[i] *= dims[i] + 1;
- static_offsets[i] += total;
- total = static_offsets[i];
- }
- 
- int indexes[dimc];
- for(int i = 0; i < dimc; i++) {
- indexes[i] = 0;
- }
- 
- //Get total length of array
- int length = 0;
- for(int i = 0; i < dimc; i++) {
- int tmp = 1;
- for(int j = i - 1; j >= 0; j--) {
- tmp *= dims[j];
- }
- tmp *= dims[i] + 1;
- length += tmp;
- }
- 
- //Malloc array
- long* arr = malloc(length);
- 
- //Set all values to 0 initially
- for(int i = 0 ; i < length; i++) {
- arr[i] = 0;
- }
- 
- //Initialize the entire array
- rec_init(arr, 0, static_offsets, indexes, dims, dimc, 0);
- 
- return arr;
- }
- */
 
