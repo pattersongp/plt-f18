@@ -3,6 +3,11 @@ open Sast
 
 module StringMap = Map.Make(String)
 
+  type env = {
+    mutable lvs: typ StringMap.t;
+    stmts: sstmt list;
+  } 
+
 let check fdec = 
 
   (* note, bind is a triple of typ, string and expr *)
@@ -32,7 +37,6 @@ let built_in_func_decls =
     } map 
     (* REVISE following line !!!*)
     in List.fold_left add_bind StringMap.empty [("print", String); ("map", String); ("filter", String)]
-
 in
 
 (* build up symbol table - global scope ONLY for now *)
@@ -145,7 +149,7 @@ let check_function func =
   let check_array_type (t1, t2) =
     if ((t1 = Int || t1 = String) && (t2 = Int || t2 = String) ) then true else false
   in
-
+(*
   let rec check_stmt_list (stmts, lvs) = function
               [Return _ as s] -> [check_stmt s]
             | Return _ :: _   -> raise (Failure "nothing may follow a return")
@@ -153,36 +157,29 @@ let check_function func =
             | Block sl :: ss  -> let sl' = check_stmt_list (stmts, lvs) sl in sl' @ (check_stmt_list (stmts, lvs) ss) (* Flatten blocks *)
             | s :: ss         -> check_stmt s :: check_stmt_list ss
             | []              -> []
-  in
-
-  type env = {
-    lvs: StringMap.Empty
-    stmts: sstmt list
-  }
-
-let rec check_stmt envs = function
-       (* Expr e -> (SExpr(expr e) :: stmts, lvs)*)
-      Expr e -> envs{stmts = SExpr(expr e) :: envs.stmts}
-      | If(p, b1, b2) -> (SIf(check_bool_expr p, check_stmt b1, check_stmt b2) :: stmts. lvs)
-      | If(p, b1, b2) -> let env1 = check_stmt envs b1 in let env2 = check_stmt envs b2 in envs{stmts = SIf(check_bool_expr p, env1.stmts, env2.stmts) :: stmts, lvs = env2.lvs}
+  in*)
   (*    | For(t1, id1, id2, st) ->
 	        (SFor(t1, id1, id2, check_stmt st), lvs)*)
-      | For(t1, id1, id2, st) -> let env1 = check_stmt envs st in envs{stmts = SFor(t1, id1, id2, env1.stmts) :: envs.stmts}
-	      (SFor(t1, id1, id2, check_stmt st), lvs)
-(*      | While(p, s) -> (SWhile(check_bool_expr p, check_stmt s), lvs)*)
-      | While(p, s) -> let env1 = check_stmt envs s in envs{stmts = SWhile(check_bool_expr p, env1.stmts) :: envs.stmts}
-      | Return e -> let (t, e') = expr e in
-        if t = func.typ then envs{stmts = SReturn (t, e') :: envs.stmts}
-        else raise (
-	  Failure ("return gives " ^ string_of_typ t ^ " expected " ^
-		   string_of_typ func.typ ^ " in " ^ string_of_expr e))
 
+       (* Expr e -> (SExpr(expr e) :: stmts, lvs)*)
+(*      | If(p, b1, b2) -> (SIf(check_bool_expr p, check_stmt b1, check_stmt b2) :: stmts. lvs)*)
+(*      | While(p, s) -> (SWhile(check_bool_expr p, check_stmt s), lvs)*)
 	    (* A block is correct if each statement is correct and nothing
 	       follows any Return statement.  Nested blocks are flattened. *)
       (*| Block sl ->  SBlock(check_stmt_list sl)*)
-      | Block sl -> let e' = List.fold_left check_stmt env sl in envs{sstmts = e'.sstmts}
-      | Break -> envs{stmts = SBreak :: envs.stmts}
 (*      | Open (s1, s2) -> (SOpen(s1, s2), lvs)*)
+let rec check_stmt envs = function
+      Expr e -> let x = envs.stmts in envs{stmts = SExpr(expr e) :: x}
+      | Block sl -> let e' = List.fold_left check_stmt env sl in envs{stmts = e'.stmts}
+      | If(p, b1, b2) -> let env1 = check_stmt envs{stmts = []} b1 in let env2 = check_stmt envs{stmts = []} b2 in envs{stmts = SIf(check_bool_expr p, SBlock(env1.stmts), SBlock(env2.stmts)) :: stmts}
+      | For(t1, id1, id2, st) -> let env1 = check_stmt envs{stmts = []} st in envs{stmts = SFor(t1, id1, id2, SBlock(env1.stmts)) :: envs.stmts}
+      | While(p, s) -> let env1 = check_stmt envs{stmts = []} s in envs{stmts = SWhile(check_bool_expr p, SBlock(env1.stmts)) :: envs.stmts}
+      | Return e -> let (t, e') = expr e in
+        if t = func.typ then envs{stmts = SReturn(t, e') :: envs.stmts}
+        else raise (
+	  Failure ("return gives " ^ string_of_typ t ^ " expected " ^
+		   string_of_typ func.typ ^ " in " ^ string_of_expr e))
+      | Break -> envs{stmts = SBreak :: envs.stmts}
       | Open (s1, s2) -> envs{stmts = SOpen(s1, s2) :: envs.stmts}
       | Map(id, f1) -> 
         let fd = find_func f1 in
@@ -194,7 +191,7 @@ let rec check_stmt envs = function
             let t1 = fd.typ
             and (t2, _, _) = List.hd fd.formals
             and (_, t3) = check_array id in
-            if t1 = t2 && t2 = t3 then envs{stmts = SMap(id, f1) envs.stmts}
+            if t1 = t2 && t2 = t3 then envs{stmts = SMap(id, f1) :: envs.stmts}
             else raise (Failure (" Map called with out matching types ") )
       | Filter(id, f1) -> 
         let fd = find_func f1 in
@@ -207,7 +204,7 @@ let rec check_stmt envs = function
             let m2 = function
             Bool -> let (t2, _, _) = List.hd fd.formals
                     and (_, t3) = check_array id in
-            if (t2 = t3) then envs{stmts = SFilter(id, f1) :: envs.stmts}
+                    if (t2 = t3) then envs{stmts = SFilter(id, f1) :: envs.stmts}
                     else raise (Failure (" Map called with out matching types ") ) 
             | _ -> raise (Failure (" Function must return Bool to be applied with Filter"))
             in m2 t1
@@ -215,14 +212,14 @@ let rec check_stmt envs = function
         let (t1, t2) = check_array id 
         and (rt1, e1') = expr e1
         and (rt2, e2') = expr e2 in
-        if rt1 = t1 && rt2 = t2 then e{SArray_Assign(id, (rt1, e1'), (rt2, e2')) :: e.stmts}
+        if ((rt1 = t1) && (rt2 = t2)) then envs{stmts = SArray_Assign(id, (rt1, e1'), (rt2, e2')) :: envs.stmts}
         else raise (Failure (" Improper types for Array Assign"))
       | Assign(var, e) as ex -> 
         let lt = type_of_identifier var
         and (rt, e') = expr e in
         let err = "illegal assignment " ^ string_of_typ lt ^ " = " ^ 
           string_of_typ rt ^ " in " ^  string_of_stmt ex
-        in check_assign lt rt err; e{stmts = SAssign(var, (rt, e')) :: e.stmts}
+        in check_assign lt rt err; envs{stmts = SAssign(var, (rt, e')) :: envs.stmts}
       | Vdecl(t, id, e) -> 
           let f = function
           Noexpr -> 
@@ -231,10 +228,10 @@ let rec check_stmt envs = function
               | None -> 
                 let f3 = function
                   Array(t1, t2) -> 
-                    if (check_array_type (t1, t2)) then let lvs' = StringMap.add id t symbols in  
-                    e{SVdecl(t, id, e) :: e.stmts, lvs = lvs'}
+                    if (check_array_type (t1, t2)) then let lvs' = StringMap.add id t envs.lvs in  
+                    envs{stmts = SVdecl(t, id, e) :: e.stmts, lvs = lvs'}
                     else raise(Failure("array key must be int or string"))
-                  | _ ->  let lvs' = StringMap.add id t symbols in e{SVdecl(t, id, e) :: e.stmnts, lvs = lvs'}
+                  | _ ->  let lvs' = StringMap.add id t symbols in envs{stmts = SVdecl(t, id, e) :: e.stmts, lvs = lvs'}
                 in f3 t
             in f2 (StringMap.find_opt id lvs)
           | _ -> 
@@ -243,19 +240,18 @@ let rec check_stmt envs = function
               | None -> 
                   let f5 = function
                     Array(_, _) -> raise (Failure("cant assign and declare array"))
-                    | _ -> let lvs' = StringMap.add id t symbols; print_string("past"); 
-                      let (stmts', l) = check_stmt (stmt, lvs') (Assign(id, e)); (SVdecl(t, id, e), lvs')
+                    | _ -> let lvs' = StringMap.add id t envs.lvs; print_string("past"); 
+                      let (rt, e') = expr e in envs{stmts = SVdecl(t, id, e) :: envs.stmts, lvs = lvs'}
                   in f5 t
-              in f4 (StringMap.find_opt id lvs)
+              in f4 (StringMap.find_opt id envs.lvs)
           in f e
-    in (* body of check_function *)
+
+in (* body of check_function *) 
     { styp = func.typ;
       sfname = func.fname;
       sformals = func.formals;
-      sbody = match check_stmt (Block func.body) with
-      sbody = let e' = List.foldl check_stmt empty_env func.body in e'.stmts
-	SBlock(sl) -> sl
-      | _ -> raise (Failure ("internal error: block didn't become a block?"))
+(*      sbody = match check_stmt (Block func.body) with*) 
+      sbody = let env = {stmts = []; lvs = StringMap.empty} in let e' = List.fold_left check_stmt env (Block func.body) in SBlock(e'.stmts) 
     }
 in
 (* next line will eventually become final line of semant *)
