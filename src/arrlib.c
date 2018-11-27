@@ -12,13 +12,19 @@ typedef struct Node {
 
 struct Array {
     struct Node *head;
-    
+    size_t size_key;
+    size_t size_value;
+    size_t length;
 };
 
-struct Array initArray(struct Array *array)
+struct Array *initArray(int size_k, int size_v)
 {
-    array->head = 0;
     struct Array *ar = malloc(sizeof(struct Array));
+    array->head = 0;
+    size_key = size_k;
+    size_value = size_v;
+    length = 0;
+    return ar;
 }
 
 void *add(struct Array *array, void *data1, void *data2){
@@ -47,8 +53,6 @@ void *add(struct Array *array, void *data1, void *data2){
         array->head = newNode;
         node = newNode;
     }
-
-    return node;
 }
 
 struct Node *findNode(struct Array *array, const void *dataSought, int (*compar)(const void *, const void *))
@@ -82,8 +86,7 @@ void set(struct Array *array, const void *dataSought, char *valueSet){
 //#ifdef BUILD_TEST
 int main() {
     //No default constructor
-    struct Array arr;
-    initArray(&arr);
+    struct Array arr = initArray(&arr);
     
     //Adding an element
     add(&arr,"Age","17");
