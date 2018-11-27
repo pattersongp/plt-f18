@@ -22,7 +22,7 @@ type expr =
   | RegexComp of expr * expr
   | Open of expr * expr
   | ReadFile of string
-  | InitArray
+  | InitArray of typ * typ
   | Noexpr
 
 type bind = typ * string * expr

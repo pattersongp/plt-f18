@@ -98,7 +98,7 @@ expr:
   | TRUE             { BoolLit(true) }
   | FALSE            { BoolLit(false) }
   | ID               { Id($1) }
-  | INITARR LPAREN RPAREN { InitArray }
+  | INITARR LPAREN concrete_typ COMMA typ RPAREN { InitArray($3, $5) }
   | ID LBRACKET expr RBRACKET ASSN expr {Array_Assign($1, $3, $6)}
   | ID DOT READFILE LPAREN RPAREN { ReadFile($1) }
   | OPEN LPAREN expr COMMA expr RPAREN { Open($3, $5) }
