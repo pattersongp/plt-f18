@@ -5,7 +5,7 @@ module StringMap = Map.Make(String)
 
   type env = {
     mutable lvs: typ StringMap.t;
-    stmts: sstmt list;
+    mutable stmts: sstmt list;
   } 
 
 let check fdec = 
@@ -169,18 +169,28 @@ let check_function func =
       (*| Block sl ->  SBlock(check_stmt_list sl)*)
 (*      | Open (s1, s2) -> (SOpen(s1, s2), lvs)*)
 let rec check_stmt envs = function
-      Expr e -> let x = envs.stmts in envs{stmts = SExpr(expr e) :: x}
-      | Block sl -> let e' = List.fold_left check_stmt env sl in envs{stmts = e'.stmts}
-      | If(p, b1, b2) -> let env1 = check_stmt envs{stmts = []} b1 in let env2 = check_stmt envs{stmts = []} b2 in envs{stmts = SIf(check_bool_expr p, SBlock(env1.stmts), SBlock(env2.stmts)) :: stmts}
-      | For(t1, id1, id2, st) -> let env1 = check_stmt envs{stmts = []} st in envs{stmts = SFor(t1, id1, id2, SBlock(env1.stmts)) :: envs.stmts}
-      | While(p, s) -> let env1 = check_stmt envs{stmts = []} s in envs{stmts = SWhile(check_bool_expr p, SBlock(env1.stmts)) :: envs.stmts}
+      Expr e -> let envs2 = {stmts = SExpr(expr e) :: envs.stmts; lvs = envs.lvs} in envs2
+      | Block sl -> let e' = List.fold_left check_stmt envs sl in 
+                    let envs2 = {stmts = e'.stmts; lvs = envs.lvs} in envs2 
+      | If(p, b1, b2) -> let e1 = {stmts = []; lvs = envs.lvs} in 
+                         let env1 = check_stmt e1 b1 in 
+                         let e2 = {stmts = []; lvs = envs.lvs} in 
+                         let env2 = check_stmt e2 b2 in 
+                         let envs3 = {stmts = SIf(check_bool_expr p, SBlock(env1.stmts), SBlock(env2.stmts)) :: envs.stmts; lvs = envs.lvs} in 
+                         envs3
+      | For(t1, id1, id2, st) -> let e1 = {stmts = []; lvs = envs.lvs} in 
+                                 let env1 = check_stmt e1 st in 
+                                 let envs2 = {stmts = SFor(t1, id1, id2, SBlock(env1.stmts)) :: envs.stmts; lvs = envs.lvs} in envs2
+      | While(p, s) -> let e1 = {stmts = []; lvs = envs.lvs} in 
+                       let env1 = check_stmt e1 s in 
+                       let envs2 = {stmts = SWhile(check_bool_expr p, SBlock(env1.stmts)) :: envs.stmts; lvs = envs.lvs} in envs2
       | Return e -> let (t, e') = expr e in
-        if t = func.typ then envs{stmts = SReturn(t, e') :: envs.stmts}
+      if t = func.typ then let envs2 = {stmts = SReturn(t, e') :: envs.stmts; lvs = envs.lvs} in envs2
         else raise (
 	  Failure ("return gives " ^ string_of_typ t ^ " expected " ^
 		   string_of_typ func.typ ^ " in " ^ string_of_expr e))
-      | Break -> envs{stmts = SBreak :: envs.stmts}
-      | Open (s1, s2) -> envs{stmts = SOpen(s1, s2) :: envs.stmts}
+      | Break -> let envs2 = {stmts = SBreak :: envs.stmts; lvs = envs.lvs} in envs2
+      | Open (s1, s2) -> let envs2 = {stmts = SOpen(s1, s2) :: envs.stmts; lvs = envs.lvs} in envs2
       | Map(id, f1) -> 
         let fd = find_func f1 in
         let param_length = List.length fd.formals in
@@ -191,7 +201,7 @@ let rec check_stmt envs = function
             let t1 = fd.typ
             and (t2, _, _) = List.hd fd.formals
             and (_, t3) = check_array id in
-            if t1 = t2 && t2 = t3 then envs{stmts = SMap(id, f1) :: envs.stmts}
+            if t1 = t2 && t2 = t3 then let envs2 = {stmts = SMap(id, f1) :: envs.stmts; lvs = envs.lvs} in envs2
             else raise (Failure (" Map called with out matching types ") )
       | Filter(id, f1) -> 
         let fd = find_func f1 in
@@ -204,7 +214,7 @@ let rec check_stmt envs = function
             let m2 = function
             Bool -> let (t2, _, _) = List.hd fd.formals
                     and (_, t3) = check_array id in
-                    if (t2 = t3) then envs{stmts = SFilter(id, f1) :: envs.stmts}
+            if (t2 = t3) then let envs2 = {stmts = SFilter(id, f1) :: envs.stmts; lvs = envs.lvs} in envs2
                     else raise (Failure (" Map called with out matching types ") ) 
             | _ -> raise (Failure (" Function must return Bool to be applied with Filter"))
             in m2 t1
@@ -212,14 +222,14 @@ let rec check_stmt envs = function
         let (t1, t2) = check_array id 
         and (rt1, e1') = expr e1
         and (rt2, e2') = expr e2 in
-        if ((rt1 = t1) && (rt2 = t2)) then envs{stmts = SArray_Assign(id, (rt1, e1'), (rt2, e2')) :: envs.stmts}
+        if ((rt1 = t1) && (rt2 = t2)) then let envs2 = {stmts = SArray_Assign(id, (rt1, e1'), (rt2, e2')) :: envs.stmts; lvs = envs.lvs} in envs2
         else raise (Failure (" Improper types for Array Assign"))
       | Assign(var, e) as ex -> 
         let lt = type_of_identifier var
-        and (rt, e') = expr e in
+        and (rt, e') = expr e in 
         let err = "illegal assignment " ^ string_of_typ lt ^ " = " ^ 
           string_of_typ rt ^ " in " ^  string_of_stmt ex
-        in check_assign lt rt err; envs{stmts = SAssign(var, (rt, e')) :: envs.stmts}
+        in let _ = check_assign lt rt err in let envs2 = {stmts = SAssign(var, (rt, e')) :: envs.stmts; lvs = envs.lvs} in envs2
       | Vdecl(t, id, e) -> 
           let f = function
           Noexpr -> 
@@ -229,19 +239,20 @@ let rec check_stmt envs = function
                 let f3 = function
                   Array(t1, t2) -> 
                     if (check_array_type (t1, t2)) then let lvs' = StringMap.add id t envs.lvs in  
-                    envs{stmts = SVdecl(t, id, e) :: e.stmts, lvs = lvs'}
+                    let envs2 = {stmts = SVdecl(t, id, e) :: envs.stmts; lvs = lvs'} in envs2
                     else raise(Failure("array key must be int or string"))
-                  | _ ->  let lvs' = StringMap.add id t symbols in envs{stmts = SVdecl(t, id, e) :: e.stmts, lvs = lvs'}
+                  | _ ->  let lvs' = StringMap.add id t envs.lvs in let envs2 = {stmts = SVdecl(t, id, e) :: envs.stmts; lvs = lvs'} in envs2
                 in f3 t
-            in f2 (StringMap.find_opt id lvs)
+            in f2 (StringMap.find_opt id envs.lvs)
+
           | _ -> 
               let f4 = function
               Some t -> raise (Failure ("trying to redeclare variable"))
               | None -> 
                   let f5 = function
                     Array(_, _) -> raise (Failure("cant assign and declare array"))
-                    | _ -> let lvs' = StringMap.add id t envs.lvs; print_string("past"); 
-                      let (rt, e') = expr e in envs{stmts = SVdecl(t, id, e) :: envs.stmts, lvs = lvs'}
+                    | _ -> let lvs' = StringMap.add id t envs.lvs in 
+                      let (rt, e') = expr e in let envs2 = {stmts = SVdecl(t, id, e) :: envs.stmts; lvs = lvs'} in envs2
                   in f5 t
               in f4 (StringMap.find_opt id envs.lvs)
           in f e
@@ -251,7 +262,7 @@ in (* body of check_function *)
       sfname = func.fname;
       sformals = func.formals;
 (*      sbody = match check_stmt (Block func.body) with*) 
-      sbody = let env = {stmts = []; lvs = StringMap.empty} in let e' = List.fold_left check_stmt env (Block func.body) in SBlock(e'.stmts) 
+      sbody = let env = {stmts = []; lvs = StringMap.empty} in let e' = List.fold_left check_stmt env func.body in e'.stmts
     }
 in
 (* next line will eventually become final line of semant *)
