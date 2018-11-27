@@ -140,6 +140,14 @@ let translate functions =
         StringMap.add n local_var lvs
     in
 
+    (* Function for matching lltype to size in c for array lib *)
+    let size_of_ltype = function
+       i32_ptr_t -> L.const_int i32_t 8
+      | string_t -> L.const_int i32_t 8
+      | i32_t    -> L.const_int i32_t 4
+      | _ -> raise (Failure "Error! Invalid array type.")
+    in
+
     let rec expr (builder, lvs) ((e) : expr) = match e with
         A.Literal i           -> L.const_int i32_t i
       | A.StringLit s         -> L.build_global_stringptr s "str" builder
@@ -152,7 +160,10 @@ let translate functions =
           let e1' = expr (builder, lvs) e1
           and e2' = expr (builder, lvs) e2 in
           L.build_call open_file_func [| e1'; e2' |] "open" builder
-      | A.InitArray -> L.build_call init_arr_func [| |] "initArray" builder
+      | A.InitArray(t1, t2) ->
+          let t1' = (size_of_ltype (ltype_of_typ t1))
+          and t2' = (size_of_ltype (ltype_of_typ t2)) in
+            L.build_call init_arr_func [| t1'; t2' |] "initArray" builder
       | A.Array_Assign (id, e1, e2)       ->
           let e1' = expr (builder, lvs) e1
           and id' = (expr (builder, lvs) (Id(id)))
@@ -162,6 +173,9 @@ let translate functions =
           L.build_call strlen_func [| (expr (builder, lvs) e) |] "strlen" builder
       | Call("sprint", [e])    ->
           L.build_call sprint_func [| (expr (builder, lvs) e) |] "sprint" builder
+
+
+
       | Call("print", [e])     ->
           L.build_call printf_func [| int_format_str; (expr (builder, lvs) e) |] "printf" builder
       | Call (f, args) ->
