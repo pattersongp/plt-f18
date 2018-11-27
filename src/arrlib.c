@@ -21,24 +21,33 @@ static inline void initArray(struct Array *array)
 }
 
 void *add(struct Array *array, void *data1, void *data2){
-    //create a new node malloc but no free
-    struct Node *newNode = malloc (sizeof(struct Node));
-    
-    //check malloc
-    if(newNode == NULL){
-        perror("melloc return NULL");
-        exit(1);
+    struct Node *node;
+    node = findNode(array, dataSought, (char (*)(const void *, const void *))&strcmp);
+
+    if (node != NULL){
+        node->data2 = data2;
+
+    }else{
+        //create a new node malloc but no free
+        struct Node *newNode = malloc (sizeof(struct Node));
+        
+        //check malloc
+        if(newNode == NULL){
+            perror("melloc return NULL");
+            exit(1);
+        }
+        
+        //assign new node's all property
+        newNode->data1 = data1;
+        newNode->data2 = data2;
+        newNode->next = array->head;    //pointing to same as head's
+        
+        //assign head
+        array->head = newNode;
+        node = newNode;
     }
-    
-    //assign new node's all property
-    newNode->data1 = data1;
-    newNode->data2 = data2;
-    newNode->next = array->head;    //pointing to same as head's
-    
-    //assign head
-    array->head = newNode;
-    
-    return newNode;
+
+    return node;
 }
 
 struct Node *findNode(struct Array *array, const void *dataSought, int (*compar)(const void *, const void *))
@@ -82,10 +91,6 @@ int main() {
     //Retrieve a value
     char *c = get(&arr,"Age");
     printf(c);
-    
-    //Assign a value
-    char *d = "2000-11-28";
-    set(&arr,"Birthday",d);
     
     return 0;
 }
