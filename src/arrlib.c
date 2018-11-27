@@ -15,9 +15,10 @@ struct Array {
     
 };
 
-static inline void initArray(struct Array *array)
+struct Array initArray(struct Array *array)
 {
     array->head = 0;
+    struct Array *ar = malloc(sizeof(struct Array));
 }
 
 void *add(struct Array *array, void *data1, void *data2){
