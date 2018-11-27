@@ -82,6 +82,11 @@ let translate functions =
   let read_file_func : L.llvalue =
     L.declare_function "readFire" read_file_t the_module in
 
+  let add_t : L.lltype =
+    L.function_type i32_t [| string_t; i32_t; i32_t |] in
+  let add_func : L.llvalue =
+    L.declare_function "add" add_t the_module in
+
   (* ---------------------- User Functions ---------------------- *)
   let function_decls : (L.llvalue * func_decl) StringMap.t =
     let function_decl m fdecl =
@@ -142,6 +147,11 @@ let translate functions =
           let e1' = expr (builder, lvs) e1
           and e2' = expr (builder, lvs) e2 in
           L.build_call open_file_func [| e1'; e2' |] "open" builder
+      | A.Array_Assign (id, e1, e2)       ->
+          let e1' = expr (builder, lvs) e1
+          and id' = (expr (builder, lvs) (Id(id))) 
+          and e2' = expr (builder, lvs) e2 in
+          L.build_call add_func [| id'; e1'; e2' |] "add" builder
       | Call("strlen", [e])    ->
           L.build_call strlen_func [| (expr (builder, lvs) e) |] "strlen" builder
       | Call("sprint", [e])    ->
