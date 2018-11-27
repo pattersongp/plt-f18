@@ -10,27 +10,38 @@ typedef struct Node {
     struct Node *next;
 }node_t;
 
-struct Array {
+typedef struct Array {
     struct Node *head;
     size_t size_key;
     size_t size_value;
     size_t length;
-};
+}Array;
 
 struct Array *initArray(int size_k, int size_v)
 {
     struct Array *ar = malloc(sizeof(struct Array));
-    array->head = 0;
-    size_key = size_k;
-    size_value = size_v;
-    length = 0;
+    ar->head = 0;
+    ar->size_key = size_k;
+    ar->size_value = size_v;
+    ar->length = 0;
     return ar;
 }
 
-void *add(struct Array *array, void *data1, void *data2){
-    struct Node *node;
-    node = findNode(array, dataSought, (char (*)(const void *, const void *))&strcmp);
+struct Node *findNode(struct Array *array, const void *dataSought, int (*compar)(const void *, const void *))
+{
+    struct Node *node = array->head;
+    while (node) {
+        if (compar(dataSought, node->data1) == 0)
+            return node;
+        node = node->next;
+    }
+    return NULL;
+}
 
+void add(struct Array *array, void *data1, void *data2){
+    struct Node *node;
+    node = findNode(array, data1, (char (*)(const void *, const void *))&strcmp);
+    
     if (node != NULL){
         node->data2 = data2;
 
@@ -52,18 +63,10 @@ void *add(struct Array *array, void *data1, void *data2){
         //assign head
         array->head = newNode;
         node = newNode;
+        
+        //add length
+        array->length = array->length + 1;
     }
-}
-
-struct Node *findNode(struct Array *array, const void *dataSought, int (*compar)(const void *, const void *))
-{
-    struct Node *node = array->head;
-    while (node) {
-        if (compar(dataSought, node->data1) == 0)
-            return node;
-        node = node->next;
-    }
-    return NULL;
 }
 
 
@@ -86,14 +89,14 @@ void set(struct Array *array, const void *dataSought, char *valueSet){
 //#ifdef BUILD_TEST
 int main() {
     //No default constructor
-    struct Array arr = initArray(&arr);
+    Array *arr = initArray(8,8);
     
     //Adding an element
-    add(&arr,"Age","17");
-    add(&arr,"Birthday","");
+    add(arr,"Age","17");
+    add(arr,"Birthday","");
     
     //Retrieve a value
-    char *c = get(&arr,"Age");
+    char *c = get(arr,"Age");
     printf(c);
     
     return 0;
