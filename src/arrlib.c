@@ -17,8 +17,7 @@ typedef struct Array {
     size_t length;
 } Array;
 
-struct Array *initArray(int size_k, int size_v)
-{
+struct Array *initArray(int size_k, int size_v) {
     struct Array *ar = malloc(sizeof(struct Array));
     ar->head = 0;
     ar->size_key = size_k;
@@ -40,6 +39,8 @@ struct Node *findNode(struct Array *array, const void *dataSought,
 
 void add(struct Array *array, void *data1, void *data2) {
     struct Node *node;
+
+	// will need to eventually change this to be another comparator function
     node = findNode(array, data1, (int (*)(const void *, const void *))&strcmp);
 
     if (node != NULL) {

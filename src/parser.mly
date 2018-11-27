@@ -69,7 +69,7 @@ concrete_typ:
         | VOID      { Void   }
         | FUNCTION  { Function   }
         | REGX      { Regx }
-        | FILE { File }
+        | FILE      { File }
 
 stmt_list:
     /* nothing */  { [] }
