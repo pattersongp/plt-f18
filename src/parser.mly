@@ -10,7 +10,7 @@ open Ast
 %token IF ELSE WHILE RETURN BREAK FOR IN
 %token LBRACKET RBRACKET CONCAT COLON
 %token REGX INT FUNCTION STRING VOID ARRAY BOOL FILE
-%token FATARROW FILTER MAP OPEN
+%token FATARROW FILTER MAP OPEN INITARR
 %token READFILE DOT
 
 %token <int> INT_LIT
@@ -91,7 +91,6 @@ stmt:
   | ID ASSN expr SEMI { Assign($1, $3) }
   | typ ID ASSN expr SEMI { Vdecl($1, $2, $4) }
   | typ ID SEMI { Vdecl($1, $2, Noexpr) }
-  | ID LBRACKET expr RBRACKET ASSN expr SEMI {Array_Assign($1, $3, $6)}
 
 expr:
     INT_LIT          { Literal($1) }
@@ -99,6 +98,8 @@ expr:
   | TRUE             { BoolLit(true) }
   | FALSE            { BoolLit(false) }
   | ID               { Id($1) }
+  | INITARR LPAREN RPAREN { InitArray }
+  | ID LBRACKET expr RBRACKET ASSN expr {Array_Assign($1, $3, $6)}
   | ID DOT READFILE LPAREN RPAREN { ReadFile($1) }
   | OPEN LPAREN expr COMMA expr RPAREN { Open($3, $5) }
   | expr PLUS   expr { Binop($1, Plus,   $3) }

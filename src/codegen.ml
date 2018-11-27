@@ -47,7 +47,7 @@ let translate functions =
     | A.String      -> string_t
     | A.Regx        -> string_t
     | A.File        -> i32_ptr_t
-    | A.Array(_, _) -> i32_ptr_t (* Not implemented*)
+    | A.Array(_, _) -> i32_ptr_t
     | A.Function    -> i32_ptr_t (* Not implemented*)
   in
 
@@ -86,6 +86,11 @@ let translate functions =
     L.function_type i32_t [| string_t; i32_t; i32_t |] in
   let add_func : L.llvalue =
     L.declare_function "add" add_t the_module in
+
+  let init_arr_t : L.lltype =
+    L.function_type i32_ptr_t [| |] in
+  let init_arr_func : L.llvalue =
+    L.declare_function "initArray" init_arr_t the_module in
 
   (* ---------------------- User Functions ---------------------- *)
   let function_decls : (L.llvalue * func_decl) StringMap.t =
@@ -147,9 +152,10 @@ let translate functions =
           let e1' = expr (builder, lvs) e1
           and e2' = expr (builder, lvs) e2 in
           L.build_call open_file_func [| e1'; e2' |] "open" builder
+      | A.InitArray -> L.build_call init_arr_func [| |] "initArray" builder
       | A.Array_Assign (id, e1, e2)       ->
           let e1' = expr (builder, lvs) e1
-          and id' = (expr (builder, lvs) (Id(id))) 
+          and id' = (expr (builder, lvs) (Id(id)))
           and e2' = expr (builder, lvs) e2 in
           L.build_call add_func [| id'; e1'; e2' |] "add" builder
       | Call("strlen", [e])    ->

@@ -17,10 +17,12 @@ type expr =
   | Binop of expr * op * expr
   | Unop of uop * expr
   | Retrieve of string * expr
+  | Array_Assign of string * expr * expr
   | Call of string * expr list
   | RegexComp of expr * expr
   | Open of expr * expr
   | ReadFile of string
+  | InitArray
   | Noexpr
 
 type bind = typ * string * expr
@@ -37,7 +39,6 @@ type stmt =
   | Break
   | Vdecl of typ * string * expr
   | Assign of string * expr
-  | Array_Assign of string * expr * expr
 
 type func_decl = {
     typ : typ;
@@ -89,6 +90,8 @@ let rec string_of_expr = function
         |  StringLit(s) ->  s
         |  Binop(e1, op, e2) -> string_of_expr ( e1) ^ " " ^
                 string_of_op op ^ " " ^ string_of_expr ( e2)
+        | Array_Assign(id, e1, e2) -> id ^ "[" ^ string_of_expr ( e1) ^
+                "]" ^ " = " ^ string_of_expr ( e2)
         |  Retrieve(id, e1) -> id ^ "[" ^ string_of_expr ( e1) ^ "]"
         |  Open(filename, delim) -> "open(" ^ string_of_expr filename ^ ", " ^ string_of_expr delim ^ ");\n"
         |  Call(id, act) -> id ^ "(" ^
@@ -121,8 +124,6 @@ let rec string_of_stmt = function
                 string_of_stmt s1
         | Map(a1, f1) -> "map(" ^ a1 ^ ", " ^ f1 ^ ");\n"
         | Filter(a1, f1) -> "filter(" ^ a1 ^ ", " ^ f1 ^ ");\n"
-        | Array_Assign(id, e1, e2) -> id ^ "[" ^ string_of_expr ( e1) ^
-                "]" ^ " = " ^ string_of_expr ( e2)
         | Assign(id, e1) ->  id ^ " = " ^ string_of_expr ( e1)
         | Vdecl(t, id, e) -> string_of_vdecl (t, id, e)
 
