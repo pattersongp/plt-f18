@@ -16,8 +16,8 @@ http://llvm.moe/ocaml/
 module L = Llvm
 module A = Ast
 module O = Batteries.Option
-open Ast (* This will change once we have Sast *)
-(* open Sast *)
+(* open Ast (* This will change once we have Sast *) *)
+open Sast
 
 module StringMap = Map.Make(String)
 

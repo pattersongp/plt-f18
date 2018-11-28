@@ -2,7 +2,7 @@
 
 open Ast
 
-type sexpr = typ * sx 
+type sexpr = typ * sx
 and sx =
     SLiteral of int
   | SBoolLit of bool
@@ -12,9 +12,13 @@ and sx =
   | SUnop of uop * sexpr
   | SRetrieve of string * sexpr
   | SCall of string * sexpr list
+  | SRegexComp of sexpr * sexpr
+  | SStrCat of sexpr * sexpr
+  | SOpen of sexpr * sexpr
+  | SReadFile of string
   | SNoexpr
 
-type sstmt = 
+type sstmt =
     SBlock of sstmt list
   | SExpr of sexpr
   | SReturn of sexpr
@@ -23,7 +27,6 @@ type sstmt =
   | SFor of typ * string * string * sstmt
   | SMap of string * string
   | SFilter of string * string
-  | SOpen of string * string
   | SBreak
   | SVdecl of typ * string * expr
   | SAssign of string * sexpr
@@ -36,7 +39,7 @@ type sfunc_decl = {
     sbody : sstmt list;
 }
 
-type sprogram = bind list * sfunc_decl list
+type sprogram = sfunc_decl list
 
 (* pretty printer *)
 let rec string_of_sexpr (t, e) =
@@ -52,6 +55,8 @@ let rec string_of_sexpr (t, e) =
   | SCall(f, el) ->
       f ^ "(" ^ String.concat ", " (List.map string_of_sexpr el) ^ ")"
   | SRetrieve(id, e1) -> id ^ "[" ^ string_of_sexpr e1 ^ "]"
+  | SOpen(filename, delim) -> "open(" ^ string_of_sexpr filename ^ ", "
+    ^ string_of_sexpr delim ^ ");\n"
   | SNoexpr -> ""
                 ) ^ ")"
 
@@ -69,7 +74,6 @@ let rec string_of_sstmt = function
   | SWhile(e, s) -> "while (" ^ string_of_sexpr e ^ ") " ^ string_of_sstmt s
   | SMap(a1, f1) -> "map(" ^ a1 ^ ", " ^ f1 ^ ");\n"
   | SFilter(a1, f1) -> "filter(" ^ a1 ^ ", " ^ f1 ^ ");\n"
-  | SOpen(filename, delim) -> "open(" ^ filename ^ ", " ^ delim ^ ");\n"
   | SBreak -> "break;"
   | SArray_Assign(id, e1, e2) -> id ^ "[" ^ string_of_sexpr e1 ^
                 "]" ^ " = " ^ string_of_sexpr e2
