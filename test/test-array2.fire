@@ -1,3 +1,4 @@
-array[int, string] arr;
-func void main = (array arr) => { arr[0,"value0"].add;}
-testfunc(arr);
+func void main = () => {
+		array[int, string] arr = init(int, string);
+		arr[0] = "value0";
+}

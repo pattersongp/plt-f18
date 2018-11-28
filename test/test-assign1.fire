@@ -1,3 +1,5 @@
+func int main = () => {
 int i;
-bool j; 
+bool j;
 str k;
+}

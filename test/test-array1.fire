@@ -1,4 +1,6 @@
-array[int, string] arr;
-array[int, int] arr;
-array[string, int] arr;
-array[string, string] arr;
+func int main = () => {
+array[int, string] arr = init(int, string);
+array[int, int] arr = init(int, int);
+array[string, int] arr = init(string, int);
+array[string, string] arr = init(string, string);
+}
