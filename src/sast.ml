@@ -27,10 +27,10 @@ type sstmt =
   | SFor of typ * string * string * sstmt
   | SMap of string * string
   | SFilter of string * string
-  | SBreak
-  | SVdecl of typ * string * expr
+  | SVdecl of typ * string * sexpr
   | SAssign of string * sexpr
   | SArray_Assign of string * sexpr * sexpr
+  | SBreak
 
 type sfunc_decl = {
     styp : typ;
@@ -78,7 +78,7 @@ let rec string_of_sstmt = function
   | SArray_Assign(id, e1, e2) -> id ^ "[" ^ string_of_sexpr e1 ^
                 "]" ^ " = " ^ string_of_sexpr e2
   | SAssign(v, e) -> v ^ " = " ^ string_of_sexpr e
-  | SVdecl(t, id, e) -> string_of_vdecl (t, id, e)
+(*   | SVdecl(t, id, e) -> string_of_svdecl (t, id, e) *)
 
 
 let string_of_sfdecl fdecl =

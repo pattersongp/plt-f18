@@ -123,15 +123,21 @@ let translate functions =
   List.fold_left add_local formals []
   in
 
+    let print_map k v = print_string(k ^ "->" ^ "some value.." ^ "\n") in
+
     (* Return the value for a variable or formal argument.
        Check local names first, then global names *)
-    let lookup n m = try StringMap.find n m
-      with Not_found -> raise (Failure ("Variable [ " ^ n ^ " ] not declared"))
+    let lookup n m = try
+(*       print_string("MAP:\n"); StringMap.iter print_map m; print_string("\n\n"); *)
+      StringMap.find n m
+      with Not_found -> raise (Failure ("Variable [" ^ n ^ "] not declared"))
     in
+
 
     let add_vdecl (t, n, lvs) =
       let local_var = L.build_alloca (ltype_of_typ t) n builder
       in
+(*         print_string("MAP:\n"); StringMap.iter print_map lvs; print_string("\n\n"); *)
         StringMap.add n local_var lvs
     in
 

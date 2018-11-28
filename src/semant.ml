@@ -30,13 +30,14 @@ in
 let built_in_func_decls =
     let add_bind map (name, rType) = StringMap.add name {
         (* object between brackets is func_decl object? *)
-        typ = Void; (* all built in functions are of type void *)
+        typ = Void; (* all built in functions are of type void THIS IS NOT TRUE *)
         fname = name;
-        formals = [(rType, "x", Noexpr)];
+        formals = [(rType, "x", Noexpr)]; (* This needs to change here-- should be a list of parameters also the param name is resolved at runtime *)
         body = []; (* empty list *)
     } map
     (* REVISE following line !!!*)
-    in List.fold_left add_bind StringMap.empty [("print", String); ("map", String); ("filter", String)]
+    (*  What is the second argument here? *)
+    in List.fold_left add_bind StringMap.empty [("print", String); ("map", String); ("filter", String); ("sprint", String)]
 in
 
 (* build up symbol table - global scope ONLY for now *)
@@ -92,7 +93,7 @@ let check_function func =
     | StringLit l -> (String, SStringLit l)
     | Id s -> (type_of_identifier s envs.lvs, SId s)
     | Open (e1, e2) ->
-       let (t1, e1') = expr envs e1 
+       let (t1, e1') = expr envs e1
        and (t2, e2') = expr envs e2  in
           (* Check that these are either id's or string literals *)
           (File, SOpen((t1, e1'), (t2, e2')))
@@ -266,7 +267,9 @@ in (* body of check_function *)
     { styp = func.typ;
       sfname = func.fname;
       sformals = func.formals;
-      sbody = let env = {stmts = []; lvs = StringMap.empty} in let e' = List.fold_left check_stmt env func.body in e'.stmts
+      sbody = let env = {stmts = []; lvs = StringMap.empty} in
+              let e' = List.fold_left check_stmt env func.body in
+              List.rev e'.stmts
     }
 in
 
