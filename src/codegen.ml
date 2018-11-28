@@ -88,20 +88,20 @@ let translate functions =
     L.declare_function "readFire" read_file_t the_module in
 
   (* ---------------------- User Functions ---------------------- *)
-  let function_decls : (L.llvalue * func_decl) StringMap.t =
+  let function_decls : (L.llvalue * sfunc_decl) StringMap.t =
     let function_decl m fdecl =
-      let name = fdecl.fname
+      let name = fdecl.sfname
       and formal_types =
-        Array.of_list (List.map (fun (t,_,_) -> ltype_of_typ t) fdecl.formals)
+        Array.of_list (List.map (fun (t,_,_) -> ltype_of_typ t) fdecl.sformals)
       in
-        let ftype = L.function_type (ltype_of_typ fdecl.typ) formal_types in
+        let ftype = L.function_type (ltype_of_typ fdecl.styp) formal_types in
           StringMap.add name (L.define_function name ftype the_module, fdecl) m
         in
     List.fold_left function_decl StringMap.empty functions
   in
   let build_function_body fdecl =
 
-    let (the_function, _) = StringMap.find fdecl.fname function_decls  in
+    let (the_function, _) = StringMap.find fdecl.sfname function_decls  in
     let builder = L.builder_at_end context (L.entry_block the_function) in
 
   (* ---------------------- Formatters ---------------------- *)
@@ -118,7 +118,7 @@ let translate functions =
       in
         StringMap.add n local_var m
     in
-  let formals = List.fold_left2 add_formal StringMap.empty fdecl.formals
+  let formals = List.fold_left2 add_formal StringMap.empty fdecl.sformals
     (Array.to_list (L.params the_function)) in
   List.fold_left add_local formals []
   in
@@ -135,55 +135,55 @@ let translate functions =
         StringMap.add n local_var lvs
     in
 
-    let rec expr (builder, lvs) ((e) : expr) = match e with
-        A.Literal i           -> L.const_int i32_t i
-      | A.StringLit s         -> L.build_global_stringptr s "str" builder
-      | A.Noexpr              -> L.const_int i32_t 0
-      | A.BoolLit b           -> L.const_int i1_t (if b then 1 else 0)
-      | A.Id s                -> L.build_load (lookup s lvs) s builder
-      | A.ReadFile (id)       ->
-        L.build_call read_file_func [| (expr (builder, lvs) (Id(id))) |] "readFire" builder
-      | A.Open (e1, e2)       ->
+    let rec expr (builder, lvs) ((_, e) : sexpr) = match e with
+        SLiteral i           -> L.const_int i32_t i
+      | SStringLit s         -> L.build_global_stringptr s "str" builder
+      | SNoexpr              -> L.const_int i32_t 0
+      | SBoolLit b           -> L.const_int i1_t (if b then 1 else 0)
+      | SId s                -> L.build_load (lookup s lvs) s builder
+      | SReadFile (id)       ->
+          L.build_call read_file_func [| (expr (builder, lvs) (A.String, SId(id))) |] "readFire" builder
+      | SOpen (e1, e2)       ->
           let e1' = expr (builder, lvs) e1
           and e2' = expr (builder, lvs) e2 in
           L.build_call open_file_func [| e1'; e2' |] "open" builder
-      | Call("strlen", [e])    ->
+      | SCall("strlen", [e])    ->
           L.build_call strlen_func [| (expr (builder, lvs) e) |] "strlen" builder
-      | Call("sprint", [e])    ->
+      | SCall("sprint", [e])    ->
           L.build_call sprint_func [| (expr (builder, lvs) e) |] "sprint" builder
-      | Call("print", [e])     ->
+      | SCall("print", [e])     ->
           L.build_call printf_func [| int_format_str; (expr (builder, lvs) e) |] "printf" builder
-      | Call (f, args) ->
+      | SCall (f, args) ->
          let (fdef, fdecl) = try StringMap.find f function_decls with Not_found -> raise (Failure "Function not found" )in
          let llargs = List.rev (List.map (expr (builder, lvs)) (List.rev args)) in
-         let result = (match fdecl.typ with
+         let result = (match fdecl.styp with
                         A.Void -> ""
                       | _ -> f ^ "_result") in
          L.build_call fdef (Array.of_list llargs) result builder
-      | RegexComp(e1, e2) ->
+      | SRegexComp(e1, e2) ->
           let e1' = expr (builder, lvs) e1
           and e2' = expr (builder, lvs) e2 in
           L.build_call regex_cmp_func [| e1'; e2' |] "regex_compare" builder
-      | StrCat(e1, e2) ->
+      | SStrCat(e1, e2) ->
           let e1' = expr (builder, lvs) e1
           and e2' = expr (builder, lvs) e2 in
           L.build_call strcat_func [| e1'; e2' |] "strcat_fire" builder
-      | Binop (e1, op, e2) ->
+      | SBinop (e1, op, e2) ->
         let e1' = expr (builder, lvs) e1
         and e2' = expr (builder, lvs) e2 in
         (match op with
-          Plus      -> L.build_add
-        | Minus     -> L.build_sub
-        | Times     -> L.build_mul
-        | Divide    -> L.build_sdiv
-        | And       -> L.build_and
-        | Or        -> L.build_or
-        | Eq        -> L.build_icmp L.Icmp.Eq
-        | Neq       -> L.build_icmp L.Icmp.Ne
-        | Lt        -> L.build_icmp L.Icmp.Slt
-        | Lteq      -> L.build_icmp L.Icmp.Sle
-        | Gt        -> L.build_icmp L.Icmp.Sgt
-        | Gteq      -> L.build_icmp L.Icmp.Sge
+          A.Plus      -> L.build_add
+        | A.Minus     -> L.build_sub
+        | A.Times     -> L.build_mul
+        | A.Divide    -> L.build_sdiv
+        | A.And       -> L.build_and
+        | A.Or        -> L.build_or
+        | A.Eq        -> L.build_icmp L.Icmp.Eq
+        | A.Neq       -> L.build_icmp L.Icmp.Ne
+        | A.Lt        -> L.build_icmp L.Icmp.Slt
+        | A.Lteq      -> L.build_icmp L.Icmp.Sle
+        | A.Gt        -> L.build_icmp L.Icmp.Sgt
+        | A.Gteq      -> L.build_icmp L.Icmp.Sge
         ) e1' e2' "tmp" builder
       | _ -> raise (Failure "FAILURE at expr builder")
     in
@@ -194,18 +194,18 @@ let translate functions =
       | None -> ignore (instr builder) in
 
     let rec stmt (builder, lvs) = function
-        Block sl -> List.fold_left stmt (builder, lvs) sl
-      | Expr e -> ignore(expr (builder, lvs) e); builder, lvs
-      | A.Vdecl (t, n, e) -> let lvs' = add_vdecl (t, n, lvs) in stmt (builder, lvs') (Assign(n,e))
-      | A.Assign (s, e) -> let e' = expr (builder, lvs) e in
+        SBlock sl -> List.fold_left stmt (builder, lvs) sl
+      | SExpr e -> ignore(expr (builder, lvs) e); builder, lvs
+      | SVdecl (t, n, e) -> let lvs' = add_vdecl (t, n, lvs) in stmt (builder, lvs') (SAssign(n, e))
+      | SAssign (s, e)   -> let e' = expr (builder, lvs) e in
                            ignore(L.build_store e' (lookup s lvs) builder); builder, lvs
-      | Return e -> ignore(match fdecl.typ with
+      | SReturn e -> ignore(match fdecl.styp with
                               (* Special "return nothing" instr *)
                               A.Void -> L.build_ret_void builder
                               (* Build return statement *)
                             | _ -> L.build_ret (expr (builder, lvs) e) builder );
                      builder, lvs
-      | If (predicate, then_stmt, else_stmt) ->
+      | SIf (predicate, then_stmt, else_stmt) ->
          let bool_val = expr (builder, lvs) predicate in
          let merge_bb = L.append_block context "merge" the_function in
          let build_br_merge = L.build_br merge_bb in (* partial function *)
@@ -217,7 +217,7 @@ let translate functions =
              build_br_merge;
            ignore(L.build_cond_br bool_val then_bb else_bb builder);
           (L.builder_at_end context merge_bb), lvs
-      | While (predicate, body) ->
+      | SWhile (predicate, body) ->
         let pred_bb = L.append_block context "while" the_function in
           ignore(L.build_br pred_bb builder);
 
@@ -239,10 +239,10 @@ let translate functions =
       | _ -> raise (Failure "FAILURE at stmt builder")
     in
     (* Build the code for each statement in the function *)
-    let builder, _ = stmt (builder, local_vars) (Block fdecl.body) in
+    let builder, _ = stmt (builder, local_vars) (SBlock fdecl.sbody) in
 
     (* Add a return if the last block falls off the end *)
-    add_terminal (builder, local_vars) (match fdecl.typ with
+    add_terminal (builder, local_vars) (match fdecl.styp with
         A.Void -> L.build_ret_void
       | t -> L.build_ret (L.const_int (ltype_of_typ t) 0))
   in
