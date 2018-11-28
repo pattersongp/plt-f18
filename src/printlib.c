@@ -1,11 +1,11 @@
 #include <stdio.h>
 
+#include "util.h"
+
 void print(int x) {
-	printf("PRINT LIB ::: %d\n", x);
+	printf("%d\n", x);
 }
 
-#ifdef BUILD_TEST
-int main() {
-	return 0;
+void sprint(char *x) {
+	printf("%s\n", x);
 }
-#endif

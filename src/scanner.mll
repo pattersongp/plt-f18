@@ -42,9 +42,8 @@ rule token = parse
 | "array"  { ARRAY }
 | "void"   { VOID }
 | "file"   { FILE }
-| 'w' { WRITE }
-| 'r' { READ }
-| "wr" { WRITEREAD }
+| '.' { DOT }
+| "read" { READFILE }
 | "func"   { FUNCTION }
 | "regx"   { REGX }
 | "int"    { INT }
@@ -53,8 +52,22 @@ rule token = parse
 | "str" { STRING }
 | ['0'-'9']+ as lit { INT_LIT(int_of_string lit) }
 | ['a'-'z' 'A'-'Z']['a'-'z' 'A'-'Z' '0'-'9' '_']* as id { ID(id) }
-| '"' [^ '"']* '"' as str { STRING_LIT(str) }
+| '"'  { read_string (Buffer.create 69) lexbuf }
 | eof { EOF }
+
+and read_string buf = parse
+  | '"'       { STRING_LIT(Buffer.contents buf) }
+  | '\\' '/'  { Buffer.add_char buf '/'; read_string buf lexbuf }
+  | '\\' '\\' { Buffer.add_char buf '\\'; read_string buf lexbuf }
+  | '\\' 'b'  { Buffer.add_char buf '\b'; read_string buf lexbuf }
+  | '\\' 'f'  { Buffer.add_char buf '\012'; read_string buf lexbuf }
+  | '\\' 'n'  { Buffer.add_char buf '\n'; read_string buf lexbuf }
+  | '\\' 'r'  { Buffer.add_char buf '\r'; read_string buf lexbuf }
+  | '\\' 't'  { Buffer.add_char buf '\t'; read_string buf lexbuf }
+  | [^ '"' '\\']+
+    { Buffer.add_string buf (Lexing.lexeme lexbuf);
+      read_string buf lexbuf
+    }
 
 and comment = parse
  "*/" { token lexbuf }
