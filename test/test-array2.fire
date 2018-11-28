@@ -1,0 +1,4 @@
+func void main = () => {
+		array[int, string] arr = init(int, string);
+		arr[0] = "value0";
+}

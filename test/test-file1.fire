@@ -1,1 +1,3 @@
-file["report.csv",","] f;
+func int main = () => {
+		file f = open("Hello Testing", ",");
+}

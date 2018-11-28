@@ -1,7 +1,5 @@
-file["report.csv",","] f;
-
-func void main = () => {
-f.open(rw);
-string line = f.read();
-int bytes = f.write("line");
+func int main = () => {
+		file f = open("hello.txt", "~");
+		string line = f.read();
+		f.write("line");
 }
