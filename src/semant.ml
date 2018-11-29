@@ -91,6 +91,9 @@ let check_function func =
       Literal l -> (Int, SLiteral l)
     | BoolLit l -> (Bool, SBoolLit l)
     | StringLit l -> (String, SStringLit l)
+    | StrCat(e1, e2) -> let (rt1, e1') = expr envs e1 in let (rt2, e2') = expr envs e2 in
+    if rt1 = String && rt2 = String then (String,  SStrCat((rt1, e1'), (rt2, e2')))
+    else raise(Failure("cannot strcat non strings"))
     | Id s -> (type_of_identifier s envs.lvs, SId s)
     | Open (e1, e2) ->
        let (t1, e1') = expr envs e1
