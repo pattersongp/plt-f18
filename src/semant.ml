@@ -37,7 +37,7 @@ let built_in_func_decls =
     } map
     (* REVISE following line !!!*)
     (*  What is the second argument here? *)
-    in List.fold_left add_bind StringMap.empty [("print", String); ("map", String); ("filter", String); ("sprint", String)]
+    in List.fold_left add_bind StringMap.empty [("print", Int); ("map", String); ("filter", String); ("sprint", String)]
 in
 
 (* build up symbol table - global scope ONLY for now *)
@@ -270,7 +270,7 @@ in (* body of check_function *)
     { styp = func.typ;
       sfname = func.fname;
       sformals = func.formals;
-      sbody = let env = {stmts = []; lvs = StringMap.empty} in
+      sbody = let env = {stmts = []; lvs = symbols} in
               let e' = List.fold_left check_stmt env func.body in
               List.rev e'.stmts
     }
