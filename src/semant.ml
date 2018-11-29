@@ -73,7 +73,9 @@ let check_function func =
 
  (* if expressions are symmetric, it is invalid; e.g. int x = int x; *)
   let check_assign lvaluet rvaluet err =
-    if lvaluet = rvaluet then lvaluet else raise (Failure err)
+    match lvaluet with
+    Regx -> if rvaluet = String then rvaluet else raise (Failure err) 
+    | _ -> if lvaluet = rvaluet then lvaluet else raise (Failure err)
   in
 
   (* build local symbol table - '@' in OCaml represents list concat *)
