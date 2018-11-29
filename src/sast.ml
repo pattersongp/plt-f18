@@ -49,6 +49,10 @@ let rec string_of_sexpr (t, e) =
   | SStringLit(s) -> s
   | SBoolLit(true) -> "true"
   | SBoolLit(false) -> "false"
+  | SStrCat(e1, e2) -> string_of_sexpr e1 ^ " ^ " ^ string_of_sexpr e2
+  | SRegexComp(e1, e2) -> string_of_sexpr e1 ^ "===" ^ string_of_sexpr e2
+  | SReadFile(id) -> id ^ ".read();"
+  | SInitArray(t1, t2) -> "init(" ^ string_of_typ t1 ^ string_of_typ t2 ^ ");\n"
   | SId(s) -> s
   | SBinop(e1, o, e2) ->
       string_of_sexpr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_sexpr e2
@@ -59,7 +63,7 @@ let rec string_of_sexpr (t, e) =
   | SArray_Assign(id, e1, e2) -> id ^ "[" ^ string_of_sexpr e1 ^
                 "]" ^ " = " ^ string_of_sexpr e2
   | SOpen(filename, delim) -> "open(" ^ string_of_sexpr filename ^ ", "
-    ^ string_of_sexpr delim ^ ");\n"
+    ^ string_of_sexpr delim ^ ");"
   | SNoexpr -> ""
                 ) ^ ")"
 
@@ -79,7 +83,7 @@ let rec string_of_sstmt = function
   | SFilter(a1, f1) -> "filter(" ^ a1 ^ ", " ^ f1 ^ ");\n"
   | SBreak -> "break;"
   | SAssign(v, e) -> v ^ " = " ^ string_of_sexpr e
-(*   | SVdecl(t, id, e) -> string_of_svdecl (t, id, e) *)
+  | SVdecl(t, id, e) -> string_of_typ t ^ id ^" = "^ string_of_sexpr e ^ ";\n"
 
 
 let string_of_sfdecl fdecl =

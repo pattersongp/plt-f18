@@ -97,10 +97,13 @@ let translate functions =
   let add_func : L.llvalue =
     L.declare_function "add" add_t the_module in
 
+(*
+ * Will eventually need this for Retrieve
   let get_t : L.lltype =
     L.function_type i32_t [| string_t; i32_t |] in
   let get_func : L.llvalue =
     L.declare_function "get" get_t the_module in
+*)
 
   (* ---------------------- User Functions ---------------------- *)
   let function_decls : (L.llvalue * sfunc_decl) StringMap.t =
@@ -138,7 +141,7 @@ let translate functions =
   List.fold_left add_local formals []
   in
 
-    let print_map k v = print_string(k ^ "->" ^ "some value.." ^ "\n") in
+(*     let print_map k v = print_string(k ^ "->" ^ "some value.." ^ "\n") in *)
 
     (* Return the value for a variable or formal argument.
        Check local names first, then global names *)
@@ -176,7 +179,6 @@ let translate functions =
           let e1' = expr (builder, lvs) e1
           and e2' = expr (builder, lvs) e2 in
           L.build_call open_file_func [| e1'; e2' |] "open" builder
-
       | SInitArray(t1, t2) ->
           let t1' = (size_of_ltype (ltype_of_typ t1))
           and t2' = (size_of_ltype (ltype_of_typ t2)) in
@@ -190,7 +192,6 @@ let translate functions =
           let e' = expr (builder, lvs) e
           and id' = (expr (builder, lvs) (A.Void, SId(id))) in
             L.build_call init_arr_func [| id'; e'  |] "get" builder
-
       | SCall("strlen", [e])    ->
           L.build_call strlen_func [| (expr (builder, lvs) e) |] "strlen" builder
       | SCall("sprint", [e])    ->
