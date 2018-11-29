@@ -80,24 +80,24 @@ let string_of_op = function
         | Or    -> "||"
 
 let rec string_of_expr = function
-          Noexpr -> ""
-        |  Literal(l) -> string_of_int l
-        |  Id(i) -> i
-        |  Unop(op, e1) -> string_of_uop op ^ string_of_expr e1
-        |  StrCat(e1, e2) -> string_of_expr e1 ^ " ^ " ^ string_of_expr e2
-        |  RegexComp(e1, e2) -> string_of_expr e1 ^ "===" ^ string_of_expr e2
-        |  ReadFile(id) -> id ^ ".read();\n"
-        |  BoolLit(true) -> "true"
-        |  BoolLit(false) -> "false"
-        |  StringLit(s) ->  s
-        |  Binop(e1, op, e2) -> string_of_expr ( e1) ^ " " ^
-                string_of_op op ^ " " ^ string_of_expr ( e2)
-        | Array_Assign(id, e1, e2) -> id ^ "[" ^ string_of_expr ( e1) ^
-                "]" ^ " = " ^ string_of_expr ( e2)
-        |  Retrieve(id, e1) -> id ^ "[" ^ string_of_expr ( e1) ^ "]"
-        |  Open(filename, delim) -> "open(" ^ string_of_expr filename ^ ", " ^ string_of_expr delim ^ ");\n"
-        |  Call(id, act) -> id ^ "(" ^
-                String.concat ", "(List.map string_of_expr act) ^ ")"
+    Noexpr -> ""
+  |  Literal(l) -> string_of_int l
+  |  Id(i) -> i
+  |  InitArray(t1, t2) -> "init(" ^ string_of_typ t1 ^ string_of_typ t2 ^ ");\n"
+  |  Unop(op, e1) -> string_of_uop op ^ string_of_expr e1
+  |  StrCat(e1, e2) -> string_of_expr e1 ^ " ^ " ^ string_of_expr e2
+  |  RegexComp(e1, e2) -> string_of_expr e1 ^ "===" ^ string_of_expr e2
+  |  ReadFile(id) -> id ^ ".read();\n"
+  |  BoolLit(true) -> "true"
+  |  BoolLit(false) -> "false"
+  |  StringLit(s) ->  s
+  |  Binop(e1, op, e2) -> string_of_expr ( e1) ^ " " ^
+          string_of_op op ^ " " ^ string_of_expr ( e2)
+  | Array_Assign(id, e1, e2) -> id ^ "[" ^ string_of_expr ( e1) ^
+          "]" ^ " = " ^ string_of_expr ( e2)
+  |  Retrieve(id, e1) -> id ^ "[" ^ string_of_expr ( e1) ^ "]"
+  |  Open(filename, delim) -> "open(" ^ string_of_expr filename ^ ", " ^ string_of_expr delim ^ ");\n"
+  |  Call(id, act) -> id ^ "(" ^ String.concat ", "(List.map string_of_expr act) ^ ")"
 
 let string_of_opt_assn = function
         Noexpr -> ""

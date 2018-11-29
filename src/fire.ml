@@ -1,7 +1,7 @@
 (* Top-level of the Fire compiler: scan & parse the input,
    check the resulting AST, generate LLVM IR, and dump the module *)
 
-type action = Ast | Sast | LLVM_IR | Compile | SastDebug
+type action = Ast | Sast | LLVM_IR | Compile
 
 let _ =
   let action = ref Compile in
@@ -9,7 +9,6 @@ let _ =
   let speclist = [
     ("-a", Arg.Unit (set_action Ast), "Print the AST");
     ("-s", Arg.Unit (set_action Sast), "Print semantically-checked AST");
-    ("-sd", Arg.Unit (set_action SastDebug), "Debug mode for Sast");
     ("-l", Arg.Unit (set_action LLVM_IR), "Print the generated LLVM IR");
     ("-c", Arg.Unit (set_action Compile), "Check and print the generated LLVM IR (default)");
   ] in
@@ -20,7 +19,7 @@ let _ =
   let lexbuf = Lexing.from_channel stdin in
 
   let ast = Parser.program Scanner.token lexbuf in
-  let sast = Semant.check ast in
+  let _ = Semant.check ast in
   match !action with
     Ast -> print_string (Ast.string_of_program ast)
   | _ -> let sast = Semant.check ast in

@@ -101,24 +101,34 @@ let check_function func =
       Literal l -> (Int, SLiteral l)
     | BoolLit l -> (Bool, SBoolLit l)
     | StringLit l -> (String, SStringLit l)
-    | StrCat(e1, e2) -> let (rt1, e1') = expr envs e1 in let (rt2, e2') = expr envs e2 in
-    if rt1 = String && rt2 = String then (String,  SStrCat((rt1, e1'), (rt2, e2')))
-    else raise(Failure("cannot strcat non strings"))
+    | Noexpr -> (Void, SNoexpr)
+    | RegexComp(e1, e2) ->
+        let (rt1, e1') = expr envs e1
+        and (rt2, e2') = expr envs e2 in
+        (Bool, SRegexComp((rt1, e1'), (rt2, e2'))) (* TODO Need to check types here*)
+    | ReadFile id -> (String, SReadFile id)
+    | StrCat(e1, e2) ->
+          let (rt1, e1') = expr envs e1 in let (rt2, e2') = expr envs e2 in
+            if rt1 = String && rt2 = String then
+              (String,  SStrCat((rt1, e1'), (rt2, e2')))
+            else
+              raise(Failure("cannot strcat non strings"))
     | Id s -> (type_of_identifier s envs.lvs, SId s)
-
+    | InitArray(t1, t2) -> (Array(t1, t2), SInitArray(t1, t2))
     | Array_Assign(id, e1, e2) ->
       let (t1, t2) = check_array envs id
       and (rt1, e1') = expr envs e1
       and (rt2, e2') = expr envs e2 in
-      if ((rt1 = t1) && (rt2 = t2)) then (Void, SArray_Assign(id, (rt1, e1'), (rt2, e2')))
-      else raise (Failure (" Improper types for Array Assign"))
-(*         let envs2 = {stmts =  :: envs.stmts; lvs = envs.lvs} in envs2 *)
+        if ((rt1 = t1) && (rt2 = t2)) then
+          (Void, SArray_Assign(id, (rt1, e1'), (rt2, e2')))
+        else
+          raise (Failure (" Improper types for Array Assign"))
+    | Retrieve(id, e) -> let e' = expr envs e in (Void, SRetrieve(id, e'))
     | Open (e1, e2) ->
        let (t1, e1') = expr envs e1
        and (t2, e2') = expr envs e2  in
-          (* Check that these are either id's or string literals *)
+          (* TODO Check that these are either id's or string literals *)
           (File, SOpen((t1, e1'), (t2, e2')))
-        (* let envs2 = {stmts = SOpen(s1, s2) :: envs.stmts; lvs = envs.lvs} in envs2*)
     | Unop(op, e) as ex ->
        let (t, e') = expr envs e in
        let ty = match op with
@@ -230,7 +240,7 @@ let rec check_stmt envs = function
           let f = function
           Noexpr ->
             let f2 = function
-              Some t -> raise (Failure ("trying to redeclare variable"))
+              Some _ -> raise (Failure ("trying to redeclare variable"))
               | None ->
                 let f3 = function
                   Array(t1, t2) ->
@@ -243,7 +253,7 @@ let rec check_stmt envs = function
 
           | _ ->
               let f4 = function
-              Some t -> raise (Failure ("trying to redeclare variable"))
+              Some _ -> raise (Failure ("trying to redeclare variable"))
               | None ->
                   let f5 = function
                     Array(_, _) -> raise (Failure("cant assign and declare array"))
