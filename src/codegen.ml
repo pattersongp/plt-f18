@@ -164,34 +164,34 @@ let translate functions =
       | _ -> raise (Failure "Error! Invalid array type.")
     in
 
-    let rec expr (builder, lvs) ((e) : expr) = match e with
-        A.Literal i           -> L.const_int i32_t i
-      | A.StringLit s         -> L.build_global_stringptr s "str" builder
-      | A.Noexpr              -> L.const_int i32_t 0
-      | A.BoolLit b           -> L.const_int i1_t (if b then 1 else 0)
-      | A.Id s                -> L.build_load (lookup s lvs) s builder
-      | A.ReadFile (id)       ->
-        L.build_call read_file_func [| (expr (builder, lvs) (Id(id))) |] "readFire" builder
-      | A.Open (e1, e2)       ->
+    let rec expr (builder, lvs) ((_, e) : sexpr) = match e with
+        SLiteral i           -> L.const_int i32_t i
+      | SStringLit s         -> L.build_global_stringptr s "str" builder
+      | SNoexpr              -> L.const_int i32_t 0
+      | SBoolLit b           -> L.const_int i1_t (if b then 1 else 0)
+      | SId s                -> L.build_load (lookup s lvs) s builder
+      | SReadFile (id)       ->
+          L.build_call read_file_func [| (expr (builder, lvs) (A.String, SId(id))) |] "readFire" builder
+      | SOpen (e1, e2)       ->
           let e1' = expr (builder, lvs) e1
           and e2' = expr (builder, lvs) e2 in
           L.build_call open_file_func [| e1'; e2' |] "open" builder
 
-      | A.InitArray(t1, t2) ->
+      | SInitArray(t1, t2) ->
           let t1' = (size_of_ltype (ltype_of_typ t1))
           and t2' = (size_of_ltype (ltype_of_typ t2)) in
             L.build_call init_arr_func [| t1'; t2' |] "initArray" builder
-      | A.Array_Assign (id, e1, e2)       ->
+      | SArray_Assign (id, e1, e2)       ->
           let e1' = expr (builder, lvs) e1
           and e2' = expr (builder, lvs) e2
-          and id' = (expr (builder, lvs) (Id(id))) in
+          and id' = (expr (builder, lvs) (A.Void, SId(id))) in
           L.build_call add_func [| id'; e1'; e2' |] "add" builder
-      | A.Retrieve(id, e) ->
+      | SRetrieve(id, e) ->
           let e' = expr (builder, lvs) e
-          and id' = (expr (builder, lvs) (Id(id))) in
+          and id' = (expr (builder, lvs) (A.Void, SId(id))) in
             L.build_call init_arr_func [| id'; e'  |] "get" builder
 
-      | Call("strlen", [e])    ->
+      | SCall("strlen", [e])    ->
           L.build_call strlen_func [| (expr (builder, lvs) e) |] "strlen" builder
       | SCall("sprint", [e])    ->
           L.build_call sprint_func [| (expr (builder, lvs) e) |] "sprint" builder
