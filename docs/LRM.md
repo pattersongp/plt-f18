@@ -212,15 +212,15 @@ Files are regarded as first-class citizens in FIRE. This is made apparent by the
 
 The syntax for instantiating a `file` object is as follows:
 
-`file["<mode>"] f;
+`file f;
 f.open("filename.csv", "<delimiter>");
 `
 
-In the example provided above, two argument are fed into the `open[...]` argument: *filename* for reading, writing or both, and *delimiter*. *delimiter* may be provided to the constructor specifying a delimiter for reading. The *mode* passing in `file[...]` can be `r` for read only, `w` for write only, and `rw` for both.
+In the example provided above, two argument are fed into the `open[...]` argument: *filename* for reading, writing or both, and *delimiter*. *delimiter* may be provided to the constructor specifying a delimiter for reading. 
 
 Example:
 
-`file[rw] f; f.open("test.csv", ",");` will open the File named `test.csv` in the current directory for both reading and writing, and delimited by the `,` character.
+`file f; f.open("test.csv", ",");` will open the File named `test.csv` in the current directory for both reading and writing, and delimited by the `,` character.
 
 
 #### 5.1.4. `func`
@@ -259,13 +259,13 @@ The `array` type is a dynamic collection of elements. Inspired by AWK's associat
 
 The structure of `array` variable declarations is as follows:
 
-`init array[<key_type>, <value_type>] arr;`
+`array[<key_type>, <value_type>] arr = init(<key_type>, <value_type>);`
 
 Example:
 
-`init array[int, string] arr;` 
+`array[str, str] arr = init(str, str);` 
 
-Note that arrays must be initalized with the `init` keyword prepended in front of the declaration.
+Note that arrays must be initialized with the `init` keyword prepended in front of parentheses which contain the key and value we are initializing the array with. Arrays **must** be initialized with an expression.
 
 The assignment of variables has the following structure:
 
@@ -273,7 +273,18 @@ The assignment of variables has the following structure:
 
 Example:
 
- `arr[17] = null;`
+ `arr["myAge"] = "28";`
+ 
+As the above example demonstrates, keys do not have to be of the same type as the values they correspond with - but all keys in an array must be of the same type, and all values must be of the same type. 
+
+There are strict restrictions on the types a key can be and a value can be. Please consult the table below:
+
+| Legal Key Types | Legal Value Types |
+|-----------------|-------------------|
+| int             | int               |
+| string          | string            |
+|                 | bool              |
+|                 | array             |
  
  Finally, a programmer can retrieve a value associated with a key with the below syntax:
  
@@ -281,9 +292,9 @@ Example:
  
  Example:
  
- `int age = arr["age"];`
+ `int age = arr["myAge"];`
  
- Throws an error if `"age"` does not exit.
+An error will be thrown if `"myAge"` does not exit.
  
 #### 5.1.5. `regx`
 
