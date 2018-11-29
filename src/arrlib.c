@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "arrlib.h"
+
 typedef struct Node {
     void *data1;
     void *data2;
