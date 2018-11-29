@@ -10,7 +10,9 @@ and sx =
   | SId of string
   | SBinop of sexpr * op * sexpr
   | SUnop of uop * sexpr
+  | SInitArray of typ * typ
   | SRetrieve of string * sexpr
+  | SArray_Assign of string * sexpr * sexpr
   | SCall of string * sexpr list
   | SRegexComp of sexpr * sexpr
   | SStrCat of sexpr * sexpr
@@ -29,7 +31,6 @@ type sstmt =
   | SFilter of string * string
   | SVdecl of typ * string * sexpr
   | SAssign of string * sexpr
-  | SArray_Assign of string * sexpr * sexpr
   | SBreak
 
 type sfunc_decl = {
@@ -55,6 +56,8 @@ let rec string_of_sexpr (t, e) =
   | SCall(f, el) ->
       f ^ "(" ^ String.concat ", " (List.map string_of_sexpr el) ^ ")"
   | SRetrieve(id, e1) -> id ^ "[" ^ string_of_sexpr e1 ^ "]"
+  | SArray_Assign(id, e1, e2) -> id ^ "[" ^ string_of_sexpr e1 ^
+                "]" ^ " = " ^ string_of_sexpr e2
   | SOpen(filename, delim) -> "open(" ^ string_of_sexpr filename ^ ", "
     ^ string_of_sexpr delim ^ ");\n"
   | SNoexpr -> ""
@@ -75,8 +78,6 @@ let rec string_of_sstmt = function
   | SMap(a1, f1) -> "map(" ^ a1 ^ ", " ^ f1 ^ ");\n"
   | SFilter(a1, f1) -> "filter(" ^ a1 ^ ", " ^ f1 ^ ");\n"
   | SBreak -> "break;"
-  | SArray_Assign(id, e1, e2) -> id ^ "[" ^ string_of_sexpr e1 ^
-                "]" ^ " = " ^ string_of_sexpr e2
   | SAssign(v, e) -> v ^ " = " ^ string_of_sexpr e
 (*   | SVdecl(t, id, e) -> string_of_svdecl (t, id, e) *)
 

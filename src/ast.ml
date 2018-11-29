@@ -16,6 +16,7 @@ type expr =
   | Id of string
   | Binop of expr * op * expr
   | Unop of uop * expr
+  | InitArray of typ * typ
   | Retrieve of string * expr
   | Array_Assign of string * expr * expr
   | Call of string * expr list
@@ -23,7 +24,6 @@ type expr =
   | StrCat of expr * expr
   | Open of expr * expr
   | ReadFile of string
-  | InitArray of typ * typ
   | Noexpr
 
 type bind = typ * string * expr
@@ -39,7 +39,6 @@ type stmt =
   | Filter of string * string
   | Vdecl of typ * string * expr
   | Assign of string * expr
-  | Array_Assign of string * expr * expr
   | Break
 
 type func_decl = {
