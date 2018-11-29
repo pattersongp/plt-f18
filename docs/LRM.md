@@ -451,3 +451,9 @@ user:~ $ ./fire.native < nj_numbers.fire
 201-750-0911
 ```
 
+### 8: Other Code Requirements
+
+Programs in FIRE mandate a main function of type `void` or `int`. If int, convention has `0` returned if the program executes successfully and `1` in the event of an error.
+
+
+
