@@ -20,9 +20,9 @@ Jason Konikow (jk4057)
 
 ## 1: Introduction
 
-File Input Reinterpretation Engine (FIRE) is a scripting language inspired by AWK, bash, and other syntacically light languages. These languages are renowed for their ability to robustly extract, pattern-match, and manipulate text files. FIRE seeks to emulate this functionality with a more attractive, C-Family inspired syntax and intuitive semantics.
+File Input Reinterpretation Engine (FIRE) is a scripting language inspired by AWK, bash, and other syntactically light languages. These languages are renowned for their ability to robustly extract, pattern-match, and manipulate text files. FIRE seeks to emulate this functionality with a more attractive, C-Family inspired syntax and intuitive semantics.
 
-FIRE is intended to be utilized with large sets of delimited data, like `csv` files. FIRE is also animated by the premise that files are first class citizens. 
+FIRE is intended to be utilized with large sets of delimited data, like `.csv` files. FIRE is also animated by the premise that files are first class citizens. 
 
 FIRE was built by a team of Columbia University undergraduates for Professor Stephen Edward's Programming Language and Translators course. FIRE is written in OCaml , utilizing libraries built in `C`, and leveraging the `LLVM` compiler back-end.
 
@@ -259,11 +259,13 @@ The `array` type is a dynamic collection of elements. Inspired by AWK's associat
 
 The structure of `array` variable declarations is as follows:
 
-`array[<key_type>, <value_type>] arr;`
+`init array[<key_type>, <value_type>] arr;`
 
 Example:
 
-`array[int, string] arr;` 
+`init array[int, string] arr;` 
+
+Note that arrays must be initalized with the `init` keyword prepended in front of the declaration.
 
 The assignment of variables has the following structure:
 
