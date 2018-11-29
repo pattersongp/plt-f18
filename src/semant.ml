@@ -89,21 +89,46 @@ let check_function func =
     with Not_found -> raise (Failure ("undeclared identifier " ^ s))
   in
 
+  let check_array envs id  =
+    let t = type_of_identifier id envs.lvs in
+    match t with
+    Array(t1, t2)  -> (t1, t2)
+    | _ -> raise (Failure ( id ^ " is not of type array" ))
+  in
+
 (* need to implement Req for regular expression matching in binop *)
-  let rec expr envs= function
+  let rec expr envs = function
       Literal l -> (Int, SLiteral l)
     | BoolLit l -> (Bool, SBoolLit l)
     | StringLit l -> (String, SStringLit l)
-    | StrCat(e1, e2) -> let (rt1, e1') = expr envs e1 in let (rt2, e2') = expr envs e2 in
-    if rt1 = String && rt2 = String then (String,  SStrCat((rt1, e1'), (rt2, e2')))
-    else raise(Failure("cannot strcat non strings"))
+    | Noexpr -> (Void, SNoexpr)
+    | RegexComp(e1, e2) ->
+        let (rt1, e1') = expr envs e1
+        and (rt2, e2') = expr envs e2 in
+        (Bool, SRegexComp((rt1, e1'), (rt2, e2'))) (* TODO Need to check types here*)
+    | ReadFile id -> (String, SReadFile id)
+    | StrCat(e1, e2) ->
+          let (rt1, e1') = expr envs e1 in let (rt2, e2') = expr envs e2 in
+            if rt1 = String && rt2 = String then
+              (String,  SStrCat((rt1, e1'), (rt2, e2')))
+            else
+              raise(Failure("cannot strcat non strings"))
     | Id s -> (type_of_identifier s envs.lvs, SId s)
+    | InitArray(t1, t2) -> (Array(t1, t2), SInitArray(t1, t2))
+    | Array_Assign(id, e1, e2) ->
+      let (t1, t2) = check_array envs id
+      and (rt1, e1') = expr envs e1
+      and (rt2, e2') = expr envs e2 in
+        if ((rt1 = t1) && (rt2 = t2)) then
+          (Void, SArray_Assign(id, (rt1, e1'), (rt2, e2')))
+        else
+          raise (Failure (" Improper types for Array Assign"))
+    | Retrieve(id, e) -> let e' = expr envs e in (Void, SRetrieve(id, e'))
     | Open (e1, e2) ->
        let (t1, e1') = expr envs e1
        and (t2, e2') = expr envs e2  in
-          (* Check that these are either id's or string literals *)
+          (* TODO Check that these are either id's or string literals *)
           (File, SOpen((t1, e1'), (t2, e2')))
-        (* let envs2 = {stmts = SOpen(s1, s2) :: envs.stmts; lvs = envs.lvs} in envs2*)
     | Unop(op, e) as ex ->
        let (t, e') = expr envs e in
        let ty = match op with
@@ -152,35 +177,10 @@ let check_function func =
     in if t' != Bool then raise (Failure err) else (t', e')
   in
 
-  let check_array envs id  =
-    let t = type_of_identifier id envs.lvs in
-    match t with
-    Array(t1, t2)  -> (t1, t2)
-    | _ -> raise (Failure ( id ^ " is not of type array" ))
-  in
-
   let check_array_type (t1, t2) =
     if ((t1 = Int || t1 = String) && (t2 = Int || t2 = String) ) then true else false
   in
-(*
-  let rec check_stmt_list (stmts, lvs) = function
-              [Return _ as s] -> [check_stmt s]
-            | Return _ :: _   -> raise (Failure "nothing may follow a return")
-            | Block sl :: ss  -> check_stmt_list (stmts, lvs) (sl @ ss) (* Flatten blocks *)
-            | Block sl :: ss  -> let sl' = check_stmt_list (stmts, lvs) sl in sl' @ (check_stmt_list (stmts, lvs) ss) (* Flatten blocks *)
-            | s :: ss         -> check_stmt s :: check_stmt_list ss
-            | []              -> []
-  in*)
-  (*    | For(t1, id1, id2, st) ->
-	        (SFor(t1, id1, id2, check_stmt st), lvs)*)
 
-       (* Expr e -> (SExpr(expr e) :: stmts, lvs)*)
-(*      | If(p, b1, b2) -> (SIf(check_bool_expr p, check_stmt b1, check_stmt b2) :: stmts. lvs)*)
-(*      | While(p, s) -> (SWhile(check_bool_expr p, check_stmt s), lvs)*)
-	    (* A block is correct if each statement is correct and nothing
-	       follows any Return statement.  Nested blocks are flattened. *)
-      (*| Block sl ->  SBlock(check_stmt_list sl)*)
-(*      | Open (s1, s2) -> (SOpen(s1, s2), lvs)*)
 let rec check_stmt envs = function
       Expr e -> let envs2 = {stmts = SExpr(expr envs e) :: envs.stmts; lvs = envs.lvs} in envs2
       | Block sl -> let e' = List.fold_left check_stmt envs sl in
@@ -230,12 +230,6 @@ let rec check_stmt envs = function
                     else raise (Failure (" Map called with out matching types ") )
             | _ -> raise (Failure (" Function must return Bool to be applied with Filter"))
             in m2 t1
-      | Array_Assign(id, e1, e2) ->
-        let (t1, t2) = check_array  envs id
-        and (rt1, e1') = expr envs e1
-        and (rt2, e2') = expr envs e2 in
-        if ((rt1 = t1) && (rt2 = t2)) then let envs2 = {stmts = SArray_Assign(id, (rt1, e1'), (rt2, e2')) :: envs.stmts; lvs = envs.lvs} in envs2
-        else raise (Failure (" Improper types for Array Assign"))
       | Assign(var, e) as ex ->
         let lt = type_of_identifier var envs.lvs
         and (rt, e') = expr envs e in
@@ -246,7 +240,7 @@ let rec check_stmt envs = function
           let f = function
           Noexpr ->
             let f2 = function
-              Some t -> raise (Failure ("trying to redeclare variable"))
+              Some _ -> raise (Failure ("trying to redeclare variable"))
               | None ->
                 let f3 = function
                   Array(t1, t2) ->
@@ -259,7 +253,7 @@ let rec check_stmt envs = function
 
           | _ ->
               let f4 = function
-              Some t -> raise (Failure ("trying to redeclare variable"))
+              Some _ -> raise (Failure ("trying to redeclare variable"))
               | None ->
                   let f5 = function
                     Array(_, _) -> raise (Failure("cant assign and declare array"))
