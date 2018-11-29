@@ -1,10 +1,7 @@
 (* Top-level of the Fire compiler: scan & parse the input,
    check the resulting AST, generate LLVM IR, and dump the module *)
 
-(*     ("-s", Arg.Unit (set_action Sast), "Print the SAST"); *)
-
 type action = Ast | Sast | LLVM_IR | Compile | SastDebug
-
 
 let _ =
   let action = ref Compile in
@@ -26,9 +23,11 @@ let _ =
   let sast = Semant.check ast in
   match !action with
     Ast -> print_string (Ast.string_of_program ast)
-    (*goal -> to eventually support the following logic: | _ -> let sast = Semant.check ast in *)
-    | Sast -> print_string "Sast Code is not complete. \n"
-    | SastDebug -> print_string (Sast.string_of_sprogram sast)   (* ignore function takes an argument and forces a return of unit *) 
-    | LLVM_IR -> print_string (Llvm.string_of_llmodule (Codegen.translate ast))
-    | _ -> ()
-
+  | _ -> let sast = Semant.check ast in
+    match !action with
+      Ast     -> ()
+    | Sast    -> print_string (Sast.string_of_sprogram sast)
+    | LLVM_IR -> print_string (Llvm.string_of_llmodule (Codegen.translate sast))
+    | Compile -> let m = Codegen.translate sast in
+        Llvm_analysis.assert_valid_module m;
+        print_string (Llvm.string_of_llmodule m)

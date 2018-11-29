@@ -35,10 +35,10 @@ type stmt =
   | For of typ * string * string * stmt
   | Map of string * string
   | Filter of string * string
-  | Break
   | Vdecl of typ * string * expr
   | Assign of string * expr
   | Array_Assign of string * expr * expr
+  | Break
 
 type func_decl = {
     typ : typ;
