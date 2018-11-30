@@ -1,0 +1,7 @@
+func int main = ()=>{
+    str q =  "can i get the compiler to mess up?";
+    bool a = false;
+    a = q; /* fail here. bool cant be str */
+    str snarky = "i better not get to this point";
+    
+}

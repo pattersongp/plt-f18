@@ -1,5 +1,0 @@
-func int main = () => {
-int i;
-bool j;
-str k;
-}

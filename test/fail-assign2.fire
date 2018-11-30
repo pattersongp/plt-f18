@@ -1,0 +1,5 @@
+func int main = () => {
+    int x = true; /* should fail here, int cant be true */
+    int y = x + 100;
+    print(y);
+}
