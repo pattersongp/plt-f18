@@ -18,6 +18,7 @@ and sx =
   | SStrCat of sexpr * sexpr
   | SOpen of sexpr * sexpr
   | SReadFile of string
+  | SWriteFile of string * sexpr
   | SNoexpr
 
 type sstmt =

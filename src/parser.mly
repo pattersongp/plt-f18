@@ -11,7 +11,7 @@ open Ast
 %token LBRACKET RBRACKET CONCAT COLON
 %token REGX INT FUNCTION STRING VOID ARRAY BOOL FILE
 %token FATARROW FILTER MAP OPEN INITARR
-%token READFILE DOT
+%token WRITEFILE READFILE DOT
 
 %token <int> INT_LIT
 %token <string> ID
@@ -99,8 +99,9 @@ expr:
   | FALSE            { BoolLit(false) }
   | ID               { Id($1) }
   | INITARR LPAREN concrete_typ COMMA typ RPAREN { InitArray($3, $5) }
-  | ID LBRACKET expr RBRACKET ASSN expr {Array_Assign($1, $3, $6)}
+  | ID LBRACKET expr RBRACKET ASSN expr { Array_Assign($1, $3, $6) }
   | ID DOT READFILE LPAREN RPAREN { ReadFile($1) }
+  | ID DOT WRITEFILE LPAREN expr RPAREN { WriteFile($1, $5) }
   | OPEN LPAREN expr COMMA expr RPAREN { Open($3, $5) }
   | expr PLUS   expr { Binop($1, Plus,   $3) }
   | expr MINUS  expr { Binop($1, Minus,   $3) }
