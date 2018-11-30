@@ -108,6 +108,9 @@ let check_function func =
         and (rt2, e2') = expr envs e2 in
         (Bool, SRegexComp((rt1, e1'), (rt2, e2'))) (* TODO Need to check types here*)
     | ReadFile id -> (String, SReadFile id)
+    | RegexGrab(id, e) ->
+        let e' = expr envs e in
+        (String, SRegexGrab(id, e'))
     | WriteFile(id, e) ->
         let e' = expr envs e in
         (Void, SWriteFile(id, e'))

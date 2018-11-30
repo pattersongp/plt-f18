@@ -51,6 +51,7 @@ rule token = parse
 | "bool"   { BOOL }
 | "open"   { OPEN }
 | "init"   { INITARR }
+| "grab"   { GRAB }
 | "str" { STRING }
 | ['0'-'9']+ as lit { INT_LIT(int_of_string lit) }
 | ['a'-'z' 'A'-'Z']['a'-'z' 'A'-'Z' '0'-'9' '_']* as id { ID(id) }
