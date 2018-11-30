@@ -173,7 +173,7 @@ void *get(struct Array *array, const void *key) {
     return node->data2;
 }
 
-//#ifdef BUILD_TEST
+#ifdef BUILD_TEST
 int main() {
     //No default constructor
     Array *arr;
@@ -193,7 +193,7 @@ int main() {
     
     return 0;
 }
-//#endif
+#endif
 
 
 
