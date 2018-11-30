@@ -52,7 +52,7 @@ int size(char type){
             realsize = 4;
             break;
         default:
-            realsize = 0;
+            realsize = 8;
             break;
     }
     return realsize;
@@ -150,8 +150,13 @@ void add(struct Array *array, void *data1, void *data2) {
         
         //add length
         array->length = array->length + 1;
-        printf("Array Length: ");
-        printf("%d \n",array->length);
+        
+        //update size of mother array
+        if (array->type_value == 'a') {
+            Array *ar = (struct Array*)node->data2;
+            array->size_value += setsizeofarrayinarray(ar);
+        }
+
     }
 }
 
