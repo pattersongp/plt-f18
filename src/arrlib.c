@@ -112,6 +112,7 @@ int setsizeofarrayinarray(const struct Array *array){
     return arraysize;
 }
 
+
 void add(struct Array *array, void *data1, void *data2) {
     struct Node *node;
     
@@ -156,7 +157,6 @@ void add(struct Array *array, void *data1, void *data2) {
             Array *ar = (struct Array*)node->data2;
             array->size_value += setsizeofarrayinarray(ar);
         }
-
     }
 }
 
@@ -194,6 +194,7 @@ int main() {
     return 0;
 }
 #endif
+
 
 
 
