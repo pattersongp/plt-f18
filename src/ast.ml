@@ -25,6 +25,7 @@ type expr =
   | Open of expr * expr
   | ReadFile of string
   | WriteFile of string * expr
+  | RegexGrab of string * expr
   | Noexpr
 
 type bind = typ * string * expr
@@ -88,6 +89,7 @@ let rec string_of_expr = function
   |  Unop(op, e1) -> string_of_uop op ^ string_of_expr e1
   |  StrCat(e1, e2) -> string_of_expr e1 ^ " ^ " ^ string_of_expr e2
   |  RegexComp(e1, e2) -> string_of_expr e1 ^ "===" ^ string_of_expr e2
+  |  RegexGrab(id, e2) -> id ^ ".grab(" ^ string_of_expr e2 ^ ");"
   |  ReadFile(id) -> id ^ ".read();\n"
   |  BoolLit(true) -> "true"
   |  BoolLit(false) -> "false"

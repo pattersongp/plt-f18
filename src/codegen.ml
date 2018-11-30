@@ -57,6 +57,11 @@ let translate functions =
   let regex_cmp_func : L.llvalue =
     L.declare_function "regex_compare" regex_cmp_t the_module in
 
+  let regex_grb_t : L.lltype =
+    L.function_type string_t [| string_t; string_t |] in
+  let regex_grb_func  : L.llvalue =
+    L.declare_function "regex_grab" regex_grb_t the_module in
+
   let sprint_t : L.lltype =
     L.var_arg_function_type i32_t [| string_t |] in
   let sprint_func : L.llvalue =
@@ -214,6 +219,9 @@ let translate functions =
           let e1' = expr (builder, lvs) e1
           and e2' = expr (builder, lvs) e2 in
           L.build_call regex_cmp_func [| e1'; e2' |] "regex_compare" builder
+      | SRegexGrab(id, e1) ->
+          let e1' = expr (builder, lvs) e1 in
+          L.build_call regex_grb_func [| e1'; (expr (builder, lvs) (A.String, SId(id))) |] "regexgrab_result" builder
       | SStrCat(e1, e2) ->
           let e1' = expr (builder, lvs) e1
           and e2' = expr (builder, lvs) e2 in

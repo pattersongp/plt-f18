@@ -19,6 +19,7 @@ and sx =
   | SOpen of sexpr * sexpr
   | SReadFile of string
   | SWriteFile of string * sexpr
+  | SRegexGrab of string * sexpr
   | SNoexpr
 
 type sstmt =
