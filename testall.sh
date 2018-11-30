@@ -88,9 +88,9 @@ Check() {
     generatedfiles=""
 
     generatedfiles="$generatedfiles ${basename}.ll ${basename}.s ${basename}.exe ${basename}.out" &&
-    Run "$MICROC" "$1" ">" "${basename}.ll" &&
+    Run "$FIRE" "$1" ">" "${basename}.ll" &&
     Run "$LLC" "-relocation-model=pic" "${basename}.ll" ">" "${basename}.s" &&
-    Run "$CC" "-o" "${basename}.exe" "${basename}.s" "printbig.o" &&
+    Run "$CC" "-o" "${basename}.exe" "${basename}.s" "arrlib.o" "filelib.o" "regexlib.o" "printlib.o" &&
     Run "./${basename}.exe" > "${basename}.out" &&
     Compare ${basename}.out ${reffile}.out ${basename}.diff
 
@@ -111,8 +111,8 @@ Check() {
 CheckFail() {
     error=0
     basename=`echo $1 | sed 's/.*\\///
-                             s/.mc//'`
-    reffile=`echo $1 | sed 's/.mc$//'`
+                             s/.fire//'`
+    reffile=`echo $1 | sed 's/.fire$//'`
     basedir="`echo $1 | sed 's/\/[^\/]*$//'`/."
 
     echo -n "$basename..."
@@ -123,7 +123,7 @@ CheckFail() {
     generatedfiles=""
 
     generatedfiles="$generatedfiles ${basename}.err ${basename}.diff" &&
-    RunFail "$MICROC" "<" $1 "2>" "${basename}.err" ">>" $globallog &&
+    RunFail "$FIRE" "<" $1 "2>" "${basename}.err" ">>" $globallog &&
     Compare ${basename}.err ${reffile}.err ${basename}.diff
 
     # Report the status and clean up the generated files
@@ -162,10 +162,27 @@ LLIFail() {
 which "$LLI" >> $globallog || LLIFail
 
 # change the below to check for the regex, print and array libraries fire uses
-if [ ! -f printbig.o ]
+if [ ! -f src/arrlib.o ]
 then
-    echo "Could not find printbig.o"
-    echo "Try \"make printbig.o\""
+    echo "Could not find arrlib.o"
+    exit 1
+fi
+
+if [ ! -f src/regexlib.o ]
+then
+    echo "Could not find regexlib.o"
+    exit 1
+fi
+
+if [ ! -f src/filelib.o ]
+then
+    echo "Could not find filelib.o"
+    exit 1
+fi
+
+if [ ! -f src/printlib.o ]
+then
+    echo "Could not find printlib.o"
     exit 1
 fi
 
