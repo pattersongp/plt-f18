@@ -80,12 +80,17 @@ let translate functions =
   let open_file_t : L.lltype =
     L.function_type i32_ptr_t [| string_t; string_t |] in
   let open_file_func : L.llvalue =
-    L.declare_function "open" open_file_t the_module in
+    L.declare_function "openFire" open_file_t the_module in
 
   let read_file_t : L.lltype =
     L.function_type string_t [| i32_ptr_t |] in
   let read_file_func : L.llvalue =
     L.declare_function "readFire" read_file_t the_module in
+
+  let write_file_t : L.lltype =
+    L.function_type string_t [| i32_ptr_t; string_t |] in
+  let write_file_func : L.llvalue =
+    L.declare_function "writeFire" write_file_t the_module in
 
   let init_arr_t : L.lltype =
     L.function_type i32_ptr_t [| i32_t; i32_t |] in
@@ -97,13 +102,10 @@ let translate functions =
   let add_func : L.llvalue =
     L.declare_function "add" add_t the_module in
 
-(*
- * Will eventually need this for Retrieve
   let get_t : L.lltype =
     L.function_type i32_t [| string_t; i32_t |] in
   let get_func : L.llvalue =
     L.declare_function "get" get_t the_module in
-*)
 
   (* ---------------------- User Functions ---------------------- *)
   let function_decls : (L.llvalue * sfunc_decl) StringMap.t =
@@ -174,24 +176,27 @@ let translate functions =
       | SBoolLit b           -> L.const_int i1_t (if b then 1 else 0)
       | SId s                -> L.build_load (lookup s lvs) s builder
       | SReadFile (id)       ->
-          L.build_call read_file_func [| (expr (builder, lvs) (A.String, SId(id))) |] "readFire" builder
+          L.build_call read_file_func [| (expr (builder, lvs) (A.String, SId(id))) |] "readFire_result" builder
+      | SWriteFile (id, e1) ->
+          let e1' = expr (builder, lvs) e1 in
+          L.build_call write_file_func [| (expr (builder, lvs) (A.String, SId(id))); e1' |] "writeFire_result" builder
       | SOpen (e1, e2)       ->
           let e1' = expr (builder, lvs) e1
           and e2' = expr (builder, lvs) e2 in
-          L.build_call open_file_func [| e1'; e2' |] "open" builder
+          L.build_call open_file_func [| e1'; e2' |] "open_result" builder
       | SInitArray(t1, t2) ->
           let t1' = (size_of_ltype (ltype_of_typ t1))
           and t2' = (size_of_ltype (ltype_of_typ t2)) in
-            L.build_call init_arr_func [| t1'; t2' |] "initArray" builder
+            L.build_call init_arr_func [| t1'; t2' |] "initArray_result" builder
       | SArray_Assign (id, e1, e2)       ->
           let e1' = expr (builder, lvs) e1
           and e2' = expr (builder, lvs) e2
           and id' = (expr (builder, lvs) (A.Void, SId(id))) in
-          L.build_call add_func [| id'; e1'; e2' |] "add" builder
+          L.build_call add_func [| id'; e1'; e2' |] "add_result" builder
       | SRetrieve(id, e) ->
           let e' = expr (builder, lvs) e
           and id' = (expr (builder, lvs) (A.Void, SId(id))) in
-            L.build_call init_arr_func [| id'; e'  |] "get" builder
+            L.build_call get_func [| id'; e'  |] "get_result" builder
       | SCall("strlen", [e])    ->
           L.build_call strlen_func [| (expr (builder, lvs) e) |] "strlen" builder
       | SCall("sprint", [e])    ->

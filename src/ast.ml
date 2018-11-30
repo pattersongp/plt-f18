@@ -24,6 +24,7 @@ type expr =
   | StrCat of expr * expr
   | Open of expr * expr
   | ReadFile of string
+  | WriteFile of string * expr
   | Noexpr
 
 type bind = typ * string * expr
