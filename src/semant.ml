@@ -28,16 +28,17 @@ in
 (* function declaration for built-in FIRE functions - print, map, filter *)
 (* re-write for FIRE bind type? *)
 let built_in_func_decls =
-    let add_bind map (name, rType) = StringMap.add name {
+    let add_bind map (name, rtype, formals') = StringMap.add name {
         (* object between brackets is func_decl object? *)
-        typ = Void; (* all built in functions are of type void THIS IS NOT TRUE *)
+        typ = rtype;
         fname = name;
-        formals = [(rType, "x", Noexpr)]; (* This needs to change here-- should be a list of parameters also the param name is resolved at runtime *)
+        formals = formals';
         body = []; (* empty list *)
     } map
     (* REVISE following line !!!*)
     (*  What is the second argument here? *)
-    in List.fold_left add_bind StringMap.empty [("print", Int); ("map", String); ("filter", String); ("sprint", String)]
+    in List.fold_left add_bind StringMap.empty
+    [("print", Void, [(Int, "", Noexpr)]); ("sprint", Void, [(String, "", Noexpr)]); ("strlen", Int, [(String, "", Noexpr)])]
 in
 
 (* build up symbol table - global scope ONLY for now *)
@@ -74,7 +75,7 @@ let check_function func =
  (* if expressions are symmetric, it is invalid; e.g. int x = int x; *)
   let check_assign lvaluet rvaluet err =
     match lvaluet with
-    Regx -> if rvaluet = String then rvaluet else raise (Failure err)
+      Regx   -> if rvaluet = String || rvaluet = Regx then rvaluet else raise (Failure err)
     | String -> if rvaluet = Regx || rvaluet = String then rvaluet else raise (Failure err)
     | _ -> if lvaluet = rvaluet then lvaluet else raise (Failure err)
   in
@@ -107,6 +108,12 @@ let check_function func =
         and (rt2, e2') = expr envs e2 in
         (Bool, SRegexComp((rt1, e1'), (rt2, e2'))) (* TODO Need to check types here*)
     | ReadFile id -> (String, SReadFile id)
+    | RegexGrab(id, e) ->
+        let e' = expr envs e in
+        (String, SRegexGrab(id, e'))
+    | WriteFile(id, e) ->
+        let e' = expr envs e in
+        (Void, SWriteFile(id, e'))
     | StrCat(e1, e2) ->
           let (rt1, e1') = expr envs e1 in let (rt2, e2') = expr envs e2 in
             if rt1 = String && rt2 = String then
