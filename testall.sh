@@ -15,7 +15,7 @@ LLC="llc"
 CC="gcc"
 
 # Path to the Fire compiler
-FIRE="./Fire.native"
+FIRE="src/Fire.native"
 
 # Set time limit for all operations
 ulimit -t 30
@@ -190,7 +190,7 @@ if [ $# -ge 1 ]
 then
     files=$@
 else
-    files="tests/test-*.fire tests/fail-*.fire"
+    files="test/test-*.fire test/fail-*.fire"
 fi
 
 for file in $files
