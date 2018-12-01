@@ -194,16 +194,18 @@ let rec check_stmt envs = function
                     let envs2 = {stmts = e'.stmts; lvs = envs.lvs} in envs2
       | If(p, b1, b2) -> let e1 = {stmts = []; lvs = envs.lvs} in
                          let env1 = check_stmt e1 b1 in
+
                          let e2 = {stmts = []; lvs = envs.lvs} in
                          let env2 = check_stmt e2 b2 in
-                         let envs3 = {stmts = SIf(check_bool_expr envs p, SBlock(env1.stmts), SBlock(env2.stmts)) :: envs.stmts; lvs = envs.lvs} in
+
+                         let envs3 = {stmts = SIf(check_bool_expr envs p, SBlock(List.rev env1.stmts), SBlock(List.rev env2.stmts)) :: envs.stmts; lvs = envs.lvs} in
                          envs3
       | For(t1, id1, id2, st) -> let e1 = {stmts = []; lvs = envs.lvs} in
                                  let env1 = check_stmt e1 st in
-                                 let envs2 = {stmts = SFor(t1, id1, id2, SBlock(env1.stmts)) :: envs.stmts; lvs = envs.lvs} in envs2
+                                 let envs2 = {stmts = SFor(t1, id1, id2, SBlock(List.rev env1.stmts)) :: envs.stmts; lvs = envs.lvs} in envs2
       | While(p, s) -> let e1 = {stmts = []; lvs = envs.lvs} in
                        let env1 = check_stmt e1 s in
-                       let envs2 = {stmts = SWhile(check_bool_expr envs p, SBlock(env1.stmts)) :: envs.stmts; lvs = envs.lvs} in envs2
+                       let envs2 = {stmts = SWhile(check_bool_expr envs p, SBlock(List.rev env1.stmts)) :: envs.stmts; lvs = envs.lvs} in envs2
       | Return e -> let (t, e') = expr envs e in
       if t = func.typ then let envs2 = {stmts = SReturn(t, e') :: envs.stmts; lvs = envs.lvs} in envs2
         else raise (
