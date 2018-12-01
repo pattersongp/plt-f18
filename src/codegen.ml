@@ -161,9 +161,9 @@ let translate functions =
 
     (* Function for matching lltype to size in c for array lib *)
     let size_of_ltype = function
-        i32_ptr_t -> L.const_int i32_t 8
-      | string_t  -> L.const_int i32_t 8
-      | i32_t     -> L.const_int i32_t 4
+        i32_t     -> L.const_int i32_t 8
+      | i1_t      -> L.const_int i32_t 4
+      | string_t  -> L.const_int i32_t 7
       | _ -> raise (Failure "Error! Invalid array type.")
     in
 
@@ -241,7 +241,11 @@ let translate functions =
     let rec stmt (builder, lvs) = function
         SBlock sl -> List.fold_left stmt (builder, lvs) sl
       | SExpr e -> ignore(expr (builder, lvs) e); builder, lvs
-      | SVdecl (t, n, e) -> let lvs' = add_vdecl (t, n, lvs) in stmt (builder, lvs') (SAssign(n, e))
+      | SVdecl (t, n, e) -> let assn' = match t with
+          Array(t1, t2) ->
+            let lvs' = add_vdecl (t, n, lvs) in stmt (builder, lvs') (SAssign(n, (Array(t1,t2), SInitArray(t1,t2))))
+        | _ -> let lvs' = add_vdecl (t, n, lvs) in stmt (builder, lvs') (SAssign(n, e))
+        in assn'
       | SAssign (s, e)   -> let e' = expr (builder, lvs) e in
                            ignore(L.build_store e' (lookup s lvs) builder); builder, lvs
       | SReturn e -> ignore(match fdecl.styp with
