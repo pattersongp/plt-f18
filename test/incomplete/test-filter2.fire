@@ -1,4 +1,0 @@
-func int main = () => {
-		str b = "4";
-		filter(a, str);
-}

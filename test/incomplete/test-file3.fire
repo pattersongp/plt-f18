@@ -1,5 +1,0 @@
-func int main = () => {
-		file f = open("hello.txt", "~");
-		string line = f.read();
-		f.write("line");
-}

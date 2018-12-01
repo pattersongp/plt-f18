@@ -1,4 +1,0 @@
-func void main = () => {
-		array[string, string] arrstring = init(string, string);
-		arr["key0"] = "value0";
-}
