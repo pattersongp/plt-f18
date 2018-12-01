@@ -1,0 +1,11 @@
+func void main = () => {
+    foo(100, true);
+    foo(99, false);
+    foo(true, 101); /* expecting int and bool, not bool and int */
+}
+
+func void foo = (int a, bool b) => {
+
+}
+
+

@@ -1,0 +1,5 @@
+func void main = () => { 
+   sprint("abcd");
+   sprint(101); /* should not be able to call sprint on int */
+   sprint("hello");
+}

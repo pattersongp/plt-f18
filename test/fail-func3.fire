@@ -1,0 +1,12 @@
+func void main = () => {
+    
+}
+
+func void bar = () => {}
+func void foo = (str a , bool b) =>{} 
+
+int main()
+{
+  foo("hehe", true);
+  foo("hehe, 101); /*  expecting str and bool, not str and int *
+}

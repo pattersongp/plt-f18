@@ -1,0 +1,14 @@
+func void main = () => {
+    str your_language = "ashes";
+    str our_language = "FIRE";
+    
+    foo(your_language, our_language);
+    foo(your_langauge);  /* Wrong number of arguments */
+
+}
+
+func void main = (str a , str b) => {
+
+    str x = a;
+    str y = b; 
+}
