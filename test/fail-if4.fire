@@ -11,6 +11,6 @@ func void main = () => {
 
   
     else {
-        int i = 32l
+        int i = 32;
     }
 }
