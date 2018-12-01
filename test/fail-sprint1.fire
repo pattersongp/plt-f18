@@ -1,4 +1,4 @@
-func void main = () => {};
+func void main = () => {}
 func void foo = () => {}
 func void sprint = () => {} /* Should not be able to define sprint */
 

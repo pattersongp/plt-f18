@@ -3,11 +3,11 @@ func void main = () => {
     str our_language = "FIRE";
     
     foo(your_language, our_language);
-    foo(your_langauge);  /* Wrong number of arguments */
+    foo(your_language);  /* Wrong number of arguments */
 
 }
 
-func void main = (str a , str b) => {
+func void foo = (str a , str b) => {
 
     str x = a;
     str y = b; 

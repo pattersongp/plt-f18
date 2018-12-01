@@ -1,6 +1,6 @@
-int foo() {}
+func void foo = () => {}
 
-int bar() {
+func int bar = () => {
   int a;
   void b; /* Error: illegal void local b */
   bool c;
@@ -8,7 +8,4 @@ int bar() {
   return 0;
 }
 
-int main()
-{
-  return 0;
-}
+func void main = () => {}
