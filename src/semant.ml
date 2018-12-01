@@ -185,7 +185,7 @@ let check_function func =
   in
 
   let check_array_type (t1, t2) =
-    print_string("typ of t1 is " ^ string_of_typ t1 ^" typ of t2 is " ^ string_of_typ t2);
+(*    print_string("typ of t1 is " ^ string_of_typ t1 ^" typ of t2 is " ^ string_of_typ t2);*)
     if (t1 = Int || t1 = String) then match t2 with
     Int -> true
     | String  -> true
