@@ -46,7 +46,7 @@ type sprogram = sfunc_decl list
 
 (* pretty printer *)
 let rec string_of_sexpr (t, e) =
-  "(" ^ string_of_typ t ^ " : " ^ (match e with
+  "( " ^ string_of_typ t ^ " : " ^ (match e with
     SLiteral(l) -> string_of_int l
   | SStringLit(s) -> s
   | SBoolLit(true) -> "true"
@@ -54,7 +54,7 @@ let rec string_of_sexpr (t, e) =
   | SStrCat(e1, e2) -> string_of_sexpr e1 ^ " ^ " ^ string_of_sexpr e2
   | SRegexComp(e1, e2) -> string_of_sexpr e1 ^ "===" ^ string_of_sexpr e2
   | SReadFile(id) -> id ^ ".read();"
-  | SInitArray(t1, t2) -> "init(" ^ string_of_typ t1 ^ string_of_typ t2 ^ ");\n"
+  | SInitArray(t1, t2) -> "init(" ^ string_of_typ t1 ^ " " ^ string_of_typ t2 ^ ");\n"
   | SId(s) -> s
   | SBinop(e1, o, e2) ->
       string_of_sexpr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_sexpr e2
@@ -85,7 +85,7 @@ let rec string_of_sstmt = function
   | SFilter(a1, f1) -> "filter(" ^ a1 ^ ", " ^ f1 ^ ");\n"
   | SBreak -> "break;"
   | SAssign(v, e) -> v ^ " = " ^ string_of_sexpr e
-  | SVdecl(t, id, e) -> string_of_typ t ^ id ^" = "^ string_of_sexpr e ^ ";\n"
+  | SVdecl(t, id, e) -> string_of_typ t ^ " " ^ id ^ " = "^ string_of_sexpr e ^ ";\n"
 
 
 let string_of_sfdecl fdecl =
