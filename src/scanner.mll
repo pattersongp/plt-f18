@@ -50,7 +50,6 @@ rule token = parse
 | "int"    { INT }
 | "bool"   { BOOL }
 | "open"   { OPEN }
-| "init"   { INITARR }
 | "grab"   { GRAB }
 | "str" { STRING }
 | ['0'-'9']+ as lit { INT_LIT(int_of_string lit) }
