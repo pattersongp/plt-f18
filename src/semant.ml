@@ -185,7 +185,14 @@ let check_function func =
   in
 
   let check_array_type (t1, t2) =
-    if ((t1 = Int || t1 = String) && (t2 = Int || t2 = String) ) then true else false
+(*    print_string("typ of t1 is " ^ string_of_typ t1 ^" typ of t2 is " ^ string_of_typ t2);*)
+    if (t1 = Int || t1 = String) then match t2 with
+    Int -> true
+    | String  -> true
+    | Bool -> true
+    | Array(_, _) -> true
+    | _ -> false
+    else false
   in
 
 let rec check_stmt envs = function
@@ -194,16 +201,18 @@ let rec check_stmt envs = function
                     let envs2 = {stmts = e'.stmts; lvs = envs.lvs} in envs2
       | If(p, b1, b2) -> let e1 = {stmts = []; lvs = envs.lvs} in
                          let env1 = check_stmt e1 b1 in
+
                          let e2 = {stmts = []; lvs = envs.lvs} in
                          let env2 = check_stmt e2 b2 in
-                         let envs3 = {stmts = SIf(check_bool_expr envs p, SBlock(env1.stmts), SBlock(env2.stmts)) :: envs.stmts; lvs = envs.lvs} in
+
+                         let envs3 = {stmts = SIf(check_bool_expr envs p, SBlock(List.rev env1.stmts), SBlock(List.rev env2.stmts)) :: envs.stmts; lvs = envs.lvs} in
                          envs3
       | For(t1, id1, id2, st) -> let e1 = {stmts = []; lvs = envs.lvs} in
                                  let env1 = check_stmt e1 st in
-                                 let envs2 = {stmts = SFor(t1, id1, id2, SBlock(env1.stmts)) :: envs.stmts; lvs = envs.lvs} in envs2
+                                 let envs2 = {stmts = SFor(t1, id1, id2, SBlock(List.rev env1.stmts)) :: envs.stmts; lvs = envs.lvs} in envs2
       | While(p, s) -> let e1 = {stmts = []; lvs = envs.lvs} in
                        let env1 = check_stmt e1 s in
-                       let envs2 = {stmts = SWhile(check_bool_expr envs p, SBlock(env1.stmts)) :: envs.stmts; lvs = envs.lvs} in envs2
+                       let envs2 = {stmts = SWhile(check_bool_expr envs p, SBlock(List.rev env1.stmts)) :: envs.stmts; lvs = envs.lvs} in envs2
       | Return e -> let (t, e') = expr envs e in
       if t = func.typ then let envs2 = {stmts = SReturn(t, e') :: envs.stmts; lvs = envs.lvs} in envs2
         else raise (
@@ -257,7 +266,6 @@ let rec check_stmt envs = function
                   | _ ->  let lvs' = StringMap.add id t envs.lvs in let envs2 = {stmts = SVdecl(t, id, (Void, SNoexpr)) :: envs.stmts; lvs = lvs'} in envs2
                 in f3 t
             in f2 (StringMap.find_opt id envs.lvs)
-
           | _ ->
               let f4 = function
               Some _ -> raise (Failure ("trying to redeclare variable"))
