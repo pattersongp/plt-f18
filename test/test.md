@@ -1,81 +1,18 @@
-## completed for testing
+# Test Suite 
 
+## How to use
 
-## to be modified
+You can run the full test suite by running `./testall.sh` from the porject root. The test suite operates by testing the output of a given .fire file against a "gold standard" reference file that consist of what the expected output should be.
+if any tests fail they will generate a .diff file in the root directory that displays the differences between expected and actual output. to delete all of these files from root use the -c option
 
-test-array1.fire
-test-array2.fire
-test-array4.fire
-test-assign1.fire
-test-assign2.fire
-test-bool1.fire
-test-bool2.fire
-test-comment3.fire
-test-comment6-error.fire
-test-file1.fire
-test-file2.fire
-test-file3.fire
-test-file4.fire
-test-filter1.fire
-test-filter2.fire
-test-filter3.fire
-test-for1.fire
-test-for2.fire
-test-for3.fire
-test-for4-error.fire
-test-for5-empty.fire
-test-func1.fire
-test-func2.fire
-test-func3.fire
-test-func4.fire
-test-func5.fire
-test-if1.fire
-test-if2.fire
-test-if3.fire
-test-if4.fire
-test-if5.fire
-test-int1.fire
-test-int2.fire
-test-int3-error.fire
-test-int4-error.fire
-test-int5.fire
-test-int6.fire
-test-int7-error.fire
-test-map1.fire
-test-map2.fire
-test-map3.fire
-test-map4.fire
-test-map5-empty.fire
-test-op1.fire
-test-op10.fire
-test-op2.fire
-test-op3.fire
-test-op4.fire
-test-op5.fire
-test-op6.fire
-test-op7.fire
-test-op8.fire
-test-op9.fire
-test-print1.fire
-test-print2.fire
-test-print3.fire
-test-print4.fire
-test-regex1.fire
-test-regex2.fire
-test-regex3.fire
-test-regex4.fire
-test-regex5.fire
-test-str1.fire
-test-str2.fire
-test-str3.fire
-test-str4.fire
-test-str5-error.fire
-test-str6-error.fire
-test-str7-error.fire
-test-void1.fire
-test-while1.fire
-test-while2.fire
-test-while3.fire
-test-while4.fire
-test-while5-infiniteloop.fire
-test.md
+## tests for not yet implemented checks
+
+some tests are in place for failures that might not yet be implmented in the semant. once these cases are implemented all we need to do is paste the expected error message in the .err ref file for that case. 
+for example if `fail-for1.fire` is a case that is not yet implemented, then once it is we paste the expected error message in `fail-for1.err`. 
+
+the unconvered tests:
+
+* `fail-for1.fire` ( using for with non array on right side of : )
+* `fail formals3.fire` ( missing comma in formals ) 
+* `fail-if5.fire` ( else without if )
+* `fail-if6.fire` ( elif without if )

@@ -1,0 +1,9 @@
+func void main = () => {
+
+  if (false) {
+    john_hui; /* Error: undeclared variable */
+  }
+  else {
+    int i = -001;
+  }
+}
