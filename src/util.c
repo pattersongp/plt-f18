@@ -14,10 +14,13 @@ char *strcat_fire(char *s1, char *s2) {
 	}
 
 	i = -1;
+	j = strlen(s1);
+
 	while(s2[++i]) {
 		s3[j] = s2[i];
 		j ++;
 	}
+	s3[strlen(s1)+strlen(s2)] = '\0';
 
 	return s3;
 }
