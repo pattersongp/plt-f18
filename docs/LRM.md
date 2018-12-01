@@ -13,7 +13,7 @@ Jason Konikow (jk4057)
 2. Lexical Conventions
 3. Meaning of Identifiers
 4. Expressions
-5. Statements 
+5. Declarations 
 6. Statements
 7. Code Sample
 
@@ -42,10 +42,10 @@ or dashes.
 
 The following identifiers are restricted from use:
 
-* `int`
+* `int` 
 * `str`
 * `regx`
-* `if`
+* `if` 
 * `else`
 * `elif`
 * `else`
@@ -57,6 +57,7 @@ The following identifiers are restricted from use:
 * `array`
 * `file`
 * `print`
+* `sprint`
 * `return`
 * `map`
 * `filter`
@@ -67,7 +68,7 @@ The following identifiers are restricted from use:
 
 #### 2.5 Regular Expressions
 
-Regular expressions are a special sequence of characters used for pattern matching surounded by single quotes `'` and preceded by the keyword `r'`. Regular expressions are of type `regx`.   
+Regular expressions are a special sequence of characters used for pattern matching surrounded by single quotes `'` and preceded by the keyword `r'`. Regular expressions are of type `regx`.   
 
 #### 2.6 Comments
 
@@ -81,7 +82,7 @@ The scope of an identifier can be either global or local. A local identifier's s
 
 ## 4: Expressions
 
-#### 4.1 Assignment Operator
+#### 4.1 Assignment Operator - MOVE TO STATEMENT
 
 The assignment operators `=` returns the value of the expression that is evaluated on its right-hand side and stores it in the identifier on the left hand side. The scope of that identifier is described in [section 3](#Identifiers)
 
@@ -115,9 +116,18 @@ Pattern matching operator l-values must be type `regx` and r-values must be type
 
 Example: `r'[a-z]+' === word`
 
-#### 4.9 String Concatination Operator
+#### 4.9 String Concatenation Operator
 
-The string concatenation `^` operator returns a new string that is the concatenation of the string on its left side and the string on its right side.
+The string concatenation `^` operator returns a new string that is the concatenation of the string on its left side and the string on its right side. This operator cannot be chained without parenthesis - as a binary operator, if you wish to concatenate multiple strings into a larger string, you must group operands. 
+
+Example:
+
+```
+str x = "hello";
+str y = " world";
+str z = x ^ y;
+str a = (x ^ y) ^ y; // evaluates to 'hello world world'
+```
 
 #### 4.10 Bracket Operator
 
@@ -259,13 +269,13 @@ The `array` type is a dynamic collection of elements. Inspired by AWK's associat
 
 The structure of `array` variable declarations is as follows:
 
-`array[<key_type>, <value_type>] arr = init(<key_type>, <value_type>);`
+`array[<key_type>, <value_type>] arr;`
 
 Example:
 
-`array[str, str] arr = init(str, str);` 
+`array[str, str] arr;`
 
-Note that arrays must be initialized with the `init` keyword prepended in front of parentheses which contain the key and value we are initializing the array with. Arrays **must** be initialized with an expression.
+Note that arrays are initialized without pointing to a value.
 
 The assignment of variables has the following structure:
 
@@ -295,6 +305,12 @@ There are strict restrictions on the types a key can be and a value can be. Plea
  `int age = arr["myAge"];`
  
 An error will be thrown if `"myAge"` does not exit.
+
+##### 5.1.4.1 Arrays of Arrays
+
+In certain cases you may create an Array of Arrays. Any value of a type array must specify the types of the array. For example:
+
+`array[str, array[int, str]] b;`
  
 #### 5.1.5. `regx`
 
@@ -349,9 +365,9 @@ func void main = () => {
 
 ## 6: Statements 
 
-#### 6.1 Print Statement
+#### 6.1 Print & SPrint Statement
 
-The print statement prints integers and strings but not array and regx. To give more explicit typing constraints, print() can only print integers and sprint() can only print strings.
+The print statement prints integers. To give more explicit typing constraints, print() can only print integers and sprint() can only print strings.
 ```
 print(10);
 ```
