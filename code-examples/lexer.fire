@@ -1,0 +1,93 @@
+/**
+ * Determines if a variable declaration
+ */
+func bool isVdecl = (str token) => {
+	regx vdeclRegx = "\\(int\\|str\\|bool\\) \\([[:alpha:]]\\+\\) = \\([[:alnum:]\\']\\+\\)";
+	return vdeclRegx === token;
+}
+
+/**
+ * Parses the type of a variable declaration
+ */
+func str getType = (str token) => {
+	sprint(("Checking [" ^ token) ^ "]");
+	regx typeRegx = "\\(int\\|str\\|bool\\)";
+	return token.grab(typeRegx);
+}
+
+/**
+ * Parses the id of a variable declaration
+ */
+func str getId = (str token) => {
+	regx idRegx = " \\([^[:space:]]*\\) ";
+	return token.grab(idRegx);
+}
+
+/**
+ * Parses the value of a variable declaration
+ */
+func str getVal = (str token) => {
+	regx idRegx = "= \\(.*\\)";
+	return token.grab(idRegx);
+}
+
+/**
+ * Library function for string equality
+ */
+func bool equals = (regx lval, str rval) => {
+	return lval === rval;
+}
+
+/**
+ * Builds the tokenized output
+ */
+func str buildOutput = (str typ, str id, str val) => {
+	str output = "";
+	if(equals("int", typ))  { output = (output ^ "INT(") ^ (typ ^ ") "); }
+	if(equals("str", typ))  { output = (output ^ "INT(") ^ (typ ^ ") "); }
+	if(equals("bool", typ)) { output = (output ^ "INT(") ^ (typ ^ ") "); }
+	output = output ^ (("ID(" ^ id) ^ ") ");
+	output = output ^ (("VALUE(" ^ val) ^ ") SEMI ");
+	sprint("Built: " ^ output);
+	return output;
+}
+
+/**
+ * Builds a tokenized variable declaration
+ */
+func str buildVdecl = (str token) => {
+		str typ = getType(token);
+		str id = getId(token);
+		str val = getVal(token);
+		return buildOutput(typ, id, val);
+}
+
+/**
+ * Function that parses a program `to_lex.prog`
+ *
+ * Limitations:
+ * 		- both text files must exist
+ *		- lexer only handles variable declarations
+ *
+ */
+func int main = () => {
+	str program = "to_lex.prog";
+
+	file input = open(program, ";");
+	file output = open((program ^ ".lex"), ";");
+
+	str s = input.read();
+	while(strlen(s) > 0) {
+		sprint(s);
+		if(isVdecl(s)) {
+			output.write(buildVdecl(s));
+		} else {
+			sprint("not vdecl");
+		}
+		s = input.read();
+	}
+
+	output.write("\n");
+	return 0;
+}
+
