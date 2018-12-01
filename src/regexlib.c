@@ -50,8 +50,16 @@ char *regex_grab(char *regex, char *operand) {
 			operand, strlen(operand));
 #endif
 
+#if 0
 	if(regcomp(&preg, (const char *)regex, 0) != 0) {
 		printf("regcomp() failed");
+	}
+#endif
+
+	if (0 != (ret = regcomp(&preg, regex, 0))) {
+		regerror(ret, &preg, buff, 100);
+		printf("regcomp() failed, returning nonzero (%d) --> (%s)\n", ret, buff);
+		return "";
 	}
 
 	// pmatch will hold the matched string
