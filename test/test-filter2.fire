@@ -1,4 +1,0 @@
-func void main = (array a) => {
-str b = "4";
-filter(a, str);
-}

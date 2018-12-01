@@ -1,0 +1,6 @@
+func void main = () => {
+    int x;
+    x = true; /* int cant be bool, should fail here */
+    int y = 100;
+    y = y + 1;
+}

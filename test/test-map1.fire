@@ -1,9 +1,0 @@
-func void main = (array a) => {
-
-map(a, foo);
-
-}
-
-func void foo = (int x) =>{
-
-}

@@ -1,0 +1,5 @@
+func void main = () => {
+    int x = 90001;
+    str y = "its over nine thousand!!!";
+    x == y;
+}

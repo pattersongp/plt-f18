@@ -1,0 +1,4 @@
+func void main () => {
+	int x = 800;
+	!x; /* cant negate an int */
+}

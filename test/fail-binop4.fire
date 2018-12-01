@@ -1,0 +1,5 @@
+func void main = () => {
+    str x = "hello world!";
+    bool y = false;
+    x / y;
+}

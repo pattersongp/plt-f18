@@ -1,2 +1,0 @@
-func void foo = () => { print(0); }
-func void main = () => { foo(); }

@@ -1,0 +1,6 @@
+func void main = () => {
+	int x = 10000;
+	for ( int y : x ){ /* cant iterate over int in for loop */
+		sprint(" well this better not work";
+	}
+}
