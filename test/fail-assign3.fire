@@ -1,4 +1,4 @@
-func int main = ()=>{
+func void main = ()=>{
     str q =  "can i get the compiler to mess up?";
     bool a = false;
     a = q; /* fail here. bool cant be str */

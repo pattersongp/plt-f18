@@ -1,0 +1,6 @@
+func void main = () => {
+  int x = 10;
+  str y;
+  x - y; /* Error: int - str */
+}
+

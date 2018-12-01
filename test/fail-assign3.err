@@ -1,1 +1,1 @@
-Fatal error: exception Failure("illegal assignment str = bool in a = q")
+Fatal error: exception Failure("illegal assignment bool = str in a = q")
