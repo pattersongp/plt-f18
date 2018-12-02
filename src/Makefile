@@ -49,7 +49,7 @@ printlib: printlib.c
 	cc -o printlib -DBUILD_TEST printlib.c
 
 arrlib: arrlib.c
-	cc -o arralib -DBUILD_TEST arrlib.c
+	cc -o arrlib -DBUILD_TEST arrlib.c
 
 util: util.c util.h
 
