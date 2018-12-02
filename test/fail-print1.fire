@@ -1,0 +1,5 @@
+func void main = () => {}
+func void foo = () => {}
+func void print = () => {} /* Should not be able to define print */
+
+

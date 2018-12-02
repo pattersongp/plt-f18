@@ -1,0 +1,9 @@
+func void main = () => {}
+func void graham = () => {}
+func void frank = () => {}
+func void chris = () => {}
+func void jason = () => {}
+func void ayer = () => {}
+func void chris = () => {} /* duplicate function, fail here */
+func void john = () => {}
+func void plt = () => {}

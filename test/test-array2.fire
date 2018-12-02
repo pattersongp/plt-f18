@@ -1,3 +1,0 @@
-array[int, string] arr;
-func void main = (array arr) => { arr[0,"value0"].add;}
-testfunc(arr);

@@ -121,7 +121,6 @@ let check_function func =
             else
               raise(Failure("cannot strcat non strings"))
     | Id s -> (type_of_identifier s envs.lvs, SId s)
-    | InitArray(t1, t2) -> (Array(t1, t2), SInitArray(t1, t2))
     | Array_Assign(id, e1, e2) ->
       let (t1, t2) = check_array envs id
       and (rt1, e1') = expr envs e1

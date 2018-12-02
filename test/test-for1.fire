@@ -1,7 +1,0 @@
-func void main = (array a) => {
-
-for (int y : a){
-
-}
-
-}

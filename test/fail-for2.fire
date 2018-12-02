@@ -1,0 +1,8 @@
+func void main = () => {
+    array [int,int] arr;
+
+    for(int x : arr){
+        j = j + 1;
+    }	
+  
+}

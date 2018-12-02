@@ -1,0 +1,6 @@
+func void main = () => {
+    int x = 10010101;
+    elif {
+        str x = "oh boy";
+    }
+}

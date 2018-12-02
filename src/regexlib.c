@@ -43,33 +43,45 @@ char *regex_grab(char *regex, char *operand) {
 	int i, ret;
 	char *result;
 	regex_t preg;
+	char buff[100];
 
 #ifdef DEBUG
 	printf("Regx [%s][%d] Operand [%s][%d]\n", regex, strlen(regex),
 			operand, strlen(operand));
 #endif
 
+#if 0
 	if(regcomp(&preg, (const char *)regex, 0) != 0) {
 		printf("regcomp() failed");
+	}
+#endif
+
+	if (0 != (ret = regcomp(&preg, regex, 0))) {
+		regerror(ret, &preg, buff, 100);
+		printf("regcomp() failed, returning nonzero (%d) --> (%s)\n", ret, buff);
+		return "";
 	}
 
 	// pmatch will hold the matched string
 	regmatch_t pmatch[2];
-	ret = regexec((const regex_t *)&preg, operand, 1, pmatch, 0);
-	if(ret != 0) { return ""; }
+	if (0 != (ret = regexec((const regex_t *)&preg, operand, 2, pmatch, 0))) {
+		regerror(ret, &preg, buff, 100);
+		printf("regexec('%s', '%s') failed with '%s'\n", regex, operand, buff);
+		return "";
+	}
 
 	// store the string to copy over to fire
-	result = malloc(sizeof(char *)*(pmatch[0].rm_eo - pmatch[0].rm_so));
+	result = malloc(sizeof(char *)*(pmatch[1].rm_eo - pmatch[1].rm_so));
 	if(result == NULL) { printf("malloc() failed\n"); exit(-1); }
 
 	// copy the string over
-	strncpy(result, &operand[pmatch[0].rm_so],
-			pmatch[0].rm_eo - pmatch[0].rm_so);
-	result[pmatch[0].rm_eo-1] = '\0';
+	strncpy(result, &operand[pmatch[1].rm_so],
+			pmatch[1].rm_eo - pmatch[1].rm_so);
+	result[pmatch[0].rm_eo] = '\0';
 
 #ifdef DEBUG
-	printf("lib Result: %s\n", result);
-	printf("lib matched: \"%s\"\n at %lld to %lld\n",
+	printf("lib Result: %s is length %d\n", result, strlen(result));
+	printf("lib matched: \"%s\" at %lld to %lld\n",
 			result, pmatch[0].rm_so, pmatch[0].rm_eo - 1);
 	if(ret == 0) {
 		printf("library says there is a match\n");

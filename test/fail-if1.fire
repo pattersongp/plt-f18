@@ -1,0 +1,5 @@
+func void main = () => 
+{
+    int s = " yeah ok this one i copied";
+    if (42) {} /* Error: non-bool predicate */
+}

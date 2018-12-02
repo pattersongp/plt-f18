@@ -16,7 +16,6 @@ type expr =
   | Id of string
   | Binop of expr * op * expr
   | Unop of uop * expr
-  | InitArray of typ * typ
   | Retrieve of string * expr
   | Array_Assign of string * expr * expr
   | Call of string * expr list
@@ -85,7 +84,6 @@ let rec string_of_expr = function
     Noexpr -> ""
   |  Literal(l) -> string_of_int l
   |  Id(i) -> i
-  |  InitArray(t1, t2) -> "init(" ^ string_of_typ t1 ^ string_of_typ t2 ^ ");\n"
   |  Unop(op, e1) -> string_of_uop op ^ string_of_expr e1
   |  StrCat(e1, e2) -> string_of_expr e1 ^ " ^ " ^ string_of_expr e2
   |  RegexComp(e1, e2) -> string_of_expr e1 ^ "===" ^ string_of_expr e2

@@ -1,0 +1,4 @@
+func void main = (int x , void y) => { /* void formals not allowed. FAIL */ 
+	str x = " i wonder if anyone can humiliated by Edwards on Facebook this semester";
+	bool a = true;
+}
