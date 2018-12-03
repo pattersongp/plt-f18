@@ -17,6 +17,13 @@ CC="gcc"
 # Path to the Fire compiler
 FIRE="src/Fire.native"
 
+# Variables for library binaries
+PRINTL="src/printlib.o"
+REGX="src/regexlib.o"
+ARRL="src/arrlib.o"
+FIL="src/filelib.o"
+UTL="src/util.o"
+
 # Set time limit for all operations
 ulimit -t 30
 
