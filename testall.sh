@@ -102,13 +102,14 @@ Check() {
 
     generatedfiles=""
 
-    generatedfiles="$generatedfiles ${basename}.ll ${basename}.s ${basename}.exe ${basename}.out" &&
-    echo "Starting..." &&
+    generatedfiles="$generatedfiles ${basename}.ll ${basename}.s" &&
+    echo "Compiling intermediate IR LLVM code..." &&
     Run "$FIRE" "<" "$1" ">" "${basename}.ll" &&
-    echo "Made it!" &&
+    echo "IR Code generated!" &&
     Run "$LLC" "-relocation-model=pic" "${basename}.ll" ">" "${basename}.s" &&
-    Run "$CC" "-o" "${basename}.exe" "${basename}.s" "arrlib.o" "filelib.o" "regexlib.o" "printlib.o" &&
-    Run "./${basename}.exe" > "${basename}.out" &&
+    # Run "$CC" "-o" "${basename}.exe" "${basename}.s" "arrlib.o" "filelib.o" "regexlib.o" "printlib.o" &&
+    Run $CC "-o" "${basename}.flames" "${basename}.s" $PRINTL $REGX $ARRL $FIL $UTL &&
+    Run "./${basename}.flames" > "${basename}.out" &&
     Compare ${basename}.out ${reffile}.out ${basename}.diff
 
     # Report the status and clean up the generated files
