@@ -100,19 +100,55 @@ let translate functions =
     L.declare_function "writeFire" write_file_t the_module in
 
   let init_arr_t : L.lltype =
-    L.function_type i32_ptr_t [| i32_t; i32_t |] in
+    L.function_type i32_ptr_t [| |] in
   let init_arr_func : L.llvalue =
     L.declare_function "initArray" init_arr_t the_module in
-
-  let add_t : L.lltype =
-    L.function_type void_t [| string_t; i32_ptr_t; i32_ptr_t |] in
-  let add_func : L.llvalue =
-    L.declare_function "add" add_t the_module in
 
   let get_t : L.lltype =
     L.function_type i32_t [| string_t; i32_t |] in
   let get_func : L.llvalue =
     L.declare_function "get" get_t the_module in
+
+  (* ---------------------- Array Assign Functions ---------------------- *)
+  (* Array[Int, Int] *)
+  let addIntInt_t : L.lltype =
+    L.function_type i1_t [| i32_ptr_t; i32_t; i32_t|] in
+  let addIntInt_func : L.llvalue =
+    L.declare_function "addIntInt" addIntInt_t the_module in
+  let getIntInt_t : L.lltype =
+    L.function_type i32_t [| i32_ptr_t; i32_t |] in
+  let getIntInt_func : L.llvalue =
+    L.declare_function "getIntInt" getIntInt_t the_module in
+
+  (* Array[Int, String] *)
+  let addIntString_t: L.lltype =
+    L.function_type i1_t [| i32_ptr_t; i32_t; string_t |] in
+  let addIntString_func : L.llvalue =
+    L.declare_function "addIntString" addIntString_t the_module in
+  let getIntString_t : L.lltype =
+    L.function_type string_t [| i32_ptr_t; i32_t |] in
+  let getIntString_func : L.llvalue =
+    L.declare_function "getIntString" getIntString_t the_module in
+
+  (* Array[String, String] *)
+  let addStringString_t: L.lltype =
+    L.function_type i1_t [| i32_ptr_t; string_t; string_t |] in
+  let addStringString_func: L.llvalue =
+    L.declare_function "addStringString" addStringString_t the_module in
+  let getStringString_t : L.lltype =
+    L.function_type string_t [| i32_ptr_t; string_t |] in
+  let getStringString_func : L.llvalue =
+    L.declare_function "getStringString" getStringString_t the_module in
+
+  (* Array[String, Int] *)
+  let addStringInt_t : L.lltype =
+    L.function_type i1_t [| i32_ptr_t; string_t; i32_t |] in
+  let addStringInt_func : L.llvalue =
+    L.declare_function "addStringInt" addStringInt_t the_module in
+  let getStringInt_t : L.lltype =
+    L.function_type i32_t [| i32_ptr_t; string_t |] in
+  let getStringInt_func : L.llvalue =
+    L.declare_function "getStringInt" getStringInt_t the_module in
 
   (* ---------------------- User Functions ---------------------- *)
   let function_decls : (L.llvalue * sfunc_decl) StringMap.t =
@@ -150,12 +186,9 @@ let translate functions =
   List.fold_left add_local formals []
   in
 
-(*     let print_map k v = print_string(k ^ "->" ^ "some value.." ^ "\n") in *)
-
     (* Return the value for a variable or formal argument.
        Check local names first, then global names *)
     let lookup n m = try
-(*       print_string("MAP:\n"); StringMap.iter print_map m; print_string("\n\n"); *)
       StringMap.find n m
       with Not_found -> raise (Failure ("Variable [" ^ n ^ "] not declared"))
     in
@@ -163,76 +196,84 @@ let translate functions =
     let add_vdecl (t, n, lvs) =
       let (t', local_var) = (t, L.build_alloca (ltype_of_typ t) n builder)
       in
-(*         print_string("MAP:\n"); StringMap.iter print_map lvs; print_string("\n\n"); *)
         StringMap.add n (t', local_var) lvs
     in
 
-    (* Function for matching lltype to size in c for array lib *)
-    let size_of_ltype = function
-        i32_t     -> L.const_int i32_t 8
-      | i1_t      -> L.const_int i32_t 4
-      | string_t  -> L.const_int i32_t 7
-      | _ -> raise (Failure "Error! Invalid array type.")
+    let get_array_type (id, lvs) =
+      let (arr, _)= lookup id lvs in match arr with
+          A.Array(A.Int, A.Int) -> (A.Int, A.Int)
+        | A.Array(A.Int, A.String) -> (A.Int, A.String)
+        | A.Array(A.String, A.Int) -> (A.String, A.Int)
+        | A.Array(A.String, A.String) -> (A.String, A.String)
+        | _ -> raise (Failure "Failed at get_array_type()")
     in
-
-(*
-    let get_val (builder, lvs) ((_, e) : sexpr) = match e with
-        SLiteral i           -> i
-      | SStringLit s         -> s
-      | SBoolLit b           -> (if b then 1 else 0)
-      | _ -> raise (Failure "expr_ptr failed")
-    in
-*)
 
     let rec expr (builder, lvs) ((_, e) : sexpr) = match e with
         SLiteral i           -> L.const_int i32_t i
       | SStringLit s         -> L.build_global_stringptr s "str" builder
       | SNoexpr              -> L.const_int i32_t 0
       | SBoolLit b           -> L.const_int i1_t (if b then 1 else 0)
-      | SId s                -> let (_, v) = lookup s lvs in L.build_load v s builder
+      | SId s                -> let (_, v) =
+        lookup s lvs in L.build_load v s builder
       | SReadFile (id)       ->
-          L.build_call read_file_func [| (expr (builder, lvs) (A.String, SId(id))) |] "readFire_result" builder
+          L.build_call read_file_func
+          [| (expr (builder, lvs) (A.String, SId(id))) |]
+          "readFire_result" builder
       | SWriteFile (id, e1) ->
           let e1' = expr (builder, lvs) e1 in
-          L.build_call write_file_func [| (expr (builder, lvs) (A.String, SId(id))); e1' |] "writeFire_result" builder
+          L.build_call write_file_func
+          [| (expr (builder, lvs) (A.String, SId(id))); e1' |]
+          "writeFire_result" builder
       | SOpen (e1, e2)       ->
           let e1' = expr (builder, lvs) e1
           and e2' = expr (builder, lvs) e2 in
           L.build_call open_file_func [| e1'; e2' |] "open_result" builder
       | SInitArray(t1, t2) ->
-          let t1' = (size_of_ltype (ltype_of_typ t1))
-          and t2' = (size_of_ltype (ltype_of_typ t2)) in
-            L.build_call init_arr_func [| t1'; t2' |] "initArray_result" builder
-      | SArray_Assign (id, e1, e2)       ->
-          let e1' = get_val (builder, lvs) e1
-          and e2' = get_val (builder, lvs) e2
-          and id' = (expr (builder, lvs) (A.Void, SId(id))) in
+            L.build_call init_arr_func [| |] "initArray_result" builder
+      | SArray_Assign (id, e1, e2) ->
+          let e1' = expr (builder, lvs) e1
+          and e2' = expr (builder, lvs) e2
+          and id' = (expr (builder, lvs) (A.Void, SId(id)))
+          and (t1, t2) as typs = get_array_type (id, lvs) in
+          (match typs with
+                (A.Int, A.Int) ->
+                L.build_call addIntInt_func       [| id'; e1'; e2' |]
+                "void_ret" builder
+              | (A.Int, A.String) ->
+                L.build_call addIntString_func    [| id'; e1'; e2' |]
+                "void_ret" builder
+              | (A.String, A.String) ->
+                L.build_call addStringString_func [| id'; e1'; e2' |]
+                "void_ret" builder
+              | (A.String, A.Int) ->
+                L.build_call addStringInt_func    [| id'; e1'; e2' |]
+                "void_ret" builder
+              | _ -> raise (Failure "Failed at ArrayAssign()"))
 
-          let (stored, _) = lookup id lvs in
-          let (t1, t2) = match stored with A.Array(t1, t2) -> (t1, t2) | _ -> raise (Failure "Something went wrong in array assignment") in
+      | SRetrieve(id, e1) ->
+          let e1' = expr (builder, lvs) e1
+          and id' = (expr (builder, lvs) (A.Void, SId(id)))
+          and (t1, t2) as typs = get_array_type (id, lvs) in
+          (match typs with
+              (A.Int, A.Int) ->
+                L.build_call getIntInt_func [| id'; e1'|]
+                "getIntInt_ret" builder
+              | (A.Int, A.String) ->
+                L.build_call getIntString_func [| id'; e1'|]
+                "getIntString_ret" builder
+              | (A.String, A.String) ->
+                L.build_call getStringString_func [| id'; e1'|]
+                "getStringString_ret" builder
+              | (A.String, A.Int) ->
+                L.build_call getStringInt_func [| id'; e1'|]
+                "getStringInt_ret" builder
+              | _ -> raise (Failure "Failed at Retrieve()"))
 
-          let t1' = L.pointer_type (ltype_of_typ t1)
-          and t2' = L.pointer_type (ltype_of_typ t2) in
-
-          let store1 = L.build_alloca t1' "t1_tmp" builder
-          and store2 = L.build_alloca t2' "t2_tmp" builder in
 (*
-
-Not sure what to do here, we essentially need to make a pointer type for the
-two data that are stored in the array, in fact they all need to be i32_ptr_t's
-
-          ignore(L.build_store (ltype_of_typ e1') store1 builder);
-          ignore(L.build_store (ltype_of_typ e2') store2 builder);
-
-*)
-          ignore(L.build_store (i32_ptr_t e1') store1 builder);
-          ignore(L.build_store (i32_ptr_t e2') store2 builder);
-
-          L.build_call add_func [| id'; store1; store2 |] "add_result" builder
-      | SRetrieve(id, e) ->
           let e' = expr (builder, lvs) e
           and id' = (expr (builder, lvs) (A.Void, SId(id))) in
             L.build_call get_func [| id'; e'  |] "get_result" builder
+*)
       | SCall("strlen", [e])    ->
           L.build_call strlen_func [| (expr (builder, lvs) e) |] "strlen" builder
       | SCall("sprint", [e])    ->

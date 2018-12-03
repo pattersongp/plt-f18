@@ -64,7 +64,7 @@ int size(char type){
 /**
  * Initializes array data structure
  */
-struct Array *initArray(int size_k, int size_v) {
+struct Array *initArray(/*int size_k, int size_v*/) {
 	struct Array *ar = (struct Array *)malloc(sizeof(struct Array));
 	ar->tail= 0;
 	ar->head = ar->tail;
@@ -80,13 +80,20 @@ struct Node *findNode(struct Array *array, const void *dataSought,
 
 	struct Node *node = array->head;
 	while (node) {
+
+#if DEBUG
 		printf("comparing [%s] ?= [%s]\n", node->data1, dataSought);
+#endif
 		if (compar(dataSought, node->data1) == 0) {
+#if DEBUG
 			printf("returning %s\n", node->data1);
+#endif
 			return node; }
 		node = node->next;
 	}
+#if DEBUG
 	printf("Didn't find it\n");
+#endif
 	return NULL;
 }
 
@@ -187,7 +194,7 @@ void addIntString(struct Array *array, int data1, char *data2) {
 }
 
 char *getIntString(struct Array *array, char *key) {
-	struct Node *node = findNode(array, key, &strcmp);
+	struct Node *node = findNode(array, key, &compareInt);
 	return node->data2;
 }
 
@@ -202,7 +209,7 @@ void addIntInt(struct Array *array, int data1, int data2) {
 }
 
 int getIntInt(struct Array *array, char *key) {
-	struct Node *node = findNode(array, key, &strcmp);
+	struct Node *node = findNode(array, key, &compareInt);
 	if(node == NULL) return 0;
 	return node->data2;
 }
