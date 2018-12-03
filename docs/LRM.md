@@ -13,16 +13,16 @@ Jason Konikow (jk4057)
 2. Lexical Conventions
 3. Meaning of Identifiers
 4. Expressions
-5. Statements 
+5. Declarations 
 6. Statements
 7. Code Sample
 
 
 ## 1: Introduction
 
-File Input Reinterpretation Engine (FIRE) is a scripting language inspired by AWK, bash, and other syntacically light languages. These languages are renowed for their ability to robustly extract, pattern-match, and manipulate text files. FIRE seeks to emulate this functionality with a more attractive, C-Family inspired syntax and intuitive semantics.
+File Input Reinterpretation Engine (FIRE) is a scripting language inspired by AWK, bash, and other syntactically light languages. These languages are renowned for their ability to robustly extract, pattern-match, and manipulate text files. FIRE seeks to emulate this functionality with a more attractive, C-Family inspired syntax and intuitive semantics.
 
-FIRE is intended to be utilized with large sets of delimited data, like `csv` files. FIRE is also animated by the premise that files are first class citizens. 
+FIRE is intended to be utilized with large sets of delimited data, like `.csv` files. FIRE is also animated by the premise that files are first class citizens. 
 
 FIRE was built by a team of Columbia University undergraduates for Professor Stephen Edward's Programming Language and Translators course. FIRE is written in OCaml , utilizing libraries built in `C`, and leveraging the `LLVM` compiler back-end.
 
@@ -42,10 +42,10 @@ or dashes.
 
 The following identifiers are restricted from use:
 
-* `int`
+* `int` 
 * `str`
 * `regx`
-* `if`
+* `if` 
 * `else`
 * `elif`
 * `else`
@@ -57,6 +57,7 @@ The following identifiers are restricted from use:
 * `array`
 * `file`
 * `print`
+* `sprint`
 * `return`
 * `map`
 * `filter`
@@ -67,7 +68,7 @@ The following identifiers are restricted from use:
 
 #### 2.5 Regular Expressions
 
-Regular expressions are a special sequence of characters used for pattern matching surounded by single quotes `'` and preceded by the keyword `r'`. Regular expressions are of type `regx`.   
+Regular expressions are a special sequence of characters used for pattern matching surrounded by single quotes `'` and preceded by the keyword `r'`. Regular expressions are of type `regx`.   
 
 #### 2.6 Comments
 
@@ -81,7 +82,7 @@ The scope of an identifier can be either global or local. A local identifier's s
 
 ## 4: Expressions
 
-#### 4.1 Assignment Operator
+#### 4.1 Assignment Operator - MOVE TO STATEMENT
 
 The assignment operators `=` returns the value of the expression that is evaluated on its right-hand side and stores it in the identifier on the left hand side. The scope of that identifier is described in [section 3](#Identifiers)
 
@@ -115,9 +116,18 @@ Pattern matching operator l-values must be type `regx` and r-values must be type
 
 Example: `r'[a-z]+' === word`
 
-#### 4.9 String Concatination Operator
+#### 4.9 String Concatenation Operator
 
-The string concatenation `^` operator returns a new string that is the concatenation of the string on its left side and the string on its right side.
+The string concatenation `^` operator returns a new string that is the concatenation of the string on its left side and the string on its right side. This operator cannot be chained without parenthesis - as a binary operator, if you wish to concatenate multiple strings into a larger string, you must group operands. 
+
+Example:
+
+```
+str x = "hello";
+str y = " world";
+str z = x ^ y;
+str a = (x ^ y) ^ y; // evaluates to 'hello world world'
+```
 
 #### 4.10 Bracket Operator
 
@@ -212,15 +222,15 @@ Files are regarded as first-class citizens in FIRE. This is made apparent by the
 
 The syntax for instantiating a `file` object is as follows:
 
-`file["<mode>"] f;
+`file f;
 f.open("filename.csv", "<delimiter>");
 `
 
-In the example provided above, two argument are fed into the `open[...]` argument: *filename* for reading, writing or both, and *delimiter*. *delimiter* may be provided to the constructor specifying a delimiter for reading. The *mode* passing in `file[...]` can be `r` for read only, `w` for write only, and `rw` for both.
+In the example provided above, two argument are fed into the `open[...]` argument: *filename* for reading, writing or both, and *delimiter*. *delimiter* may be provided to the constructor specifying a delimiter for reading. 
 
 Example:
 
-`file[rw] f; f.open("test.csv", ",");` will open the File named `test.csv` in the current directory for both reading and writing, and delimited by the `,` character.
+`file f; f.open("test.csv", ",");` will open the File named `test.csv` in the current directory for both reading and writing, and delimited by the `,` character.
 
 
 #### 5.1.4. `func`
@@ -263,7 +273,9 @@ The structure of `array` variable declarations is as follows:
 
 Example:
 
-`array[int, string] arr;` 
+`array[str, str] arr;`
+
+Note that arrays are initialized without pointing to a value.
 
 The assignment of variables has the following structure:
 
@@ -271,7 +283,18 @@ The assignment of variables has the following structure:
 
 Example:
 
- `arr[17] = null;`
+ `arr["myAge"] = "28";`
+ 
+As the above example demonstrates, keys do not have to be of the same type as the values they correspond with - but all keys in an array must be of the same type, and all values must be of the same type. 
+
+There are strict restrictions on the types a key can be and a value can be. Please consult the table below:
+
+| Legal Key Types | Legal Value Types |
+|-----------------|-------------------|
+| int             | int               |
+| string          | string            |
+|                 | bool              |
+|                 | array             |
  
  Finally, a programmer can retrieve a value associated with a key with the below syntax:
  
@@ -279,9 +302,15 @@ Example:
  
  Example:
  
- `int age = arr["age"];`
+ `int age = arr["myAge"];`
  
- Throws an error if `"age"` does not exit.
+An error will be thrown if `"myAge"` does not exit.
+
+##### 5.1.4.1 Arrays of Arrays
+
+In certain cases you may create an Array of Arrays. Any value of a type array must specify the types of the array. For example:
+
+`array[str, array[int, str]] b;`
  
 #### 5.1.5. `regx`
 
@@ -336,9 +365,9 @@ func void main = () => {
 
 ## 6: Statements 
 
-#### 6.1 Print Statement
+#### 6.1 Print & SPrint Statement
 
-The print statement prints integers and strings but not array and regx. To give more explicit typing constraints, print() can only print integers and sprint() can only print strings.
+The print statement prints integers. To give more explicit typing constraints, print() can only print integers and sprint() can only print strings.
 ```
 print(10);
 ```
@@ -437,4 +466,10 @@ user:~ $ ./fire.native < nj_numbers.fire
 201-445-9372
 201-750-0911
 ```
+
+### 8: Other Code Requirements
+
+Programs in FIRE mandate a main function of type `void` or `int`. If int, convention has `0` returned if the program executes successfully and `1` in the event of an error.
+
+
 

@@ -1,0 +1,3 @@
+int x = 10;
+str s = 'hello';
+bool b = true;

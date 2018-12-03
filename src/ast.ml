@@ -16,7 +16,6 @@ type expr =
   | Id of string
   | Binop of expr * op * expr
   | Unop of uop * expr
-  | InitArray of typ * typ
   | Retrieve of string * expr
   | Array_Assign of string * expr * expr
   | Call of string * expr list
@@ -24,6 +23,8 @@ type expr =
   | StrCat of expr * expr
   | Open of expr * expr
   | ReadFile of string
+  | WriteFile of string * expr
+  | RegexGrab of string * expr
   | Noexpr
 
 type bind = typ * string * expr
@@ -83,10 +84,10 @@ let rec string_of_expr = function
     Noexpr -> ""
   |  Literal(l) -> string_of_int l
   |  Id(i) -> i
-  |  InitArray(t1, t2) -> "init(" ^ string_of_typ t1 ^ string_of_typ t2 ^ ");\n"
   |  Unop(op, e1) -> string_of_uop op ^ string_of_expr e1
   |  StrCat(e1, e2) -> string_of_expr e1 ^ " ^ " ^ string_of_expr e2
   |  RegexComp(e1, e2) -> string_of_expr e1 ^ "===" ^ string_of_expr e2
+  |  RegexGrab(id, e2) -> id ^ ".grab(" ^ string_of_expr e2 ^ ");"
   |  ReadFile(id) -> id ^ ".read();\n"
   |  BoolLit(true) -> "true"
   |  BoolLit(false) -> "false"
