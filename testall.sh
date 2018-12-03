@@ -107,8 +107,7 @@ Check() {
     Run "$FIRE" "<" "$1" ">" "${basename}.ll" &&
     echo "IR Code generated!" &&
     Run "$LLC" "-relocation-model=pic" "${basename}.ll" ">" "${basename}.s" &&
-    # Run "$CC" "-o" "${basename}.exe" "${basename}.s" "arrlib.o" "filelib.o" "regexlib.o" "printlib.o" &&
-    Run $CC "-o" "${basename}.flames" "${basename}.s" $PRINTL $REGX $ARRL $FIL $UTL &&
+    Run "$CC" "-o" "${basename}.flames" "${basename}.s" $PRINTL $REGX $ARRL $FIL $UTL &&
     Run "./${basename}.flames" > "${basename}.out" &&
     Compare ${basename}.out ${reffile}.out ${basename}.diff
 
