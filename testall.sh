@@ -96,7 +96,9 @@ Check() {
     generatedfiles=""
 
     generatedfiles="$generatedfiles ${basename}.ll ${basename}.s ${basename}.exe ${basename}.out" &&
-    Run "$FIRE" "$1" ">" "${basename}.ll" &&
+    echo "Starting..." &&
+    Run "$FIRE" "<" "$1" ">" "${basename}.ll" &&
+    echo "Made it!" &&
     Run "$LLC" "-relocation-model=pic" "${basename}.ll" ">" "${basename}.s" &&
     Run "$CC" "-o" "${basename}.exe" "${basename}.s" "arrlib.o" "filelib.o" "regexlib.o" "printlib.o" &&
     Run "./${basename}.exe" > "${basename}.out" &&
