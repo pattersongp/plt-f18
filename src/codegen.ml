@@ -150,6 +150,20 @@ let translate functions =
   let getStringInt_func : L.llvalue =
     L.declare_function "getStringInt" getStringInt_t the_module in
 
+  let mapIntFormal_t : L.lltype =
+    L.function_type i32_t [| i32_t |] in
+  let mapStringFormal_t : L.lltype =
+    L.function_type string_t [| string_t |] in
+
+  let mapInt_t : L.lltype =
+    L.function_type i1_t [| i32_ptr_t; (L.pointer_type mapIntFormal_t) |] in
+  let mapInt_func : L.llvalue =
+    L.declare_function "mapInt" mapInt_t the_module in
+  let mapString_t : L.lltype =
+    L.function_type i1_t [| i32_ptr_t; (L.pointer_type mapStringFormal_t) |] in
+  let mapString_func : L.llvalue =
+    L.declare_function "mapString" mapString_t the_module in
+
   (* ---------------------- User Functions ---------------------- *)
   let function_decls : (L.llvalue * sfunc_decl) StringMap.t =
     let function_decl m fdecl =
@@ -269,11 +283,15 @@ let translate functions =
                 "getStringInt_ret" builder
               | _ -> raise (Failure "Failed at Retrieve()"))
 
-(*
-          let e' = expr (builder, lvs) e
-          and id' = (expr (builder, lvs) (A.Void, SId(id))) in
-            L.build_call get_func [| id'; e'  |] "get_result" builder
-*)
+      | SMap(id, f) ->
+          let id' = (expr (builder, lvs) (A.Void, SId(id)))
+          and (f', _) = try StringMap.find f function_decls with
+                            Not_found -> raise (Failure "Function not found" )
+          and (_, t2) = get_array_type (id, lvs) in
+          (match t2 with
+            A.Int    -> L.build_call mapInt_func [| id'; f' |] "void_ret" builder
+            | A.String -> L.build_call mapString_func [| id'; f' |] "void_ret" builder
+            | _ -> raise (Failure "not implemented yet"))
       | SCall("strlen", [e])    ->
           L.build_call strlen_func [| (expr (builder, lvs) e) |] "strlen" builder
       | SCall("sprint", [e])    ->

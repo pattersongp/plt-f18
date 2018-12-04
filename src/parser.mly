@@ -10,7 +10,7 @@ open Ast
 %token IF ELSE WHILE RETURN BREAK FOR IN
 %token LBRACKET RBRACKET CONCAT COLON
 %token REGX INT FUNCTION STRING VOID ARRAY BOOL FILE
-%token FATARROW FILTER MAP OPEN 
+%token FATARROW FILTER MAP OPEN
 %token GRAB WRITEFILE READFILE DOT
 
 %token <int> INT_LIT
@@ -85,8 +85,6 @@ stmt:
   | IF LPAREN expr RPAREN stmt ELSE stmt    { If($3, $5, $7) }
   | FOR LPAREN typ ID COLON ID RPAREN stmt
         { For($3, $4, $6, $8) }
-  | MAP LPAREN ID COMMA ID RPAREN SEMI { Map($3, $5)  }
-  | FILTER LPAREN ID COMMA ID RPAREN SEMI { Filter($3, $5)  }
   | WHILE LPAREN expr RPAREN stmt { While($3, $5) }
   | ID ASSN expr SEMI { Assign($1, $3) }
   | typ ID ASSN expr SEMI { Vdecl($1, $2, $4) }
@@ -103,6 +101,8 @@ expr:
   | ID DOT WRITEFILE LPAREN expr RPAREN { WriteFile($1, $5) }
   | ID DOT GRAB LPAREN expr RPAREN      { RegexGrab($1, $5) }
   | OPEN LPAREN expr COMMA expr RPAREN { Open($3, $5) }
+  | MAP LPAREN ID COMMA ID RPAREN { Map($3, $5)  }
+  | FILTER LPAREN ID COMMA ID RPAREN { Filter($3, $5)  }
   | expr PLUS   expr { Binop($1, Plus,   $3) }
   | expr MINUS  expr { Binop($1, Minus,   $3) }
   | expr TIMES  expr { Binop($1, Times,  $3) }

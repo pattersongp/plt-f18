@@ -13,6 +13,8 @@ and sx =
   | SInitArray of typ * typ
   | SRetrieve of string * sexpr
   | SArray_Assign of string * sexpr * sexpr
+  | SMap of string * string
+  | SFilter of string * string
   | SCall of string * sexpr list
   | SRegexComp of sexpr * sexpr
   | SStrCat of sexpr * sexpr
@@ -29,8 +31,6 @@ type sstmt =
   | SIf of sexpr * sstmt * sstmt
   | SWhile of sexpr * sstmt
   | SFor of typ * string * string * sstmt
-  | SMap of string * string
-  | SFilter of string * string
   | SVdecl of typ * string * sexpr
   | SAssign of string * sexpr
   | SBreak
@@ -64,6 +64,8 @@ let rec string_of_sexpr (t, e) =
   | SRetrieve(id, e1) -> id ^ "[" ^ string_of_sexpr e1 ^ "]"
   | SArray_Assign(id, e1, e2) -> id ^ "[" ^ string_of_sexpr e1 ^
                 "]" ^ " = " ^ string_of_sexpr e2
+  | SMap(a1, f1) -> "map(" ^ a1 ^ ", " ^ f1 ^ ");\n"
+  | SFilter(a1, f1) -> "filter(" ^ a1 ^ ", " ^ f1 ^ ");\n"
   | SOpen(filename, delim) -> "open(" ^ string_of_sexpr filename ^ ", "
     ^ string_of_sexpr delim ^ ");"
   | SNoexpr -> ""
@@ -81,8 +83,6 @@ let rec string_of_sstmt = function
   | SFor(typ, id1, id2, s) ->
       "for (" ^ string_of_typ typ ^ id1  ^ " : " ^ id2 ^ ")" ^ string_of_sstmt s
   | SWhile(e, s) -> "while (" ^ string_of_sexpr e ^ ") " ^ string_of_sstmt s
-  | SMap(a1, f1) -> "map(" ^ a1 ^ ", " ^ f1 ^ ");\n"
-  | SFilter(a1, f1) -> "filter(" ^ a1 ^ ", " ^ f1 ^ ");\n"
   | SBreak -> "break;"
   | SAssign(v, e) -> v ^ " = " ^ string_of_sexpr e
   | SVdecl(t, id, e) -> string_of_typ t ^ " " ^ id ^ " = "^ string_of_sexpr e ^ ";\n"
