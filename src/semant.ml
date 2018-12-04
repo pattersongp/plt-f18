@@ -140,6 +140,35 @@ let check_function func =
     | Retrieve(id, e) ->
         let retType = get_array_type (id, envs) in
         let e' = expr envs e in (retType, SRetrieve(id, e'))
+    | Map(id, f1) ->
+      let fd = find_func f1 in
+      let param_length = List.length fd.formals in
+      if 1 != param_length then
+          raise (Failure ("expecting " ^ "1" ^
+                      " arguments in " ^ "usage of map"))
+      else
+          let t1 = fd.typ
+          and (t2, _, _) = List.hd fd.formals
+          and (_, t3) = check_array envs id in
+          if t1 = t2 && t2 = t3 then (Void, SMap(id, f1))
+          else raise (Failure (" Map called with out matching types ") )
+(*           if t1 = t2 && t2 = t3 then let envs2 = {stmts = SMap(id, f1) :: envs.stmts; lvs = envs.lvs} in envs2 *)
+    | Filter(id, f1) ->
+      let fd = find_func f1 in
+      let param_length = List.length fd.formals in
+      if 1 != param_length then
+        raise (Failure ("expecting " ^ "1" ^
+                      " arguments in " ^ "usage of map"))
+      else
+          let t1 = fd.typ in
+          let m2 = function
+          Bool -> let (t2, _, _) = List.hd fd.formals
+                  and (_, t3) = check_array envs id in
+          if (t2 = t3) then (Void, SFilter(id, f1))
+(*           if (t2 = t3) then let envs2 = {stmts = SFilter(id, f1) :: envs.stmts; lvs = envs.lvs} in envs2 *)
+                  else raise (Failure (" Map called with out matching types ") )
+          | _ -> raise (Failure (" Function must return Bool to be applied with Filter"))
+          in m2 t1
     | Open (e1, e2) ->
        let (t1, e1') = expr envs e1
        and (t2, e2') = expr envs e2  in
@@ -228,33 +257,6 @@ let rec check_stmt envs = function
 	  Failure ("return gives " ^ string_of_typ t ^ " expected " ^
 		   string_of_typ func.typ ^ " in " ^ string_of_expr e))
       | Break -> let envs2 = {stmts = SBreak :: envs.stmts; lvs = envs.lvs} in envs2
-      | Map(id, f1) ->
-        let fd = find_func f1 in
-        let param_length = List.length fd.formals in
-        if 1 != param_length then
-            raise (Failure ("expecting " ^ "1" ^
-                        " arguments in " ^ "usage of map"))
-        else
-            let t1 = fd.typ
-            and (t2, _, _) = List.hd fd.formals
-            and (_, t3) = check_array envs id in
-            if t1 = t2 && t2 = t3 then let envs2 = {stmts = SMap(id, f1) :: envs.stmts; lvs = envs.lvs} in envs2
-            else raise (Failure (" Map called with out matching types ") )
-      | Filter(id, f1) ->
-        let fd = find_func f1 in
-        let param_length = List.length fd.formals in
-        if 1 != param_length then
-          raise (Failure ("expecting " ^ "1" ^
-                        " arguments in " ^ "usage of map"))
-        else
-            let t1 = fd.typ in
-            let m2 = function
-            Bool -> let (t2, _, _) = List.hd fd.formals
-                    and (_, t3) = check_array envs id in
-            if (t2 = t3) then let envs2 = {stmts = SFilter(id, f1) :: envs.stmts; lvs = envs.lvs} in envs2
-                    else raise (Failure (" Map called with out matching types ") )
-            | _ -> raise (Failure (" Function must return Bool to be applied with Filter"))
-            in m2 t1
       | Assign(var, e) as ex ->
         let lt = type_of_identifier var envs.lvs
         and (rt, e') = expr envs e in

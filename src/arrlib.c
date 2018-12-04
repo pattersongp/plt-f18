@@ -210,6 +210,22 @@ int getIntInt(struct Array *array, char *key) {
 	return node->data2;
 }
 
+void mapString(struct Array *array, char *(*f)(char *)) {
+	struct Node *node = array->head;
+	while(node) {
+		node->data2 = f((char *)node->data2);
+		node = node->next;
+	}
+}
+
+void mapInt(struct Array *array, int (*f)(int)) {
+	struct Node *node = array->head;
+	while(node) {
+		node->data2 = f((int)node->data2);
+		node = node->next;
+	}
+}
+
 #ifdef BUILD_TEST
 #include <assert.h>
 int main() {

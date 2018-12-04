@@ -18,6 +18,8 @@ type expr =
   | Unop of uop * expr
   | Retrieve of string * expr
   | Array_Assign of string * expr * expr
+  | Map of string * string
+  | Filter of string * string
   | Call of string * expr list
   | RegexComp of expr * expr
   | StrCat of expr * expr
@@ -36,8 +38,6 @@ type stmt =
   | If of expr * stmt * stmt
   | While of expr * stmt
   | For of typ * string * string * stmt
-  | Map of string * string
-  | Filter of string * string
   | Vdecl of typ * string * expr
   | Assign of string * expr
   | Break
@@ -97,6 +97,8 @@ let rec string_of_expr = function
   | Array_Assign(id, e1, e2) -> id ^ "[" ^ string_of_expr ( e1) ^
           "]" ^ " = " ^ string_of_expr ( e2)
   |  Retrieve(id, e1) -> id ^ "[" ^ string_of_expr ( e1) ^ "]"
+  | Map(a1, f1) -> "map(" ^ a1 ^ ", " ^ f1 ^ ");\n"
+  | Filter(a1, f1) -> "filter(" ^ a1 ^ ", " ^ f1 ^ ");\n"
   |  Open(filename, delim) -> "open(" ^ string_of_expr filename ^ ", " ^ string_of_expr delim ^ ");\n"
   |  Call(id, act) -> id ^ "(" ^ String.concat ", "(List.map string_of_expr act) ^ ")"
 
@@ -125,8 +127,6 @@ let rec string_of_stmt = function
                 id2 ^ ")" ^ string_of_stmt s1
         | While(e1, s1) -> "while (" ^ string_of_expr ( e1) ^ ") " ^
                 string_of_stmt s1
-        | Map(a1, f1) -> "map(" ^ a1 ^ ", " ^ f1 ^ ");\n"
-        | Filter(a1, f1) -> "filter(" ^ a1 ^ ", " ^ f1 ^ ");\n"
         | Assign(id, e1) ->  id ^ " = " ^ string_of_expr ( e1)
         | Vdecl(t, id, e) -> string_of_vdecl (t, id, e)
 
