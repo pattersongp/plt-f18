@@ -14,11 +14,7 @@ typedef struct Node {
 typedef struct Array {
 	struct Node *head;
 	struct Node *tail;
-	size_t size_key;
-	size_t size_value;
 	int length;
-	char type_key;
-	char type_value;
 } Array;
 
 #if 0 // don't need this anymore, keeping for reference
@@ -64,7 +60,7 @@ int size(char type){
 /**
  * Initializes array data structure
  */
-struct Array *initArray(/*int size_k, int size_v*/) {
+struct Array *initArray() {
 	struct Array *ar = (struct Array *)malloc(sizeof(struct Array));
 	ar->tail= 0;
 	ar->head = ar->tail;
