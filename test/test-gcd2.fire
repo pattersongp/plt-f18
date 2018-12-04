@@ -1,0 +1,18 @@
+/* adapted from code by Graham Patterson */
+
+func int gcd = (int a, int b) => {
+		while (a != b) {
+			if (a > b) {
+					a = a - b;
+			} else {
+					b = b - a;
+			}
+		}
+		return a;
+}
+
+func int main = () => {
+		print(gcd(4, 20));
+		print(gcd(10, 100));
+		print(gcd(11, 99));
+}
