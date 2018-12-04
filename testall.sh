@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Testing script for FIRE
-# 
+#
 #  Compile, run, and check the output of each test against expected result
 #  Expected failures run diff against the expected error, expected passes check against the expected output of the file
 
@@ -75,8 +75,8 @@ RunFail() {
 }
 
 Clean() {
-    rm test-*
-    rm fail-*
+    rm -f test-*
+    rm -f fail-*
     echo "cleaning all diff and err files from root"
     exit 1
 }
