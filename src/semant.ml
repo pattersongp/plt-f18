@@ -97,6 +97,13 @@ let check_function func =
     | _ -> raise (Failure ( id ^ " is not of type array" ))
   in
 
+  let get_array_type (id, envs) =
+    let typs = check_array envs id in match typs with
+        (_, Int) -> Int
+      | (_, String) -> String
+      | _ -> raise (Failure "Not implemented yet")
+  in
+
 (* need to implement Req for regular expression matching in binop *)
   let rec expr envs = function
       Literal l -> (Int, SLiteral l)
@@ -129,7 +136,10 @@ let check_function func =
           (Void, SArray_Assign(id, (rt1, e1'), (rt2, e2')))
         else
           raise (Failure (" Improper types for Array Assign"))
-    | Retrieve(id, e) -> let e' = expr envs e in (Void, SRetrieve(id, e'))
+(* This function needs to be generalized for the different arrays *)
+    | Retrieve(id, e) ->
+        let retType = get_array_type (id, envs) in
+        let e' = expr envs e in (retType, SRetrieve(id, e'))
     | Open (e1, e2) ->
        let (t1, e1') = expr envs e1
        and (t2, e2') = expr envs e2  in
