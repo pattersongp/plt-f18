@@ -1,0 +1,12 @@
+func int fib = (int z) => {
+		if (z < 3) {
+				return 1;
+		} else {
+				return fib(z-1) + fib(z-2);
+		}
+}
+
+func int main = () => {
+		print(fib(8));
+}
+
