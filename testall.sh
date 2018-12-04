@@ -103,9 +103,7 @@ Check() {
     generatedfiles=""
 
     generatedfiles="$generatedfiles ${basename}.ll ${basename}.s" &&
-    echo "Compiling intermediate IR LLVM code..." &&
     Run "$FIRE" "<" "$1" ">" "${basename}.ll" &&
-    echo "IR Code generated!" &&
     Run "$LLC" "-relocation-model=pic" "${basename}.ll" ">" "${basename}.s" &&
     Run "$CC" "-o" "${basename}.flames" "${basename}.s" $PRINTL $REGX $ARRL $FIL $UTL &&
     Run "./${basename}.flames" > "${basename}.out" &&
