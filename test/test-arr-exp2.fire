@@ -9,10 +9,14 @@ func int main = () => {
         wrd[1] = "Hello";
         wrd[2] = "World!";
 
+        array[int, str] wrd2;
+        wrd[1] = "other";
+        wrd[2] = "else";
+
         int x = num["other"]; 
         int y = num["else"];
 
-        sprint(wrd[x]); 
-        sprint(wrd[y]); 
+        sprint(wrd[num[wrd2[x]]]); 
+        sprint(wrd[num[wrd2[y]]]); 
         return 0;
 }
