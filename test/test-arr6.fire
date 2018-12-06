@@ -1,0 +1,15 @@
+func int main = () => {
+        
+        array[str, str] a;
+        a["a"] = "a";
+        a["b"] = "b";
+        a["c"] = "c";
+        a["d"] = "d";
+
+        sprint(a["a"]);
+        sprint(a["b"]);
+        sprint(a["c"]);
+        sprint(a["d"]);
+        
+        return 0;
+}

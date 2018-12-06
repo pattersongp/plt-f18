@@ -1,0 +1,15 @@
+func int main = () => {
+        
+        array[str, str] a;
+        a["zeus"] = "THE GREATEST";
+        a["athena"] = "THE WISEST";
+        a["herakles"] = "THE STRONGEST";
+        a["hermes"] = "THE CLEVEREST";
+
+        sprint(a["zeus"]);
+        sprint(a["athena"]);
+        sprint(a["herakles"]);
+        sprint(a["hermes"]);
+        
+        return 0;
+}

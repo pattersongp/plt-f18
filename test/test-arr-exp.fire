@@ -1,0 +1,18 @@
+func int main = () => {
+        
+        array[str, int] num;
+        num["one"] = 0;
+        num["other"] = 1;
+        num["else"] = 2;
+
+        array[int, str] wrd;
+        wrd[1] = "Hello";
+        wrd[2] = "World!";
+
+        int x = num["other"]; 
+        int y = num["else"];
+
+        sprint(wrd[num["other"]]); 
+        sprint(wrd[num["else"]]); 
+        return 0;
+}
