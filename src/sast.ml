@@ -53,7 +53,9 @@ let rec string_of_sexpr (t, e) =
   | SBoolLit(false) -> "false"
   | SStrCat(e1, e2) -> string_of_sexpr e1 ^ " ^ " ^ string_of_sexpr e2
   | SRegexComp(e1, e2) -> string_of_sexpr e1 ^ "===" ^ string_of_sexpr e2
-  | SReadFile(id) -> id ^ ".read();"
+  | SRegexGrab(id, e2) -> id ^ ".grab(" ^ string_of_sexpr e2 ^ ");"
+  | SReadFile(id) -> id ^ ".read();\n"
+  | SWriteFile(id, e) -> id ^ ".write(" ^ string_of_sexpr e ^ ");\n"
   | SInitArray(t1, t2) -> "init(" ^ string_of_typ t1 ^ " " ^ string_of_typ t2 ^ ");\n"
   | SId(s) -> s
   | SBinop(e1, o, e2) ->

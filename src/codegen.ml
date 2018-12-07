@@ -51,8 +51,6 @@ let translate functions =
     | A.Function    -> i32_ptr_t (* Not implemented*)
   in
 
-  let ltype_ptr = function _ -> i32_ptr_t in
-
   (* ---------------------- External Functions ---------------------- *)
   let regex_cmp_t : L.lltype =
     L.var_arg_function_type i1_t [| string_t; string_t |] in
@@ -103,11 +101,6 @@ let translate functions =
     L.function_type i32_ptr_t [| |] in
   let init_arr_func : L.llvalue =
     L.declare_function "initArray" init_arr_t the_module in
-
-  let get_t : L.lltype =
-    L.function_type i32_t [| string_t; i32_t |] in
-  let get_func : L.llvalue =
-    L.declare_function "get" get_t the_module in
 
   (* ---------------------- Array Assign Functions ---------------------- *)
   (* Array[Int, Int] *)
@@ -242,13 +235,13 @@ let translate functions =
           let e1' = expr (builder, lvs) e1
           and e2' = expr (builder, lvs) e2 in
           L.build_call open_file_func [| e1'; e2' |] "open_result" builder
-      | SInitArray(t1, t2) ->
+      | SInitArray(_, _) ->
             L.build_call init_arr_func [| |] "initArray_result" builder
       | SArray_Assign (id, e1, e2) ->
           let e1' = expr (builder, lvs) e1
           and e2' = expr (builder, lvs) e2
           and id' = (expr (builder, lvs) (A.Void, SId(id)))
-          and (t1, t2) as typs = get_array_type (id, lvs) in
+          and typs = get_array_type (id, lvs) in
           (match typs with
                 (A.Int, A.Int) ->
                 L.build_call addIntInt_func       [| id'; e1'; e2' |]
@@ -267,7 +260,7 @@ let translate functions =
       | SRetrieve(id, e1) ->
           let e1' = expr (builder, lvs) e1
           and id' = (expr (builder, lvs) (A.Void, SId(id)))
-          and (t1, t2) as typs = get_array_type (id, lvs) in
+          and typs = get_array_type (id, lvs) in
           (match typs with
               (A.Int, A.Int) ->
                 L.build_call getIntInt_func [| id'; e1'|]
@@ -345,8 +338,8 @@ let translate functions =
         SBlock sl -> List.fold_left stmt (builder, lvs) sl
       | SExpr e -> ignore(expr (builder, lvs) e); builder, lvs
       | SVdecl (t, n, e) -> let assn' = match t with
-          Array(t1, t2) ->
-            let lvs' = add_vdecl (t, n, lvs) in stmt (builder, lvs') (SAssign(n, (Array(t1,t2), SInitArray(t1,t2))))
+          A.Array(t1, t2) ->
+            let lvs' = add_vdecl (t, n, lvs) in stmt (builder, lvs') (SAssign(n, (A.Array(t1,t2), SInitArray(t1,t2))))
         | _ -> let lvs' = add_vdecl (t, n, lvs) in stmt (builder, lvs') (SAssign(n, e))
         in assn'
       | SAssign (s, e)   -> let e' = expr (builder, lvs) e in
