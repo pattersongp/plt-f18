@@ -102,6 +102,11 @@ let translate functions =
   let init_arr_func : L.llvalue =
     L.declare_function "initArray" init_arr_t the_module in
 
+  let len_arr_t : L.lltype =
+    L.function_type i32_t [| i32_ptr_t |] in
+  let len_arr_func : L.llvalue =
+    L.declare_function "arrLength" len_arr_t the_module in
+
   (* ---------------------- Array Assign Functions ---------------------- *)
   (* Array[Int, Int] *)
   let addIntInt_t : L.lltype =
@@ -172,6 +177,8 @@ let translate functions =
     L.function_type i1_t [| i32_ptr_t; (L.pointer_type filterStringFormal_t) |] in
   let filterString_func : L.llvalue =
     L.declare_function "filterString" filterString_t the_module in
+
+
 
 
   (* ---------------------- User Functions ---------------------- *)
@@ -311,6 +318,8 @@ let translate functions =
             A.Int    -> L.build_call filterInt_func [| id'; f' |] "void_ret" builder
             | A.String -> L.build_call filterString_func [| id'; f' |] "void_ret" builder
             | _ -> raise (Failure "not implemented yet"))
+      | SCall("len", [e])    ->
+          L.build_call len_arr_func [| (expr (builder, lvs) e) |] "len" builder
       | SCall("strlen", [e])    ->
           L.build_call strlen_func [| (expr (builder, lvs) e) |] "strlen" builder
       | SCall("sprint", [e])    ->

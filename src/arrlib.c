@@ -256,6 +256,12 @@ void filterInt(struct Array *array, bool (*f)(int)) {
             head = prev->next;
         }
 }
+
+int arrLength(struct Array *a) {
+	        return a->length;
+
+}
+
 #ifdef BUILD_TEST
 #include <assert.h>
 int main() {
