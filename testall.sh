@@ -17,6 +17,13 @@ CC="gcc"
 # Path to the Fire compiler
 FIRE="src/Fire.native"
 
+# Variables for library binaries
+PRINTL="src/printlib.o"
+REGX="src/regexlib.o"
+ARRL="src/arrlib.o"
+FIL="src/filelib.o"
+UTL="src/util.o"
+
 # Set time limit for all operations
 ulimit -t 30
 
@@ -95,11 +102,11 @@ Check() {
 
     generatedfiles=""
 
-    generatedfiles="$generatedfiles ${basename}.ll ${basename}.s ${basename}.exe ${basename}.out" &&
-    Run "$FIRE" "$1" ">" "${basename}.ll" &&
+    generatedfiles="$generatedfiles ${basename}.ll ${basename}.s" &&
+    Run "$FIRE" "<" "$1" ">" "${basename}.ll" &&
     Run "$LLC" "-relocation-model=pic" "${basename}.ll" ">" "${basename}.s" &&
-    Run "$CC" "-o" "${basename}.exe" "${basename}.s" "arrlib.o" "filelib.o" "regexlib.o" "printlib.o" &&
-    Run "./${basename}.exe" > "${basename}.out" &&
+    Run "$CC" "-o" "${basename}.flames" "${basename}.s" $PRINTL $REGX $ARRL $FIL $UTL &&
+    Run "./${basename}.flames" > "${basename}.out" &&
     Compare ${basename}.out ${reffile}.out ${basename}.diff
 
     # Report the status and clean up the generated files

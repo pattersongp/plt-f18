@@ -1,0 +1,16 @@
+func int main = () => {
+        
+        array[str, int] num;
+        num["one"] = 7;
+        num["other"] = 77;
+        num["else"] = 11;
+
+        print(num["one"]);
+        print(num["other"]);
+        print(num["else"]);
+
+        int x = num["one"] * num["else"];
+        print(x);
+
+        return 0;
+}

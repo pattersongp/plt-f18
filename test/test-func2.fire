@@ -1,0 +1,12 @@
+func int mul = (int a, int b) =>
+{
+  return a * b;
+}
+
+func int main = () =>
+{
+  int a;
+  a = mul(23, 8);
+  print(a);
+  return 0;
+}

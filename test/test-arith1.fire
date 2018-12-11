@@ -1,0 +1,4 @@
+func int main = () => {
+    print(80 + 3);
+    return 0;
+}

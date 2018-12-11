@@ -1,0 +1,16 @@
+func int main = () => {
+        
+        array[int, str] a;
+        a[0] = "GATE";
+        a[1] = "GATE";
+        a[2] = "PARASAMGATE";
+        a[3] = "BODHI SAVHA";
+
+        int j = 0;
+        while(j < 4) {
+        	sprint(a[j]);
+        	j = j + 1;
+        }
+
+        return 0;
+}
