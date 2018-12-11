@@ -1,5 +1,5 @@
 func void main = () => {
 	int a = 100;
 	str yolo = "you only live once";
-	a + y:
+	a + y;
 }

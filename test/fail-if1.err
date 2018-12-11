@@ -1,1 +1,1 @@
-Fatal error: exception Failure("expected Boolean expression in 42")
+Fatal error: exception Failure("illegal assignment int = str in int s =  yeah ok this one i copied;\n")
