@@ -263,7 +263,7 @@ let rec check_stmt envs = function
         let err = "illegal assignment " ^ string_of_typ lt ^ " = " ^
           string_of_typ rt ^ " in " ^  string_of_stmt ex
         in let _ = check_assign lt rt err in let envs2 = {stmts = SAssign(var, (rt, e')) :: envs.stmts; lvs = envs.lvs} in envs2
-      | Vdecl(t, id, e) ->
+      | Vdecl(t, id, e) as ex ->
           let f = function
           Noexpr ->
             let f2 = function
@@ -284,7 +284,11 @@ let rec check_stmt envs = function
                   let f5 = function
                     Array(_, _) -> raise (Failure("cant assign and declare array"))
                     | _ -> let lvs' = StringMap.add id t envs.lvs in
-                      let (rt, e') = expr envs e in let envs2 = {stmts = SVdecl(t, id, (rt, e')) :: envs.stmts; lvs = lvs'} in envs2
+                      let (rt, e') = expr envs e in
+                      let err = "illegal assignment " ^ string_of_typ t ^ " = " ^
+                        string_of_typ rt ^ " in " ^  string_of_stmt ex in
+                      let _ = check_assign t rt err in
+                      let envs2 = {stmts = SVdecl(t, id, (rt, e')) :: envs.stmts; lvs = lvs'} in envs2
                   in f5 t
               in f4 (StringMap.find_opt id envs.lvs)
           in f e
