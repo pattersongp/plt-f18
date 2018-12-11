@@ -90,6 +90,10 @@ let check_function func =
     with Not_found -> raise (Failure ("undeclared identifier " ^ s))
   in
 
+  let check_void t =
+    match t with Void -> raise (Failure("Cannot assign variable of type void")) | _ -> t
+  in
+
   let check_array envs id  =
     let t = type_of_identifier id envs.lvs in
     match t with
@@ -233,6 +237,7 @@ let check_function func =
     else false
   in
 
+
 let rec check_stmt envs = function
       Expr e -> let envs2 = {stmts = SExpr(expr envs e) :: envs.stmts; lvs = envs.lvs} in envs2
       | Block sl -> let e' = List.fold_left check_stmt envs sl in
@@ -264,6 +269,7 @@ let rec check_stmt envs = function
           string_of_typ rt ^ " in " ^  string_of_stmt ex
         in let _ = check_assign lt rt err in let envs2 = {stmts = SAssign(var, (rt, e')) :: envs.stmts; lvs = envs.lvs} in envs2
       | Vdecl(t, id, e) as ex ->
+          let _ = check_void t in
           let f = function
           Noexpr ->
             let f2 = function
@@ -292,6 +298,7 @@ let rec check_stmt envs = function
                   in f5 t
               in f4 (StringMap.find_opt id envs.lvs)
           in f e
+
 
 in (* body of check_function *)
     { styp = func.typ;
