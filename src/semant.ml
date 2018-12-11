@@ -35,10 +35,11 @@ let built_in_func_decls =
         formals = formals';
         body = []; (* empty list *)
     } map
-    (* REVISE following line !!!*)
-    (*  What is the second argument here? *)
     in List.fold_left add_bind StringMap.empty
-    [("print", Void, [(Int, "", Noexpr)]); ("sprint", Void, [(String, "", Noexpr)]); ("strlen", Int, [(String, "", Noexpr)])]
+    [("print", Void, [(Int, "", Noexpr)]);
+     ("sprint", Void, [(String, "", Noexpr)]);
+     ("strlen", Int, [(String, "", Noexpr)]);
+     ("len", Int, [(Array(Int, Int), "", Noexpr)])]
 in
 
 (* build up symbol table - global scope ONLY for now *)
@@ -204,6 +205,15 @@ let check_function func =
                     string_of_typ t1 ^ " " ^ string_of_op op ^ " " ^
                     string_of_typ t2 ^ " in " ^ string_of_expr e))
        in (ty, SBinop((t1, e1'), op, (t2, e2')))
+    | Call("len", args) ->
+        let fd = find_func "len" in
+        let check_call (ft, _, _) e =
+            let (et, e') = expr envs e in
+            let err = "illegal argument found " ^ string_of_typ et ^
+                    " expected " ^ string_of_typ ft ^ " in " ^ string_of_expr e
+            in (check_assign ft ft err, e')
+        in let args' = List.map2 check_call fd.formals args in
+        (fd.typ, SCall("len", args'))
     | Call(fname, args) as call ->
         let fd = find_func fname in
         let param_length = List.length fd.formals in
@@ -214,7 +224,8 @@ let check_function func =
             let (et, e') = expr envs e in
             let err = "illegal argument found " ^ string_of_typ et ^
                     " expected " ^ string_of_typ ft ^ " in " ^ string_of_expr e
-            in (check_assign ft et err, e')
+            in
+            (check_assign ft et err, e')
         in
         let args' = List.map2 check_call fd.formals args
         in (fd.typ, SCall(fname, args'))
