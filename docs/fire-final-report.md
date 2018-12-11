@@ -25,7 +25,15 @@ I. Appendix A - Codebase
 
 ## 1. Introduction 
 - *Include your language white paper.*
-	
+
+F.I.R.E (File Input Reinterpretation Engine) is a programming language inspired by AWK, Bash & C. It seeks to provide some of the robust pattern matching and script-manipulation functionality of these languages with a more palatable syntax.
+
+### 1.1 Motivation
+
+AWK & Bash remain essential weapons in the arsenal of any programmer seeking to manipulate text files in a Unix-like environment. They are robust and integrate well with other Unix tools, but they are also artifacts of a time before the total dominance of C in the landscape of programming language design. As a result, both languages feature syntax that is downright alien to generations of programmers reared on C and C-like languages like Java, C++, Python and et al. Bash, for all its utility, has gained a reputation for fiddly and non-intuitive syntax rules (ever leave an extraneous space in a `makefile` or `.bashrc`? You know what I'm talking about). 
+
+Since C is so well regarded and so well know, we have made
+
 ## 2. Tutorial
 - *A short explanation telling a novice how to use your language.*
 
