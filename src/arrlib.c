@@ -3,6 +3,7 @@
 #include <sys/types.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
 #include "arrlib.h"
 
 typedef struct Node {
@@ -226,6 +227,35 @@ void mapInt(struct Array *array, int (*f)(int)) {
 	}
 }
 
+void filterString(struct Array *array, bool (*f)(char *)) {
+	struct Node *head = array->head;
+        while (head) {
+            if (f((char *)head->data2)) break;
+            else array->head = head->next;
+        }
+	struct Node *prev = array->head;
+        head = prev->next;
+        while(head){
+            if (!(f((char *)head->data2))) prev->next = head->next;
+            prev = prev->next;
+            head = prev->next;
+        }
+}
+
+void filterInt(struct Array *array, bool (*f)(int)) {
+	struct Node *head = array->head;
+        while (head) {
+            if (f((int)head->data2)) break;
+            else array->head = head->next;
+        }
+	struct Node *prev = array->head;
+        head = prev->next;
+        while(head){
+            if (!(f((int)head->data2))) prev->next = head->next;
+            prev = prev->next;
+            head = prev->next;
+        }
+}
 #ifdef BUILD_TEST
 #include <assert.h>
 int main() {
