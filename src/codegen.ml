@@ -148,7 +148,7 @@ let translate functions =
     L.function_type i32_t [| i32_t |] in
   let mapStringFormal_t : L.lltype =
     L.function_type string_t [| string_t |] in
-  
+
   let mapInt_t : L.lltype =
     L.function_type i1_t [| i32_ptr_t; (L.pointer_type mapIntFormal_t) |] in
   let mapInt_func : L.llvalue =
@@ -157,7 +157,7 @@ let translate functions =
     L.function_type i1_t [| i32_ptr_t; (L.pointer_type mapStringFormal_t) |] in
   let mapString_func : L.llvalue =
     L.declare_function "mapString" mapString_t the_module in
-  
+
   (*filter functions*)
   let filterIntFormal_t : L.lltype =
     L.function_type i1_t [| i32_t |] in
@@ -217,7 +217,7 @@ let translate functions =
       with Not_found -> raise (Failure ("Variable [" ^ n ^ "] not declared"))
     in
 
-    let add_vdecl (t, n, lvs) =
+    let add_vdecl (t, n, lvs, builder) =
       let (t', local_var) = (t, L.build_alloca (ltype_of_typ t) n builder)
       in
         StringMap.add n (t', local_var) lvs
@@ -365,8 +365,8 @@ let translate functions =
       | SExpr e -> ignore(expr (builder, lvs) e); builder, lvs
       | SVdecl (t, n, e) -> let assn' = match t with
           A.Array(t1, t2) ->
-            let lvs' = add_vdecl (t, n, lvs) in stmt (builder, lvs') (SAssign(n, (A.Array(t1,t2), SInitArray(t1,t2))))
-        | _ -> let lvs' = add_vdecl (t, n, lvs) in stmt (builder, lvs') (SAssign(n, e))
+            let lvs' = add_vdecl (t, n, lvs, builder) in stmt (builder, lvs') (SAssign(n, (A.Array(t1,t2), SInitArray(t1,t2))))
+        | _ -> let lvs' = add_vdecl (t, n, lvs, builder) in stmt (builder, lvs') (SAssign(n, e))
         in assn'
       | SAssign (s, e)   -> let e' = expr (builder, lvs) e in
                             let (_, v) = lookup s lvs in
@@ -403,6 +403,7 @@ let translate functions =
         let merge_bb = L.append_block context "merge" the_function in
           ignore(L.build_cond_br bool_val body_bb merge_bb pred_builder);
           (L.builder_at_end context merge_bb), lvs
+
 (*
  * This is a special case because we have to get the array to iterate over it
       | For (e1, e2, e3, body) -> stmt builder
@@ -410,6 +411,7 @@ let translate functions =
 *)
       | _ -> raise (Failure "FAILURE at stmt builder")
     in
+
     (* Build the code for each statement in the function *)
     let builder, _ = stmt (builder, local_vars) (SBlock fdecl.sbody) in
 
