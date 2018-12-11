@@ -1,16 +1,9 @@
 func void main = () => {
-
     if (true) {
         str bruceYoungSwaySoup = " when in rome do as the romans";
     }
-
-    elif {
+    else {
         grenade; /* Error: undeclared variable */
 
-    }   
-
-  
-    else {
-        int i = 32;
     }
 }
