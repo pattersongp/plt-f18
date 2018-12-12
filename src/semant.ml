@@ -38,7 +38,10 @@ let built_in_func_decls =
     (* REVISE following line !!!*)
     (*  What is the second argument here? *)
     in List.fold_left add_bind StringMap.empty
-    [("print", Void, [(Int, "", Noexpr)]); ("sprint", Void, [(String, "", Noexpr)]); ("strlen", Int, [(String, "", Noexpr)])]
+    [("print", Void, [(Int, "", Noexpr)]);
+     ("sprint", Void, [(String, "", Noexpr)]);
+     ("strlen", Int, [(String, "", Noexpr)]);
+     ("split", Array(Int, String), [(String, "", Noexpr); (String, "", Noexpr)])]
 in
 
 (* build up symbol table - global scope ONLY for now *)

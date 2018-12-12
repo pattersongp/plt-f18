@@ -82,6 +82,11 @@ let translate functions =
   let strlen_func : L.llvalue =
     L.declare_function "strlen" strlen_t the_module in
 
+  let split_t : L.lltype =
+    L.function_type i32_ptr_t [| string_t; string_t |] in
+  let split_func : L.llvalue =
+    L.declare_function "split" split_t the_module in
+
   let open_file_t : L.lltype =
     L.function_type i32_ptr_t [| string_t; string_t |] in
   let open_file_func : L.llvalue =
@@ -337,6 +342,10 @@ let translate functions =
           L.build_call strlen_func [| (expr (builder, lvs) e) |] "strlen" builder
       | SCall("sprint", [e])    ->
           L.build_call sprint_func [| (expr (builder, lvs) e) |] "sprint" builder
+      | SCall("split", [e1; e2])    ->
+        let e1' = expr (builder, lvs) e1
+        and e2' = expr (builder, lvs) e2 in
+          L.build_call split_func [| e1'; e2' |] "split" builder
       | SCall("print", [e])     ->
           L.build_call printf_func [| int_format_str; (expr (builder, lvs) e) |] "printf" builder
       | SCall (f, args) ->
