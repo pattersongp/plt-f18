@@ -105,37 +105,38 @@ int compareInt(const void *data1, const void *data2)
 	else return 1;
 }
 
-#if 0
-int setsizeofarrayinarray(const struct Array *array){
-	int len = array->length;
-	int ks = (int)array->size_key;
-	int vs = (int)array->size_value;
-	int arraysize = (ks+vs)*len;
-	return arraysize;
+/**
+ * Comparator for Array *
+ */
+int compareArray(const void *data1, const void *data2)
+{
+	struct Array *a = (struct Array *)data1;
+	struct Array *b = (struct Array *)data2;
+	if (a == b) return 0;
+	else return 1;
 }
-#endif
 
 struct Node *addNodeTail(struct Array *array) {
-		//create a new node malloc but no free
-		struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
-		if(newNode == NULL) {
-			perror("malloc return NULL");
-			exit(1);
-		}
+	//create a new node malloc but no free
+	struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
+	if(newNode == NULL) {
+		perror("malloc return NULL");
+		exit(1);
+	}
 
-		// Add the new node to the end of the list
-		if(array->tail == NULL) {
-			array->head = newNode;
-			array->tail = newNode;
-		} else {
-			array->tail->next = newNode;
-			array->tail = newNode;
-		}
+	// Add the new node to the end of the list
+	if(array->tail == NULL) {
+		array->head = newNode;
+		array->tail = newNode;
+	} else {
+		array->tail->next = newNode;
+		array->tail = newNode;
+	}
 
-		//add length
-		array->length ++;
+	//add length
+	array->length ++;
 
-		return newNode;
+	return newNode;
 }
 
 void addSetData(struct Array *array, struct Node *node, void *data1, void *data2) {
@@ -177,6 +178,19 @@ void addStringString(struct Array *array, char *data1, char *data2) {
 
 char *getStringString(struct Array *array, char *key) {
 	struct Node *node = findNode(array, key, &strcmp);
+	return node->data2;
+}
+
+/**
+ * Functions for Array[int, Array[ ... ]]
+ */
+void addIntArray(struct Array *array, int data1, struct Array *data2) {
+	struct Node *node = findNode(array, data1, &compareInt);
+	addSetData(array, node, (void *)data1, (void *)data2);
+}
+
+struct Array *getIntArray(struct Array *array, int key) {
+	struct Node *node = findNode(array, key, &compareInt);
 	return node->data2;
 }
 
@@ -229,32 +243,32 @@ void mapInt(struct Array *array, int (*f)(int)) {
 
 void filterString(struct Array *array, bool (*f)(char *)) {
 	struct Node *head = array->head;
-        while (head) {
-            if (f((char *)head->data2)) break;
-            else array->head = head->next;
-        }
+	while (head) {
+		if (f((char *)head->data2)) break;
+		else array->head = head->next;
+	}
 	struct Node *prev = array->head;
-        head = prev->next;
-        while(head){
-            if (!(f((char *)head->data2))) prev->next = head->next;
-            prev = prev->next;
-            head = prev->next;
-        }
+	head = prev->next;
+	while(head){
+		if (!(f((char *)head->data2))) prev->next = head->next;
+		prev = prev->next;
+		head = prev->next;
+	}
 }
 
 void filterInt(struct Array *array, bool (*f)(int)) {
 	struct Node *head = array->head;
-        while (head) {
-            if (f((int)head->data2)) break;
-            else array->head = head->next;
-        }
+	while (head) {
+		if (f((int)head->data2)) break;
+		else array->head = head->next;
+	}
 	struct Node *prev = array->head;
-        head = prev->next;
-        while(head){
-            if (!(f((int)head->data2))) prev->next = head->next;
-            prev = prev->next;
-            head = prev->next;
-        }
+	head = prev->next;
+	while(head){
+		if (!(f((int)head->data2))) prev->next = head->next;
+		prev = prev->next;
+		head = prev->next;
+	}
 }
 #ifdef BUILD_TEST
 #include <assert.h>

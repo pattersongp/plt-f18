@@ -105,6 +105,7 @@ let check_function func =
     let typs = check_array envs id in match typs with
         (_, Int) -> Int
       | (_, String) -> String
+      | (_, Array(t1, t2)) -> Array(t1, t2)
       | _ -> raise (Failure "Not implemented yet")
   in
 

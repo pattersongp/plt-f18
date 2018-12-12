@@ -123,6 +123,16 @@ let translate functions =
   let getIntString_func : L.llvalue =
     L.declare_function "getIntString" getIntString_t the_module in
 
+  (* Array[Int, Array[...]] *)
+  let addIntArray_t: L.lltype =
+    L.function_type i1_t [| i32_ptr_t; i32_t; i32_ptr_t |] in
+  let addIntArray_func : L.llvalue =
+    L.declare_function "addIntArray" addIntArray_t the_module in
+  let getIntArray_t : L.lltype =
+    L.function_type i32_ptr_t [| i32_ptr_t; i32_t |] in
+  let getIntArray_func : L.llvalue =
+    L.declare_function "getIntArray" getIntArray_t the_module in
+
   (* Array[String, String] *)
   let addStringString_t: L.lltype =
     L.function_type i1_t [| i32_ptr_t; string_t; string_t |] in
@@ -227,6 +237,7 @@ let translate functions =
       let (arr, _)= lookup id lvs in match arr with
           A.Array(A.Int, A.Int) -> (A.Int, A.Int)
         | A.Array(A.Int, A.String) -> (A.Int, A.String)
+        | A.Array(A.Int, A.Array(t1, t2)) -> (A.Int, A.Array(t1, t2))
         | A.Array(A.String, A.Int) -> (A.String, A.Int)
         | A.Array(A.String, A.String) -> (A.String, A.String)
         | _ -> raise (Failure "Failed at get_array_type()")
@@ -252,8 +263,13 @@ let translate functions =
           let e1' = expr (builder, lvs) e1
           and e2' = expr (builder, lvs) e2 in
           L.build_call open_file_func [| e1'; e2' |] "open_result" builder
-      | SInitArray(_, _) ->
-            L.build_call init_arr_func [| |] "initArray_result" builder
+
+      | SInitArray(_, typ) ->
+          let ret = match typ with
+(*               A.Array(t1, t2) as inner ->  *)
+            | _ -> L.build_call init_arr_func [| |] "initArray_result" builder
+          in ret
+
       | SArray_Assign (id, e1, e2) ->
           let e1' = expr (builder, lvs) e1
           and e2' = expr (builder, lvs) e2
@@ -265,6 +281,9 @@ let translate functions =
                 "void_ret" builder
               | (A.Int, A.String) ->
                 L.build_call addIntString_func    [| id'; e1'; e2' |]
+                "void_ret" builder
+              | (A.Int, A.Array(_, _)) ->
+                L.build_call addIntArray_func     [| id'; e1'; e2' |]
                 "void_ret" builder
               | (A.String, A.String) ->
                 L.build_call addStringString_func [| id'; e1'; e2' |]
@@ -285,6 +304,9 @@ let translate functions =
               | (A.Int, A.String) ->
                 L.build_call getIntString_func [| id'; e1'|]
                 "getIntString_ret" builder
+              | (A.Int, A.Array(_, _)) ->
+                L.build_call getIntArray_func     [| id'; e1' |]
+                "getIntArray_ret" builder
               | (A.String, A.String) ->
                 L.build_call getStringString_func [| id'; e1'|]
                 "getStringString_ret" builder
