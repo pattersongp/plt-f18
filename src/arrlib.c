@@ -3,60 +3,9 @@
 #include <sys/types.h>
 #include <stdio.h>
 #include <string.h>
-#include <stdbool.h>
+
 #include "arrlib.h"
 
-typedef struct Node {
-	void *data1;
-	void *data2;
-	struct Node *next;
-} node_t;
-
-typedef struct Array {
-	struct Node *head;
-	struct Node *tail;
-	int length;
-} Array;
-
-#if 0 // don't need this anymore, keeping for reference
-char checktypefromcodegen (int codegensize){
-	char type;
-	switch (codegensize) {
-		case 8:
-			type = 'i';
-			break;
-		case 7:
-			type = 's';
-			break;
-		case 4:
-			type = 'b';
-			break;
-		default:
-			type = 'a';
-			break;
-	}
-	return type;
-}
-
-int size(char type){
-	int realsize;
-	switch (type) {
-		case 'i':
-			realsize = sizeof(int);
-			break;
-		case 's':
-			realsize = sizeof(char *);
-			break;
-		case 'b':
-			realsize = sizeof(int);
-			break;
-		default:
-			realsize = 8;
-			break;
-	}
-	return realsize;
-}
-#endif
 
 /**
  * Initializes array data structure
@@ -270,6 +219,7 @@ void filterInt(struct Array *array, bool (*f)(int)) {
 		head = prev->next;
 	}
 }
+
 #ifdef BUILD_TEST
 #include <assert.h>
 int main() {
@@ -292,14 +242,6 @@ int main() {
 	assert(ret == 0);
 
 	assert(arr->length == 2);
-
-	//Array *arr2;
-	//arr2 = initArray(7,10);
-	//add(arr, "1", arr2);
-
-	//Retrieve a value
-	// int c = (int)get(arr,"Age");
-	// printf("Age: %d\n", c);
 
 	return 0;
 }

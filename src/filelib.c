@@ -44,6 +44,7 @@ file_t *openFire(char *filename, char *delim) {
 
 /*
  * Note: This function removes the delimiter from the chunk read
+ *  -- this function expects delimiter to be length 1
  */
 char *readFire(file_t *ft) {
 	int i = 0;
