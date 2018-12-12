@@ -1,4 +1,4 @@
-func void main () => {
+func void main = () => {
 	bool b = false;
 	int x = -b; /* cant make a bool negative */
 }
