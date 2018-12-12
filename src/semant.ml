@@ -40,7 +40,8 @@ let built_in_func_decls =
      ("sprint", Void, [(String, "", Noexpr)]);
      ("strlen", Int, [(String, "", Noexpr)]);
      ("split", Array(Int, String), [(String, "", Noexpr); (String, "", Noexpr)]);
-     ("len", Int, [(Array(Int, Int), "", Noexpr)])]
+     ("len", Int, [(Array(Void, Void), "", Noexpr)]);
+     ("keys", Array(Int, Void), [(Array(Void, Void), "", Noexpr)])]
 in
 
 (* build up symbol table - global scope ONLY for now *)
@@ -79,6 +80,7 @@ let check_function func =
     match lvaluet with
       Regx   -> if rvaluet = String || rvaluet = Regx then rvaluet else raise (Failure err)
     | String -> if rvaluet = Regx || rvaluet = String then rvaluet else raise (Failure err)
+    | Array(_, _) -> lvaluet
     | _ -> if lvaluet = rvaluet then lvaluet else raise (Failure err)
   in
 
@@ -216,6 +218,15 @@ let check_function func =
             in (check_assign ft ft err, e')
         in let args' = List.map2 check_call fd.formals args in
         (fd.typ, SCall("len", args'))
+    | Call("keys", args) ->
+        let fd = find_func "len" in
+        let check_call (ft, _, _) e =
+            let (et, e') = expr envs e in
+            let err = "illegal argument found " ^ string_of_typ et ^
+                    " expected " ^ string_of_typ ft ^ " in " ^ string_of_expr e
+            in (check_assign ft ft err, e')
+        in let args' = List.map2 check_call fd.formals args in
+        (fd.typ, SCall("keys", args'))
     | Call(fname, args) as call ->
         let fd = find_func fname in
         let param_length = List.length fd.formals in
@@ -279,7 +290,7 @@ let rec check_stmt envs = function
         let lt = type_of_identifier var envs.lvs
         and (rt, e') = expr envs e in
         let err = "illegal assignment " ^ string_of_typ lt ^ " = " ^
-          string_of_typ rt ^ " in " ^  string_of_stmt ex
+                  string_of_typ rt ^ " in " ^  string_of_stmt ex
         in let _ = check_assign lt rt err in let envs2 = {stmts = SAssign(var, (rt, e')) :: envs.stmts; lvs = envs.lvs} in envs2
       | Vdecl(t, id, e) as ex ->
           let _ = check_void t in

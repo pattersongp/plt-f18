@@ -50,4 +50,6 @@ void mapInt(struct Array *array, int (*f)(int));
 void filterString(struct Array *array, bool (*f)(char *));
 void filterInt(struct Array *array, bool (*f)(int));
 
+struct Array *keys(struct Array *a);
+
 #endif

@@ -107,6 +107,11 @@ let translate functions =
   let init_arr_func : L.llvalue =
     L.declare_function "initArray" init_arr_t the_module in
 
+  let keys_t : L.lltype =
+    L.function_type i32_ptr_t [| i32_ptr_t |] in
+  let keys_func : L.llvalue =
+    L.declare_function "keys" keys_t the_module in
+
   let len_arr_t : L.lltype =
     L.function_type i32_t [| i32_ptr_t |] in
   let len_arr_func : L.llvalue =
@@ -202,9 +207,6 @@ let translate functions =
     L.function_type i1_t [| i32_ptr_t; (L.pointer_type filterStringFormal_t) |] in
   let filterString_func : L.llvalue =
     L.declare_function "filterString" filterString_t the_module in
-
-
-
 
   (* ---------------------- User Functions ---------------------- *)
   let function_decls : (L.llvalue * sfunc_decl) StringMap.t =
@@ -362,6 +364,9 @@ let translate functions =
             A.Int    -> L.build_call filterInt_func [| id'; f' |] "void_ret" builder
             | A.String -> L.build_call filterString_func [| id'; f' |] "void_ret" builder
             | _ -> raise (Failure "not implemented yet"))
+      | SCall("keys", [e1])    ->
+        let e1' = expr (builder, lvs) e1 in
+          L.build_call keys_func [| e1' |] "keys" builder
       | SCall("len", [e])    ->
           L.build_call len_arr_func [| (expr (builder, lvs) e) |] "len" builder
       | SCall("strlen", [e])    ->

@@ -239,8 +239,24 @@ int arrLength(struct Array *a) {
 
 }
 
+struct Array *keys(struct Array *a) {
+	struct Array *ret = (struct Array *)malloc(sizeof(struct Array));
+	struct Node *tmp = a->head;
+
+	int i = 0;
+	while(tmp != a->tail) {
+		addSetData(ret, addNodeTail(ret), i++, tmp->data1);
+		tmp = tmp->next;
+	}
+
+	addSetData(ret, addNodeTail(ret), i, tmp->data1);
+	return ret;
+}
+
 #ifdef BUILD_TEST
 #include <assert.h>
+char *printFunc(char *s) { printf("%s\n", s); return s; }
+
 int main() {
 	//No default constructor
 	Array *arr;
@@ -261,6 +277,10 @@ int main() {
 	assert(ret == 0);
 
 	assert(arr->length == 2);
+
+	struct Array *keysOnly = keys(arr);
+	printf("Should print [age, birthday]\n");
+	mapString(keysOnly, &printFunc);
 
 	return 0;
 }
