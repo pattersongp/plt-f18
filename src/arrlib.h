@@ -25,6 +25,10 @@ struct Node *addNodeTail(struct Array *array);
 void addSetData(struct Array *array, struct Node *node,
         void *data1, void *data2);
 
+void addStringArray(struct Array *array, char *data1,
+        struct Array *data2);
+struct Array *getStringArray(struct Array *array, char *key);
+
 void addStringInt(struct Array *array, char *data1, int data2);
 int getStringInt(struct Array *array, char *key);
 

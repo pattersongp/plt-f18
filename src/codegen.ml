@@ -158,6 +158,16 @@ let translate functions =
   let getStringInt_func : L.llvalue =
     L.declare_function "getStringInt" getStringInt_t the_module in
 
+  (* Array[String, Array[...]] *)
+  let addStringArray_t: L.lltype =
+    L.function_type i1_t [| i32_ptr_t; string_t; i32_ptr_t |] in
+  let addStringArray_func : L.llvalue =
+    L.declare_function "addStringArray" addStringArray_t the_module in
+  let getStringArray_t : L.lltype =
+    L.function_type i32_ptr_t [| i32_ptr_t; string_t |] in
+  let getStringArray_func : L.llvalue =
+    L.declare_function "getStringArray" getStringArray_t the_module in
+
   (*map functions*)
   let mapIntFormal_t : L.lltype =
     L.function_type i32_t [| i32_t |] in
@@ -243,6 +253,7 @@ let translate functions =
           A.Array(A.Int, A.Int) -> (A.Int, A.Int)
         | A.Array(A.Int, A.String) -> (A.Int, A.String)
         | A.Array(A.Int, A.Array(t1, t2)) -> (A.Int, A.Array(t1, t2))
+        | A.Array(A.String, A.Array(t1, t2)) -> (A.String, A.Array(t1, t2))
         | A.Array(A.String, A.Int) -> (A.String, A.Int)
         | A.Array(A.String, A.String) -> (A.String, A.String)
         | _ -> raise (Failure "Failed at get_array_type()")
@@ -296,6 +307,9 @@ let translate functions =
               | (A.String, A.Int) ->
                 L.build_call addStringInt_func    [| id'; e1'; e2' |]
                 "void_ret" builder
+              | (A.String, A.Array(_, _)) ->
+                L.build_call addStringArray_func     [| id'; e1'; e2' |]
+                "void_ret" builder
               | _ -> raise (Failure "Failed at ArrayAssign()"))
 
       | SRetrieve(id, e1) ->
@@ -318,6 +332,9 @@ let translate functions =
               | (A.String, A.Int) ->
                 L.build_call getStringInt_func [| id'; e1'|]
                 "getStringInt_ret" builder
+              | (A.String, A.Array(_, _)) ->
+                L.build_call getStringArray_func     [| id'; e1' |]
+                "getStringArray_ret" builder
               | _ -> raise (Failure "Failed at Retrieve()"))
 
       | SMap(id, f) ->

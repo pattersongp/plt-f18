@@ -100,6 +100,20 @@ void addSetData(struct Array *array, struct Node *node, void *data1, void *data2
 }
 
 /**
+ * Functions for Array[String, Array[ ... ]]
+ */
+void addStringArray(struct Array *array, char *data1,
+		struct Array *data2) {
+	struct Node *node = findNode(array, data1, &strcmp);
+	addSetData(array, node, (void *)data1, (void *)data2);
+}
+
+struct Array *getStringArray(struct Array *array, char *key) {
+	struct Node *node = findNode(array, key, &strcmp);
+	return node->data2;
+}
+
+/**
  * Functions for Array[String, int]
  */
 void addStringInt(struct Array *array, char *data1, int data2) {
