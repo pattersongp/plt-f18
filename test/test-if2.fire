@@ -1,0 +1,14 @@
+func int main = () => {
+    bool x = true;
+    str result = "false";
+    
+    if(x) {
+        result = "true";
+    }
+
+    sprint(result);
+    return 0;
+}
+
+    
+        

@@ -1,0 +1,6 @@
+func int main = () => {
+    if(true) {
+       sprint("true");
+    }
+    return 0;
+}

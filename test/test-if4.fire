@@ -1,0 +1,21 @@
+func int main = () => {
+    int x = 500;
+
+    if(true || false) {
+        print(100);
+    }
+    else {
+        x = 200;
+    }
+
+    sprint("checkpoint 1");
+    
+    if(100 < 50) { 
+        sprint("this should not print");
+    }
+    else {
+        print(x);
+    }
+    
+    return 0;
+}
