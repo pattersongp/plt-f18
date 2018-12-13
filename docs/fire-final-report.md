@@ -123,6 +123,18 @@ If you would like to clean up binaries or recompile the FIRE compiler, run `make
 - *Describe the software development environment used (tools and languages)
 Include your project log*
 
+### 4.1 Our Process
+
+### 4.1.1 Weekly Meetings
+
+Our team conferred in twice-weekly sprints throughout the semester, with one meeting on Tuesday afternoons and the other on Thursday afternoons. The Tuesday meetings took place between 2 and 3 pm, and were often our weekly opportunity to sort out logistics, assign tasks for the week, and engage in high-level planning about the direction our language would take during development. Our Tuesday meetings were followed by a half-hour to hour meeting with our TA and mentor John Hui. The timing of our Tuesday meetings proved to be hugely helpful, as we were able to formulate questions and concerns that we could almost immediately field to John for input.
+
+Our Thursday meetings were comprised of long coding sprints, from 4 to 6 pm, though in practice we often began work earlier than the specified time. Though we frequently did work outside of the sprints, sometimes remotely and separated from one another, these Thursday sprints gave us a chance to confer and collaborate in person, keeping us on the same page.
+
+Numerous times in the semester we broke the cadence of twice weekly meetings to meet every day of the week, most notably around the development of the `Semant.ml`.
+
+### 
+
 ## 5. Architectural Design 
 - *Give block diagram showing the major components of your translator*
 - *Describe the interfaces between the components*
