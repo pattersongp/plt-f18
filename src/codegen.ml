@@ -82,6 +82,11 @@ let translate functions =
   let strlen_func : L.llvalue =
     L.declare_function "strlen" strlen_t the_module in
 
+  let strcmp_t : L.lltype =
+    L.function_type i32_t [| string_t; string_t |] in
+  let strcmp_func : L.llvalue =
+    L.declare_function "strcmp" strcmp_t the_module in
+
   let split_t : L.lltype =
     L.function_type i32_ptr_t [| string_t; string_t |] in
   let split_func : L.llvalue =
@@ -369,6 +374,10 @@ let translate functions =
           L.build_call keys_func [| e1' |] "keys" builder
       | SCall("len", [e])    ->
           L.build_call len_arr_func [| (expr (builder, lvs) e) |] "len" builder
+      | SCall("strcmp", [e1; e2])    ->
+        let e1' = expr (builder, lvs) e1
+        and e2' = expr (builder, lvs) e2 in
+          L.build_call strcmp_func [| e1'; e2' |] "strcmp" builder
       | SCall("strlen", [e])    ->
           L.build_call strlen_func [| (expr (builder, lvs) e) |] "strlen" builder
       | SCall("sprint", [e])    ->

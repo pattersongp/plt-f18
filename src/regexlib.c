@@ -29,7 +29,7 @@ int regex_compare(char *regex, char *operand) {
 	}
 #endif
 
-	regfree(&preg);
+	//regfree(&preg);
 	if(ret == 0) return 1;
 	return 0;
 }

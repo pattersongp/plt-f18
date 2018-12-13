@@ -40,6 +40,7 @@ let built_in_func_decls =
      ("sprint", Void, [(String, "", Noexpr)]);
      ("strlen", Int, [(String, "", Noexpr)]);
      ("split", Array(Int, String), [(String, "", Noexpr); (String, "", Noexpr)]);
+     ("strcmp", Int,  [(String, "", Noexpr); (String, "", Noexpr)]);
      ("len", Int, [(Array(Void, Void), "", Noexpr)]);
      ("keys", Array(Int, Void), [(Array(Void, Void), "", Noexpr)])]
 in
