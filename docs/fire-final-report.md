@@ -53,9 +53,9 @@ It is highly recommended that you use the Docker container utilized by our devel
 
 For help with installing Docker on your machine, please consult [Docker's documentation](https://docs.docker.com/)
 
-0. Ensure you are in the root of the repository: `cd plt-f18`
-1. Build a docker image via the following command: `docker build -t fire .` Note that a `.` is required at the end of the command.
-2. To execute the container, use the following command: ```docker run --rm -it -v `pwd`:/home/fire -w=/home/fire fire```
+1. Ensure that you are in the root of the repository: `cd plt-f18`
+2. Build a docker image via the following command: `docker build -t fire .` Note that a `.` is required at the end of the command.
+3. To execute the container, use the following command: ```docker run --rm -it -v `pwd`:/home/fire -w=/home/fire fire```
 
 Please note that these commands may vary slightly depending on the shell you are using. Also note that in the third command, a bash variable `pwd` is employed - this prints your local directory. It can be substituted with the absolute or relative path of the root directory of the repository. 
 
@@ -97,7 +97,7 @@ func int main = () => {
 }
 ```
 
-As you may have surmised, this program outputs "Hello World" to `stdout`. To compile it, ensure you are in the `/src` directory of your copy of the FIRE repository, and run:
+As you may have gathered, this program outputs "Hello World" to `stdout`. To compile it, ensure you are in the `/src` directory of your copy of the FIRE repository, and run:
 
 `./fire.native hello.fire`
 
@@ -105,11 +105,11 @@ As you may have surmised, this program outputs "Hello World" to `stdout`. To com
 
 The compiler will now generate an executable, `hello.flames`, as well as several intermediate files used in compilation, usually with the extension `.ll` and or `.s`. These artifact files can be deleted without repercussion as they are only useful in the process of building an executable. 
 
-As the above example illustrates, compiling a file is much the same as it is with other languages - supply a source file to the compiler as an argument, and the compiler will generate an executable binary.
+As the above example illustrates, compiling a file is much the same as it is with other languages - supply a source file to the compiler as an argument, and the compiler will generate an executable binary. Running the above will output `Hello World!`, as expected.
 
-### 2.4 Special Argument Flags 
+### 2.4 Clean Up
 
-FIRE comes with special
+If you would like to clean up binaries or recompile the FIRE compiler, run `make clean` while inside the `src` folder. Make clean not only removes the existing binary for the FIRE compiler, it removes all the artifacts of compilation (like `.ll` files) and will clean up artifacts generated the the test suite as well.
 
 
 ## 3. Language Reference Manual 
