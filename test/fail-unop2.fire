@@ -1,4 +1,4 @@
-func void main () => {
+func void main = () => {
 	str x = "please dont negate me";
 	bool y = !x;	/* cant negate a string */
 }
