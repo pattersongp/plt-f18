@@ -133,7 +133,13 @@ Our Thursday meetings were comprised of long coding sprints, from 4 to 6 pm, tho
 
 Numerous times in the semester we broke the cadence of twice weekly meetings to meet every day of the week, most notably around the development of the `Semant.ml`.
 
-### 
+### 4.1.2 Team Communication
+
+Our team utilize a slack channel to manage communications between our five-member group. This proved indispensable, primarily because Slack was a familiar technology for almost all of us, and had useful features like support for Code Blocks and a mobile app. Helpfully, all of our members were responsive to messages and replied promptly, which enabled us to quickly pivot or assign tasks to one another. Also of note is the fact that our TA John Hui joined our Slack, which enabled us to quickly ping him with questions (and enable him to respond, almost as quickly).
+
+### 4.1.3 Git & Our Workflow
+
+Our 
 
 ## 5. Architectural Design 
 - *Give block diagram showing the major components of your translator*
