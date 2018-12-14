@@ -162,7 +162,23 @@ We followed the below style guide when writing code in FIRE. Our goal was primar
 * Individual lines of code cannot exceed 80 characters. 
 * Employ `camelCase` when naming variables and functions.
 * Blocks of non-trivial code should have terse but useful comments.
-* Git commits should be substantive; e.g. "Fixed map bug in semant.ml" instead of "fixed bug".
+* Git commit messages should be substantive; e.g. "Fixed map bug in semant.ml" instead of "fixed bug".
+
+Many of these style principles come from our experience coding in other languages, and proved to be useful in the context of coding in FIRE as well.
+
+### 4.3 Project Timeline
+
+
+| Milestone            	| Date     	|
+|----------------------	|----------	|
+| Proposal             	| Sep 19th 	|
+| Reference Manual     	| Oct 15th 	|
+| Parser               	|          	|
+| Semant               	| Nov 15th 	|
+| Hello World          	| Nov 15th 	|
+| Generate LLVM        	|          	|
+| Project Report       	| Dec 14th 	|
+| Project Presentation 	| Dec 19th 	|
 
 
 
