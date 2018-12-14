@@ -180,8 +180,34 @@ Many of these style principles come from our experience coding in other language
 | Project Report       	| Dec 14th 	|
 | Project Presentation 	| Dec 19th 	|
 
+### 4.4 Team Roles
+
+The below are the roles assigned to us at the inception of the project. As is natural with a project of this complexity, and with a team of this size, people came to take on other roles beyond their prescribed ambit as need required:
 
 
+| Role             | Team Member        | UNI     |
+|------------------|--------------------|---------|
+| Manager          | Graham Patterson   | gpp2109 |
+| System Architect | Jason Konikow      | jk4057  |
+| System Architect | Frank Spano        | fas2154 |
+| Tester           | Ayer Chan          | oc2237  |
+| Language Guru    | Christopher Thomas | cpt2132 |
+
+### 4.5 Tooling
+
+Languages: OCaml, C, Bash
+Version Control: Git
+Repository Management: Github
+Testing: Bash, FIRE
+Editors: Vim, VS Code, Sublime Text, Xcode 
+Platforms: MacOS 10.14 Mohave, Ubuntu (via Docker, VirtualBox & Parallels Desktop)
+Documentation: Markdown, Macdown Editor
+Communication: Slack
+
+
+### 4.6 Project Log
+
+GITHUB COMMITS HERE
 
 ## 5. Architectural Design 
 - *Give block diagram showing the major components of your translator*
