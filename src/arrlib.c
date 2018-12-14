@@ -240,7 +240,7 @@ int arrLength(struct Array *a) {
 }
 
 struct Array *keys(struct Array *a) {
-	struct Array *ret = (struct Array *)malloc(sizeof(struct Array));
+	struct Array *ret = initArray(); // (struct Array *)malloc(sizeof(struct Array));
 	struct Node *tmp = a->head;
 
 	int i = 0;
@@ -249,7 +249,7 @@ struct Array *keys(struct Array *a) {
 		tmp = tmp->next;
 	}
 
-	addSetData(ret, addNodeTail(ret), i, tmp->data1);
+	if(i > 0) addSetData(ret, addNodeTail(ret), i, tmp->data1);
 	return ret;
 }
 

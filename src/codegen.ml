@@ -82,6 +82,16 @@ let translate functions =
   let strlen_func : L.llvalue =
     L.declare_function "strlen" strlen_t the_module in
 
+  let atoi_t : L.lltype =
+    L.function_type i32_t [| string_t |] in
+  let atoi_func : L.llvalue =
+    L.declare_function "atoi" atoi_t the_module in
+
+  let strip_t : L.lltype =
+    L.function_type string_t [| string_t; string_t |] in
+  let strip_func : L.llvalue =
+    L.declare_function "strip" strip_t the_module in
+
   let strcmp_t : L.lltype =
     L.function_type i32_t [| string_t; string_t |] in
   let strcmp_func : L.llvalue =
@@ -369,11 +379,18 @@ let translate functions =
             A.Int    -> L.build_call filterInt_func [| id'; f' |] "void_ret" builder
             | A.String -> L.build_call filterString_func [| id'; f' |] "void_ret" builder
             | _ -> raise (Failure "not implemented yet"))
+      | SCall("atoi", [e1])    ->
+        let e1' = expr (builder, lvs) e1 in
+          L.build_call atoi_func [| e1' |] "atoi" builder
       | SCall("keys", [e1])    ->
         let e1' = expr (builder, lvs) e1 in
           L.build_call keys_func [| e1' |] "keys" builder
       | SCall("len", [e])    ->
           L.build_call len_arr_func [| (expr (builder, lvs) e) |] "len" builder
+      | SCall("strip", [e1; e2])    ->
+        let e1' = expr (builder, lvs) e1
+        and e2' = expr (builder, lvs) e2 in
+          L.build_call strip_func [| e1'; e2' |] "strip" builder
       | SCall("strcmp", [e1; e2])    ->
         let e1' = expr (builder, lvs) e1
         and e2' = expr (builder, lvs) e2 in

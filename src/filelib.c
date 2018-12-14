@@ -50,12 +50,13 @@ char *readFire(file_t *ft) {
 	int i = 0;
 	int n = 0;
 	char *buff = (char *)malloc(1024);
+
+	if (strlen(ft->delim) == 0) {
+		fread(buff, 1, 1, ft->fd);
+		return buff;
+	}
+
 	n = fread(buff+i, 1, 1, ft->fd);
-
-#ifdef DEBUG
-	printf("fread: %s\n", buff);
-#endif
-
 	while (n > 0 && buff[i] != *ft->delim) {
 		i ++;
 		n = fread(buff+i, 1, 1, ft->fd);
