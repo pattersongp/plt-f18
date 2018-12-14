@@ -5,6 +5,36 @@
 #include "util.h"
 #include "arrlib.h"
 
+/*
+ * Assumes that strlen(remove) == 1
+ */
+char *strip(char *s, char *remove) {
+	char *ret = (char *)malloc(strlen(s)*sizeof(char *));
+
+	int i = 0;
+	char buff[2];
+#if 0
+	char *remove = "\t";
+	printf("Comparing [%s][%s]\n", buff, remove);
+#endif
+
+
+
+	while(*s) {
+		buff[0] = *s;
+		buff[1] = '\0';
+		if(strcmp(buff, remove) != 0) {
+			ret[i] = *s;
+
+			i ++;
+		}else{
+			printf("Removing a char...\n");
+		}
+		s ++;
+	}
+	return ret;
+}
+
 char *strcat_fire(char *s1, char *s2) {
 	char *s3 = (char *)malloc(sizeof(char *)*(strlen(s1)+strlen(s2)+1));
 	int i = -1;
