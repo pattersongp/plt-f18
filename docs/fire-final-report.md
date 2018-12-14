@@ -155,6 +155,14 @@ Below are screenshots of our Github Projects page and some notes from an individ
 
 Github Projects is surprisingly robust. It allowed us to link notes to individual git commits, combining task management with git's version history tools to allow us to more granularly and effectively track progress. It was an essential part of our workflow.
 
+### 4.2 Style Guide
+
+We followed the below style guide when writing code in FIRE. Our goal was primarily readability, though some of our test suite programs broke the these rules to properly vet features.
+
+* Individual lines of code cannot exceed 80 characters. 
+* Employ `camelCase` when naming variables and functions.
+* Blocks of non-trivial code should have terse but useful comments.
+* Git commits should be substantive; e.g. "Fixed map bug in semant.ml" instead of "fixed bug".
 
 
 
