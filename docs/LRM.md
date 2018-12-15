@@ -43,7 +43,7 @@ An identifier is a token correlate to a single variable, a function, an array, o
 
 FIRE has a set of identifiers that are restricted from use.
 
-#### 2.2.1 Types
+#### 2.2.1 Basic Types
 FIRE was designed for efficiency. Basic types, integer and string, are most efficient for scripting files. They ensure and eliminates certian runtime decisions. Void data type is used for functions that does not return a value. `true` and `false` are two predefined constants for `bool`.
 
 * `int` 
