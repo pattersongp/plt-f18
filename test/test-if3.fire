@@ -1,0 +1,19 @@
+func int main = () => {
+    bool x = true;
+    str result = "what will it be?";
+    
+    if(!x) {
+        result = "true";
+    }
+    
+    else {
+        result = "false";
+    }
+    
+
+    sprint(result);
+    return 0;
+}
+
+    
+        

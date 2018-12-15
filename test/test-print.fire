@@ -1,0 +1,11 @@
+func int main = () => {
+    print(100);
+    int tmp = 50; 
+    print(tmp);
+    printer(150);
+    return 0;
+}
+
+func void printer = (int x ) => {
+    print(x);
+}
