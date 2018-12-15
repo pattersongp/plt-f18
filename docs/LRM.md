@@ -84,7 +84,7 @@ The following keywords are reserved for advance data types.
 
 FIRE supports integer, string and boolean literals, inside expressions. 
 
-#### Integer
+#### 2.3.1 Integer
 Identifiers of type `int` represent positive integers. An `int` is a 32-bit singed integer, and consists of at least one digit. The following defines the regular expression of a decimal digit for `int`:
 
 `digit = ['0' - '9']`
@@ -97,7 +97,7 @@ Example:
 
 `int a = 34 * 2 + (2 / 1);`
 
-#### String
+#### 2.3.2 String
 Identifiers of type `str` are used to represent sequences of characters, strings. Strings can be declared in the following manner:
 
 Example:
@@ -124,6 +124,29 @@ In order to print out the raw forms of speically marked characters that are list
 `\\\b`
 `\\\\`
 `\\/`
+
+#### 2.3.3 Boolean
+Boolean objects contain a value of either `true` or `false`. They can be declared on their own, and are used in conditional statements.
+
+The structure of a boolean declaration:
+
+```
+bool switch = true; // or false
+```
+
+Example: 
+
+```
+func void main = () => {
+	int x = 0;
+	bool switch = true;
+
+	// infinite loop
+	while(switch) {
+		x = x + 1;
+	}
+}
+```
 
 ### 2.4 Punctuation
 FIRE supports primary expressions using the previously-mentioned identifiers. Primary expressions also include expressions inside parentheses. In addition, parentheses can indicate a list of arguments in a function declaration or a function call:
@@ -289,27 +312,27 @@ Objects are instantiated via declarations, which explicitly assign a data type t
 
 ### 3.3 Expressions
 
-#### Primary Expressions
+#### 3.3.1 Primary Expressions
 The grammar of the two primitive literals are INT_LIT and STRING_LIT. 
 
-#### Function Calls
+#### 3.3.2 Function Calls
 Functions take in arguments by value except in the case of other functions which are passed by reference. Functions, other than build-in functions, need to be assigned before being called, but FIRE does not support prototyping. The scope of a function is the top level.
 
-#### Logical Negation
+#### 3.3.3 Logical Negation
 FIRE provides `true` and `false` values. The logical negation operator `!` evalutates to the parity of the operand.
 
-#### AND Operator
+#### 3.3.4 AND Operator
 The logical AND `&&` is a short circuit operator, and returns `true` if and only if the expressions on its left and right both evaluate to `true`, otherwise `false`.
 
-#### OR Operator
+#### 3.3.5 OR Operator
 The logical OR `||` operator is a short circuit operator and returns `true` if either of the expressions on its left or right return `true`, otherwise `false`.
 
-#### Relational Operators
+#### 3.3.6 Relational Operators
 The relational operators `<, >, <=, <=, ==` return `true` if the expression on the left side of the operator has the expected relation to the operator on the right-hand side, otherwise `false`.
 
 These relationships amongst ints are determined by natural ordering. Strings can only be evaluated using the `==` operator.
 
-#### String Concatenation Operator
+#### 3.3.7 String Concatenation Operator
 The string concatenation `^` operator returns a new string that is the concatenation of the string on its left side and the string on its right side. This operator cannot be chained without parenthesis - as a binary operator, if you wish to concatenate multiple strings into a larger string, you must group operands. 
 
 Example:
@@ -321,7 +344,7 @@ str z = x ^ y;
 str a = (x ^ y) ^ y; // evaluates to 'hello world world'
 ```
 
-#### Bracket Operator
+#### 3.3.8 Bracket Operator
 The bracket operator `[]` are operators on `array`.
 
 When used on `array` it is supplied a key and returns the corresponding element. Indexing a key using the bracket operator  assigns an element to the corresponding key.
@@ -339,29 +362,7 @@ str animal = arr[0];
 
 where `arr` is a type of `[int,str]` array, `arr` can only accpet integer keys and elements.
 
-#### Boolean
 
-Boolean objects contain a value of either `true` or `false`. They can be declared on their own, and are used in conditional statements.
-
-The structure of a boolean declaration:
-
-```
-bool switch = true; // or false
-```
-
-Example: 
-
-```
-func void main = () => {
-	int x = 0;
-	bool switch = true;
-
-	// infinite loop
-	while(switch) {
-		x = x + 1;
-	}
-}
-```
 
 ## 4:Statements 
 
