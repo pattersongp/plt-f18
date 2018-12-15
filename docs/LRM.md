@@ -267,17 +267,17 @@ The syntax for the regex patterns are as follows:
 
 
 
-#### 2.4 Comments
+### 2.4 Comments
 FIRE only supports the use the block comments. Comments are initiated with the `/*` symbol and terminated by the `*/` symbol. Everything in between the symbols will be ignored by FIRE during compilation:
 
  `/* This is a comment. */`
 
-#### 2.5 Value Binding
+### 2.5 Value Binding
 A single equal sign indicates assignment in an assignment or declaration statement:
 
  `=`
  
-#### 2.6 Operators
+### 2.6 Operators
 FIRE supports the following binary operators:
 ```
 + - * /
@@ -431,7 +431,7 @@ The `map` keyword applies the function to the array passed as the first argument
 
 The return type of `map` is `void`.
 
-#### Typing
+##### Typing
 The return type of the function `f` in `map(arr,f);` must match the type of value in `a`. Additionally, the only argument of `f` must be the type of the value in the array. A function used in `map` must take exactly 1 argument. It is also the case that the return type and only argument type of `f` are the same. A valid `function`, `map`, and `array` use might be:
 
 ```
@@ -443,7 +443,7 @@ map(a,f);
 }
 ```
 
-### 4.3.2 Filter 
+#### 4.3.2 Filter 
 The filter keyword takes any function that returns a boolean and applies it to elements of an array. This allows filter to quickly generate a new array that consists of elements that match whatever member criteria your function tests for.
 
 Example: `filter(arr,f);`
@@ -451,7 +451,7 @@ Example: `filter(arr,f);`
 
 In the above 4.2.9 example, arr contains an array of strings that are either `dog` or `cat`. func `f` returns `true` if any elements is equal to `dog`. The above expression would return an array that contains `dog` element.
 
-#### Typing
+##### Typing
 The return type of the function `f` in `filter(a,f);` must be a `bool`. Additionally, the only argument of `f` must be the type of the value in the array. A function used in a `filter` must take exactly 1 argument. A valid `function`, `filter`, and `array` use might be:
 
 ```
@@ -502,7 +502,7 @@ doSomething(saySomething);
 * Fire does not support genericity in functions
 
 
-### 7: Code Sample
+## 5: Code Sample
 
 The below is an example of `FIRE` in action. In the snippet below, a `FIRE` program is used to extract phone numbers that begin with a particular area code:
 
@@ -556,7 +556,7 @@ user:~ $ ./fire.native < nj_numbers.fire
 201-750-0911
 ```
 
-### 8: Other Code Requirements
+## 6: Other Code Requirements
 
 Programs in FIRE mandate a main function of type `void` or `int`. If int, convention has `0` returned if the program executes successfully and `1` in the event of an error.
 
