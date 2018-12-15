@@ -369,7 +369,8 @@ func void main = () => {
 
 The assignment operators `=` returns the value of the expression that is evaluated on its right-hand side and stores it in the identifier on the left hand side. The scope of that identifier is described in [section 2](#Identifiers)
 
-### 4.2 Blocks and Control Flow
+### 4.2 Blocks and Control Flow 
+
 #### Block 
 A block is defined inside curly braces, which can include a possibly-empty list of statements.
 
@@ -377,18 +378,22 @@ A block is defined inside curly braces, which can include a possibly-empty list 
 A Conditional statement is an if, if-else, or if-elif-else statement that takes an expression that evaluates to a
 bool value. It only executes code based on a `true` value.
 ```
+\*    if   *\
 if (<expression>) {
 	<code block>
 }
-```
+
+\* if-else *\
+
 if (<expression>) {
 	<code block>
 }
 else {
 	<code block>
 }
-```
-```
+
+\* if-elif-else *\
+
 if (<expression>) {
 	<code block>
 }
@@ -400,7 +405,7 @@ else {
 }
 ```
 		
-#### Iteration Statement
+#### Iteration Statement 
 An iteration statement begins with the `while` keyword. The expressions must evaluate to a `bool` value. While statements execute a code block until its provided condition fails to be met:
 
 ```
@@ -409,7 +414,7 @@ while(<condition>) {
 }
 ```
 
-#### Jump Statements
+#### Jump Statements 
 The return statement takes an expression at the end of a function and exit out of that function. 
 ```
 return expression
