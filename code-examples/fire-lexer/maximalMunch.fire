@@ -11,8 +11,6 @@ func array[int, array[str, str]] readGrammar = (str filename) => {
 		while(strlen(chunk) > 0) {
 				array[str, str] entry;
 				tmp = split(chunk, "$");
-				sprint("Read [" ^ tmp[0] ^ ":" ^ tmp[1] ^"]");
-				print(i);
 				entry[tmp[0]] = tmp[1];
 
 				grammar[i] = entry;
@@ -43,15 +41,12 @@ func array[int, int] makeAccepting = (str acceptConfig) => {
 
 func void writeFile = (array[int, str] tokens, str filename) => {
 		file output = open(filename ^ ".lexed.ir", "");
-		sprint(filename ^ ".lexed.ir");
-		print(len(tokens));
 		map(tokens, printStrVal);
 		int i = 0;
 		while(i < len(tokens)) {
 				if(containsKeyInt(tokens, i)) {
 				    sprint("Considering [" ^ tokens[i] ^ "]");
 				    str toWrite = tokens[i];
-					sprint("Writing to file..");
 					output.write(toWrite ^ " ");
 				} else {
 						sprint("Didn't contain:");
@@ -100,11 +95,9 @@ func array[int, array[str, int]] makeTransition = (str config) => {
 						 */
 						array[str, int] entry;
 						if(found) {
-								sprint("Adding to existing table");
 								entry = table[state];
 								entry[observ] = next;
 						} else {
-								sprint("Making new table");
 								entry[observ] = next;
 								table[state] = entry;
 						}
