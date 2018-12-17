@@ -32,7 +32,7 @@ F.I.R.E (File Input Reinterpretation Engine) is a programming language inspired 
 
 AWK & Bash remain essential weapons in the arsenal of any programmer seeking to manipulate text files in a Unix-like environment. They are robust and integrate well with other Unix tools, but they are also artifacts of a time before the total dominance of C in the landscape of programming language design. As a result, both languages feature syntax that is alien to generations of programmers reared on C and C-like languages like Java, C++, Python and et al. Bash, for all its utility, has gained a reputation for fiddly and non-intuitive syntax rules (ever leave an extraneous space in a `makefile` or `.bashrc`? You know what I'm talking about). 
 
-Since C is so well regarded and so well-know, we have made it the inspiration for much of our syntax. If you code in C or a language inspired by C, much of FIRE will feel as comfortable as a cardigan.
+Since C is so well regarded and so well-known, we have made it the inspiration for much of our syntax. If you code in C or a language inspired by C, much of FIRE will feel as comfortable as a cardigan.
 
 ### 1.2 Target Audience
 
@@ -43,7 +43,7 @@ The kind of programmer that will find FIRE useful spends many hours in the termi
 
 This tutorial assumes a certain degree of familiarity with programming languages, compilation and the command-line. We recommend brushing up on basic git commands like `git pull` and with docker as well. Use git clone to download a local copy of our repository, named `plt-f18`:
 
-`git clone ....`
+`git clone https://github.com/pattersongp/plt-f18.git`
 
 ### 2.1 Environment Setup
 
@@ -1838,6 +1838,8 @@ The diagram below describes both the architecture and the interface between each
 - *What kind of automation was used in testing*
 - *State who did what*
 
+
+
 ## 7. Lessons Learned
 - *Each team member should explain his or her most important learning
 Include any advice the team has for future teams*
@@ -1854,6 +1856,12 @@ Include any advice the team has for future teams*
 	tools that I use everyday was incredibly rewarding. This course made me a more well rounded programmer
 	and software developer.
 	 
+**Christopher**
+
+```
+I am continually fascinated by language and the chasm that can exist between what we say and we mean to say. This chasm becomes especially apparent in the design of programming languages. In natural language, it is perilously easy to say something that is far removed from the concept you are attempting to convey - how many fights between friends, colleagues or couples stem from a poor or ambiguous choice of words. This same difficulty can persist in programming languages, and so much of the task of becoming proficient in a language is learning how to tell a computer exactly what it is you intend it to do. Programming languages can play a huge role in how successful these attempts can be. I've come to realize that the way a language is structured shapes the way we approach or even think about a problem. We are transmuted by the very tools we employ. PLT will rank as one of my favorite classes because I didn't just solve a problem, I had a say in shaping the inner life and mental models employed by the coders who use our language.
+```
+
 
 ## 8. Appendix
 - *Attach a complete code listing of your translator with each module signed by its author*
