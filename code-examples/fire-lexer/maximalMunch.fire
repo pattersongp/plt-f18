@@ -1,0 +1,340 @@
+func array[int, array[str, str]] readGrammar = (str filename) => {
+
+		int i = 0;
+
+		array[int, str] tmp;
+		array[int, array[str, str]] grammar;
+
+		file input = open(filename, "\n");
+
+		str chunk = input.read();
+		while(strlen(chunk) > 0) {
+				array[str, str] entry;
+				tmp = split(chunk, "$");
+				sprint("Read [" ^ tmp[0] ^ ":" ^ tmp[1] ^"]");
+				print(i);
+				entry[tmp[0]] = tmp[1];
+
+				grammar[i] = entry;
+				i = i + 1;
+				chunk = input.read();
+		}
+		return grammar;
+}
+
+/*
+ * Reads the configuration file for accepting states
+ */
+func array[int, int] makeAccepting = (str acceptConfig) => {
+		array[int, int] states;
+		file conf = open(acceptConfig, " ");
+		int i;
+
+		str chunk = conf.read();
+		while(strlen(chunk) > 0) {
+				if("\\([0-9]\\+\\)" === chunk) {
+						states[i] = atoi(chunk);
+						i = i + 1;
+				}
+				chunk = conf.read();
+		}
+		return states;
+}
+
+func void writeFile = (array[int, str] tokens, str filename) => {
+		file output = open(filename ^ ".lexed.ir", "");
+		sprint(filename ^ ".lexed.ir");
+		print(len(tokens));
+		map(tokens, printStrVal);
+		int i = 0;
+		while(i < len(tokens)) {
+				if(containsKeyInt(tokens, i)) {
+				    sprint("Considering [" ^ tokens[i] ^ "]");
+				    str toWrite = tokens[i];
+					sprint("Writing to file..");
+					output.write(toWrite ^ " ");
+				} else {
+						sprint("Didn't contain:");
+						print(i);
+				}
+				i = i + 1;
+		}
+}
+
+/*
+ * Builds a transition table per the specifications from @config
+ */
+func array[int, array[str, int]] makeTransition = (str config) => {
+
+		array[int, array[str, int]] table;
+		file conf = open(config, "\n");
+
+		str chunk = conf.read();
+		while(strlen(chunk) > 0) {
+				array[int, str] line;
+				line = split(chunk, " ");
+				int state  = atoi(line[0]);
+				str observ = line[1];
+				int next   = atoi(line[2]);
+
+/*
+				sprint("============ Line ========== ");
+				sprint("State:"); print(state);
+				sprint("Observing: " ^ observ);
+				sprint("Next: "); print(next);
+				sprint("============================ ");
+*/
+
+				if(strcmp(observ, "@") == 0) {
+						array[str, int] entry;
+						table[state] = entry;
+				} else {
+						if(strcmp(observ, "~") == 0) {
+								observ = " ";
+						}
+
+						bool found = containsKeyInt(table, state);
+
+						/*
+						 * Insert entry into the transition table.
+						 */
+						array[str, int] entry;
+						if(found) {
+								sprint("Adding to existing table");
+								entry = table[state];
+								entry[observ] = next;
+						} else {
+								sprint("Making new table");
+								entry[observ] = next;
+								table[state] = entry;
+						}
+				}
+
+
+				chunk = conf.read();
+		}
+		return table;
+}
+
+func void push = (array[int, int] a, int ptr, int val) => {
+		a[ptr] = val;
+}
+
+func int pop = (array[int, int] a, int ptr) => {
+		return a[ptr];
+}
+
+func bool transDefined = (array[int, array[str, int]] table,
+						  int state, str s) => {
+		array[str, int] entry;
+		entry = table[state];
+
+		return containsKeyStr(entry, s);
+}
+
+func bool containsInt = (array[int, int] accept, int q) => {
+		int i = 0;
+		while(i < len(accept)) {
+				if(q == accept[i]) { return true; }
+				i = i + 1;
+		}
+		return false;
+}
+
+/*
+ * Takes a transition based on @table in @state on @s
+ */
+func int takeTransition = (array[int, array[str, int]] table,
+						  int state, str s) => {
+		array[str, int] entry;
+		entry = table[state];
+		return entry[s];
+}
+
+/*
+ * Returns a new stack
+ */
+func array[int, int] resetStack = () => {
+		array[int, int] new;
+		return new;
+}
+
+/*
+ * Implementation of the Maximal Munch lexing algorithm
+ */
+func array[int, str] maxMunch = (array[int, array[str, int]] table,
+				     array[int, int] accept, file target) => {
+		array[int, str] tokens;
+		int tokenPtr = 0;
+
+		array[int, str] stack;
+		int stackPtr = 0;
+		int i = 0;
+		int q = 0;
+
+		str candidate = "";
+		str s = target.read();
+
+		while(true) {
+				q = 0;
+
+				push(stack, stackPtr, -1);
+				stackPtr = stackPtr + 1;
+
+				while(transDefined(table, q, s)) {
+
+						if(containsInt(accept, q)) {
+								stack = resetStack();
+								stackPtr = 0;
+						}
+
+						push(stack, stackPtr, q);
+						stackPtr = stackPtr + 1;
+
+						q = takeTransition(table, q, s);
+						candidate = candidate ^ s;
+						s = target.read();
+
+						if (strlen(s) == 0) {
+								sprint("Finished reading target Program");
+								return tokens;
+						}
+				}
+
+				while(!containsInt(accept, q)) {
+						stackPtr = stackPtr - 1;
+
+						q = pop(stack, stackPtr);
+
+						if(q == -1) {
+								sprint("Error: Cannot tokenize ");
+								return tokens;
+						}
+				}
+
+				if(strlen(s) == 0) { return tokens; }
+				sprint("Potential Candidate: [" ^ candidate ^ "]");
+				tokens[tokenPtr] = candidate;
+				tokenPtr = tokenPtr + 1;
+				candidate = "";
+		}
+		return tokens;
+}
+
+func bool equals = (str a, str b) => {
+		return (strcmp(a,b) == 0);
+}
+
+func str match = (str target, array[int, array[str, str]] g) => {
+		int i = 0;
+		while(i < len(g)) {
+
+				/* String to Token */
+				array[str, str] kvPair;
+				kvPair = g[i];
+
+				if(containsKeyStr(kvPair, target)) {
+						return kvPair[target];
+				}
+
+				i = i+1;
+		}
+
+		return "";
+}
+
+func array[int, str] tokenize = (array[int, array[str, str]] g,
+								 array[int, str] prog) => {
+
+		array[int, str] tokenizedProg;
+
+		regx id = "\\([[:alpha:]]\\+\\)";
+		regx intLit = "\\([0-9]\\+\\)";
+
+		int progLength = len(prog);
+		int i = 0;
+		int j = 0;
+
+		while(i < progLength) {
+				str s = prog[i]; /* String to be tokenized */
+				sprint("Checking [" ^ s ^ "]");
+				if(!equals(s, " ")) {
+    				str token = match(s, g);
+    				sprint("Matched Token: [" ^ token ^ "]");
+
+    				if(equals(token, "")) {
+    						if(id === s) {
+    						    tokenizedProg[j] = "ID(" ^ s ^ ")";
+							    j = j + 1;
+    						}
+    						if(intLit === s) {
+    						    tokenizedProg[j] = "LIT(" ^ s ^ ")";
+							    j = j + 1;
+    						}
+
+    				} else {
+    						sprint("Adding token...");
+    						tokenizedProg[j] = token;
+							j = j + 1;
+    				}
+				}
+				i = i + 1;
+
+		}
+		return tokenizedProg;
+}
+
+/*
+ * Function for mapping across an array to print elements
+ */
+func int printVal = (int i) => { print(i); return i; }
+func str printStrVal = (str i) => { sprint(i); return i; }
+
+func int main = () => {
+		array[int, array[str, int]] transitionTable;
+		array[int, int] acceptingStates;
+
+		transitionTable = makeTransition("simple.dfa.conf");
+
+		/* Check what states we read in */
+		sprint("--------------------");
+		sprint("We have states: ");
+		array[int, int] checkStates;
+		checkStates = keys(transitionTable);
+		map(checkStates, printVal);
+		sprint("--------------------");
+
+		acceptingStates = makeAccepting("simple.accepting.conf");
+
+		/* Check what states we read in */
+		sprint("--------------------");
+		sprint("We have accepting states:");
+		map(acceptingStates, printVal);
+		sprint("--------------------");
+
+		file input = open("simple.target", "");
+
+		array[int, str] tokens;
+		tokens = maxMunch(transitionTable, acceptingStates, input);
+
+		/* Check what tokens we parsed */
+		sprint("--------------------");
+		sprint("We have tokens:");
+		map(tokens, printStrVal);
+		sprint("--------------------");
+
+		array[int, array[str, str]] grammar;
+		grammar = readGrammar("simple.grammar.conf");
+
+		array[int, str] tokenizedProg;
+		tokenizedProg = tokenize(grammar, tokens);
+
+		sprint("--------------------");
+		sprint("We have tokenized tokens:");
+		map(tokenizedProg, printStrVal);
+		sprint("--------------------");
+
+		writeFile(tokenizedProg, "simple");
+
+		return 0;
+}
