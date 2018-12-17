@@ -223,6 +223,17 @@ let translate functions =
   let filterString_func : L.llvalue =
     L.declare_function "filterString" filterString_t the_module in
 
+  (*  Contains Functions *)
+  let containsKeyStr_t : L.lltype =
+    L.function_type i1_t [| i32_ptr_t; string_t |] in
+  let containsKeyStr_func : L.llvalue =
+    L.declare_function "containsKeyStr" containsKeyStr_t the_module in
+
+  let containsKeyInt_t : L.lltype =
+    L.function_type i1_t [| i32_ptr_t; i32_t |] in
+  let containsKeyInt_func : L.llvalue =
+    L.declare_function "containsKeyInt" containsKeyInt_t the_module in
+
   (* ---------------------- User Functions ---------------------- *)
   let function_decls : (L.llvalue * sfunc_decl) StringMap.t =
     let function_decl m fdecl =
@@ -387,6 +398,14 @@ let translate functions =
           L.build_call keys_func [| e1' |] "keys" builder
       | SCall("len", [e])    ->
           L.build_call len_arr_func [| (expr (builder, lvs) e) |] "len" builder
+      | SCall("containsKeyStr", [e1; e2])    ->
+        let e1' = expr (builder, lvs) e1
+        and e2' = expr (builder, lvs) e2 in
+          L.build_call containsKeyStr_func [| e1'; e2' |] "containsKeyStr" builder
+      | SCall("containsKeyInt", [e1; e2])    ->
+        let e1' = expr (builder, lvs) e1
+        and e2' = expr (builder, lvs) e2 in
+          L.build_call containsKeyInt_func [| e1'; e2' |] "containsKeyInt" builder
       | SCall("strip", [e1; e2])    ->
         let e1' = expr (builder, lvs) e1
         and e2' = expr (builder, lvs) e2 in
@@ -423,6 +442,12 @@ let translate functions =
           let e1' = expr (builder, lvs) e1
           and e2' = expr (builder, lvs) e2 in
           L.build_call strcat_func [| e1'; e2' |] "strcat_fire" builder
+      | SUnop (op, e) ->
+        let e' = expr (builder, lvs) e in
+        (match op with
+            A.Neg -> L.build_neg
+          | A.Not -> L.build_not
+        ) e' "tmp" builder
       | SBinop (e1, op, e2) ->
         let e1' = expr (builder, lvs) e1
         and e2' = expr (builder, lvs) e2 in
@@ -440,7 +465,6 @@ let translate functions =
         | A.Gt        -> L.build_icmp L.Icmp.Sgt
         | A.Gteq      -> L.build_icmp L.Icmp.Sge
         ) e1' e2' "tmp" builder
-      | _ -> raise (Failure "FAILURE at expr builder")
     in
 
   let add_terminal (builder, _) instr =
