@@ -1838,6 +1838,15 @@ The diagram below describes both the architecture and the interface between each
 - *What kind of automation was used in testing*
 - *State who did what*
 
+Testing was a pivotal part of our development process. As FIRE matured as a language, we rapidly realized that as our language grew more complex, we would have to develop automated means of testing new and existing functionality. The following section details our test plan. 
+
+### 6.1 Testing Workflow
+
+The structure of a FIRE test is to generate a test case for each salient feature (ideally as the feature is developed) store the expected output of that program in a file titled `test_name.out`, and then run a script that compiles the program and compares the generated output to the expected output. The script utilizes UNIX's `diff` tools to perform this comparison - if a difference is detected, the test fails, but if not, it passes. Our Workflow was inspired by MicroC's test suite.
+
+Our workflow also contained a large number of erroneous test cases. For these tests, we noted the expected error message the erroneous test case should generate, and performed a similar comparison as our valid test cases when we attempted to compile the invalid FIRE programs. This helped ensure that unexpected behavior could not occ
+
+We also had a separate workflow earlier in our design process for testing parsing errors. Prior to building up our automated test suite, we created a set of tests to check syntax as we designed our AST. This was pivotal in detecting issues with how we parsed and tokenized components of our language.
 
 
 ## 7. Lessons Learned
@@ -1859,7 +1868,7 @@ Include any advice the team has for future teams*
 **Christopher**
 
 ```
-I am continually fascinated by language and the chasm that can exist between what we say and we mean to say. This chasm becomes especially apparent in the design of programming languages. In natural language, it is perilously easy to say something that is far removed from the concept you are attempting to convey - how many fights between friends, colleagues or couples stem from a poor or ambiguous choice of words. This same difficulty can persist in programming languages, and so much of the task of becoming proficient in a language is learning how to tell a computer exactly what it is you intend it to do. Programming languages can play a huge role in how successful these attempts can be. I've come to realize that the way a language is structured shapes the way we approach or even think about a problem. We are transmuted by the very tools we employ. PLT will rank as one of my favorite classes because I didn't just solve a problem, I had a say in shaping the inner life and mental models employed by the coders who use our language.
+I am continually fascinated by language and the chasm that can exist between what we say and we mean to say. This chasm becomes especially apparent in the design of programming languages. In natural language, it is perilously easy to say something that is far removed from the concept you are attempting to convey - how many fights between friends, colleagues or couples stem from a poor or ambiguous choice of words. This same difficulty can plague the art of programming, and so much of the task of becoming proficient in a language is learning how to tell a computer exactly what it is you intend it to do. Programming languages can play a huge role in how successful these attempts can be. I've come to realize that the way a language is structured shapes the way we approach or even think about a problem. We are transmuted by the very tools we employ. PLT will rank as one of my favorite classes because I didn't just solve a problem, I had a say in shaping the inner life and mental models employed by the coders who use our language.
 ```
 
 
