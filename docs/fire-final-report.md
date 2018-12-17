@@ -1815,10 +1815,21 @@ Date:   Thu Sep 6 09:19:02 2018 -0400
     This will be the last direct commit to master, everything else through branches
 
 
-## 5. Architectural Design 
-- *Give block diagram showing the major components of your translator*
-- *Describe the interfaces between the components*
-- *State who implemented each component*
+## 5. Architectural Design
+
+The diagram below describes both the architecture and the interface between each component. The interfaces between each component are data structures defined in various components. For example, a tree representing a program is given to the code generator to traverse the data structure, generating appropriate LLVM in order to compile the program for the native distribution.
+ 
+![Diagram Page](./architectureDiagram.png "Diagram")
+
+- **Scanner, Parser, AST** Frank and Graham
+- **Semantic Checker** Frank, Jason, and Chris
+- **Semantically Checked AST** Frank, Jason, and Chris
+- **Code Generation** Graham and Ayer
+- **Array Library** Ayer and Graham
+- **File Library** Graham and Frank
+- **Regular Expression Library** Graham
+- **Utilities Library** Graham
+
 
 ## 6. Testing Plan
 - *Show two or three representative source language programs along with the target language program generated for each*
@@ -1830,6 +1841,19 @@ Date:   Thu Sep 6 09:19:02 2018 -0400
 ## 7. Lessons Learned
 - *Each team member should explain his or her most important learning
 Include any advice the team has for future teams*
+
+**Graham**
+
+	The most important experience I had during this course was the demystification of compilers, interpreters,
+	and translators. Working on various components of the compiler exposed the various choices of production
+	compilers like gcc, clang, and Javascript interpreter. Engaging with various problems like code generation
+	and intermediate representation of programs exposes problems that compiler writers have experienced. For
+	example, when implementing the lexer code example, I needed to implement a token choice algorithm. When I
+	researched the algorithm I usually found its shortcomings described in the context of the C++ compiler
+	and the issues with <template<template>> and the >> operator. Engaging with algorithms that are used in
+	tools that I use everyday was incredibly rewarding. This course made me a more well rounded programmer
+	and software developer.
+	 
 
 ## 8. Appendix
 - *Attach a complete code listing of your translator with each module signed by its author*
