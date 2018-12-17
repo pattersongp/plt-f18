@@ -1,4 +1,4 @@
-all: clean source tests
+all: clean source tests examples
 
 source:
 	$(MAKE) -C src/ all
@@ -6,7 +6,11 @@ source:
 tests:
 	./testall.sh
 
+examples:
+	$(MAKE) -C code-examples/fire-lexer/ test
+
 .ONESHELL:
 clean:
 	./testall.sh -c
 	$(MAKE) -C src/ clean
+	$(MAKE) -C code-examples/fire-lexer/ clean

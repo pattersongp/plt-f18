@@ -119,6 +119,7 @@ Check() {
 	echo "###### SUCCESS" 1>&2
     else
 	echo "###### FAILED" 1>&2
+	echo "Setting error to ${error}"
 	globalerror=$error
     fi
 }
@@ -151,6 +152,7 @@ CheckFail() {
 	echo "###### SUCCESS" 1>&2
     else
 	echo "###### FAILED" 1>&2
+	echo "Setting error to ${error}"
 	globalerror=$error
     fi
 }
@@ -225,6 +227,8 @@ do
 	    ;;
     esac
 done
+
+echo $globalerror
 
 exit $globalerror
 

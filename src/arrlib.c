@@ -103,7 +103,7 @@ void addStringArray(struct Array *array, char *data1,
 
 struct Array *getStringArray(struct Array *array, char *key) {
 	struct Node *node = findNode(array, key, &strcmp);
-	if(node == NULL) { fprintf(stderr, "Error: KeyError"); exit(-1); }
+	if(node == NULL) { fprintf(stderr, "Error: KeyError"); exit(1); }
 	return node->data2;
 }
 
@@ -119,7 +119,7 @@ void addStringInt(struct Array *array, char *data1, int data2) {
 
 int getStringInt(struct Array *array, char *key) {
 	struct Node *node = findNode(array, key, &strcmp);
-	if(node == NULL) { fprintf(stderr, "Error: KeyError"); exit(-1); }
+	if(node == NULL) { fprintf(stderr, "Error: KeyError"); exit(1); }
 	return node->data2;
 }
 
@@ -135,7 +135,7 @@ void addStringString(struct Array *array, char *data1, char *data2) {
 
 char *getStringString(struct Array *array, char *key) {
 	struct Node *node = findNode(array, key, &strcmp);
-	if(node == NULL) { fprintf(stderr, "Error: KeyError"); exit(-1); }
+	if(node == NULL) { fprintf(stderr, "Error: KeyError"); exit(1); }
 	return node->data2;
 }
 
@@ -149,7 +149,7 @@ void addIntArray(struct Array *array, int data1, struct Array *data2) {
 
 struct Array *getIntArray(struct Array *array, int key) {
 	struct Node *node = findNode(array, key, &compareInt);
-	if(node == NULL) { fprintf(stderr, "Error: KeyError"); exit(-1); }
+	if(node == NULL) { fprintf(stderr, "Error: KeyError"); exit(1); }
 	return node->data2;
 }
 
@@ -165,7 +165,7 @@ void addIntString(struct Array *array, int data1, char *data2) {
 
 char *getIntString(struct Array *array, int key) {
 	struct Node *node = findNode(array, key, &compareInt);
-	if(node == NULL) { fprintf(stderr, "Error: KeyError"); exit(-1); }
+	if(node == NULL) { fprintf(stderr, "Error: KeyError"); exit(1); }
 	return node->data2;
 }
 
