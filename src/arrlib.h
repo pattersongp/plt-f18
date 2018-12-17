@@ -39,7 +39,7 @@ void addIntArray(struct Array *array, int data1, struct Array *data2);
 struct Array *getIntArray(struct Array *array, int key);
 
 void addIntString(struct Array *array, int data1, char *data2);
-char *getIntString(struct Array *array, char *key);
+char *getIntString(struct Array *array, int key);
 
 void addIntInt(struct Array *array, int data1, int data2);
 int getIntInt(struct Array *array, char *key);
