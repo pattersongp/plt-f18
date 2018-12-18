@@ -2094,7 +2094,590 @@ Our test suite has over 80 tests covering a wide array of functionality. The bel
 
 ### 6.5 Target Program to LLVM
 
-The below features three programs written in FIRE and the LLVM our compiler generates:
+The below features a program written in FIRE and the LLVM our compiler generates:
+
+**binarytree.fire**
+
+```
+```
+
+**binarytree.ll**
+
+```
+; ModuleID = 'Fire'
+source_filename = "Fire"
+
+@fmt = private unnamed_addr constant [4 x i8] c"%d\0A\00"
+@fmt.1 = private unnamed_addr constant [4 x i8] c"%d\0A\00"
+@fmt.2 = private unnamed_addr constant [4 x i8] c"%d\0A\00"
+@fmt.3 = private unnamed_addr constant [4 x i8] c"%d\0A\00"
+@str = private unnamed_addr constant [13 x i8] c"treedata.txt\00"
+@str.4 = private unnamed_addr constant [2 x i8] c"\0A\00"
+@str.5 = private unnamed_addr constant [2 x i8] c" \00"
+@str.6 = private unnamed_addr constant [20 x i8] c"pre-order traversal\00"
+@str.7 = private unnamed_addr constant [20 x i8] c"===================\00"
+@str.8 = private unnamed_addr constant [20 x i8] c"===================\00"
+@str.9 = private unnamed_addr constant [21 x i8] c"post-order traversal\00"
+@str.10 = private unnamed_addr constant [20 x i8] c"===================\00"
+@str.11 = private unnamed_addr constant [20 x i8] c"===================\00"
+@str.12 = private unnamed_addr constant [19 x i8] c"in-order traversal\00"
+@str.13 = private unnamed_addr constant [20 x i8] c"===================\00"
+@str.14 = private unnamed_addr constant [20 x i8] c"===================\00"
+
+declare i1 @regex_compare(i8*, i8*, ...)
+
+declare i8* @regex_grab(i8*, i8*)
+
+declare i32 @sprint(i8*, ...)
+
+declare i32 @printf(i8*, ...)
+
+declare i8* @strcat_fire(i8*, i8*)
+
+declare i32 @strlen(i8*)
+
+declare i32 @atoi(i8*)
+
+declare i8* @strip(i8*, i8*)
+
+declare i32 @strcmp(i8*, i8*)
+
+declare i32* @split(i8*, i8*)
+
+declare i32* @openFire(i8*, i8*)
+
+declare i8* @readFire(i32*)
+
+declare i8* @writeFire(i32*, i8*)
+
+declare i32* @initArray()
+
+declare i32* @keys(i32*)
+
+declare i32 @arrLength(i32*)
+
+declare i1 @addIntInt(i32*, i32, i32)
+
+declare i32 @getIntInt(i32*, i32)
+
+declare i1 @addIntString(i32*, i32, i8*)
+
+declare i8* @getIntString(i32*, i32)
+
+declare i1 @addIntArray(i32*, i32, i32*)
+
+declare i32* @getIntArray(i32*, i32)
+
+declare i1 @addStringString(i32*, i8*, i8*)
+
+declare i8* @getStringString(i32*, i8*)
+
+declare i1 @addStringInt(i32*, i8*, i32)
+
+declare i32 @getStringInt(i32*, i8*)
+
+declare i1 @addStringArray(i32*, i8*, i32*)
+
+declare i32* @getStringArray(i32*, i8*)
+
+declare i1 @mapInt(i32*, i32 (i32)*)
+
+declare i1 @mapString(i32*, i8* (i8*)*)
+
+declare i1 @filterInt(i32*, i1 (i32)*)
+
+declare i1 @filterString(i32*, i1 (i8*)*)
+
+declare i1 @containsKeyStr(i32*, i8*)
+
+declare i1 @containsKeyInt(i32*, i32)
+
+define void @inTraversal(i32* %tree, i32 %i) {
+entry:
+  %tree1 = alloca i32*
+  store i32* %tree, i32** %tree1
+  %i2 = alloca i32
+  store i32 %i, i32* %i2
+  %i3 = load i32, i32* %i2
+  %tree4 = load i32*, i32** %tree1
+  %len = call i32 @arrLength(i32* %tree4)
+  %tmp = icmp sge i32 %i3, %len
+  br i1 %tmp, label %then, label %else
+
+merge:                                            ; preds = %else
+  %lchild = alloca i32
+  %i5 = load i32, i32* %i2
+  %tmp6 = mul i32 %i5, 2
+  %tmp7 = add i32 %tmp6, 1
+  store i32 %tmp7, i32* %lchild
+  %rchild = alloca i32
+  %i8 = load i32, i32* %i2
+  %tmp9 = mul i32 %i8, 2
+  %tmp10 = add i32 %tmp9, 2
+  store i32 %tmp10, i32* %rchild
+  %lchild11 = load i32, i32* %lchild
+  %tree12 = load i32*, i32** %tree1
+  call void @inTraversal(i32* %tree12, i32 %lchild11)
+  %i13 = load i32, i32* %i2
+  %tree14 = load i32*, i32** %tree1
+  %getIntString_ret = call i8* @getIntString(i32* %tree14, i32 %i13)
+  %sprint = call i32 (i8*, ...) @sprint(i8* %getIntString_ret)
+  %rchild15 = load i32, i32* %rchild
+  %tree16 = load i32*, i32** %tree1
+  call void @inTraversal(i32* %tree16, i32 %rchild15)
+  ret void
+
+then:                                             ; preds = %entry
+  ret void
+
+else:                                             ; preds = %entry
+  br label %merge
+}
+
+define void @postTraversal(i32* %tree, i32 %i) {
+entry:
+  %tree1 = alloca i32*
+  store i32* %tree, i32** %tree1
+  %i2 = alloca i32
+  store i32 %i, i32* %i2
+  %i3 = load i32, i32* %i2
+  %tree4 = load i32*, i32** %tree1
+  %len = call i32 @arrLength(i32* %tree4)
+  %tmp = icmp sge i32 %i3, %len
+  br i1 %tmp, label %then, label %else
+
+merge:                                            ; preds = %else
+  %lchild = alloca i32
+  %i5 = load i32, i32* %i2
+  %tmp6 = mul i32 %i5, 2
+  %tmp7 = add i32 %tmp6, 1
+  store i32 %tmp7, i32* %lchild
+  %rchild = alloca i32
+  %i8 = load i32, i32* %i2
+  %tmp9 = mul i32 %i8, 2
+  %tmp10 = add i32 %tmp9, 2
+  store i32 %tmp10, i32* %rchild
+  %lchild11 = load i32, i32* %lchild
+  %tree12 = load i32*, i32** %tree1
+  call void @postTraversal(i32* %tree12, i32 %lchild11)
+  %rchild13 = load i32, i32* %rchild
+  %tree14 = load i32*, i32** %tree1
+  call void @postTraversal(i32* %tree14, i32 %rchild13)
+  %i15 = load i32, i32* %i2
+  %tree16 = load i32*, i32** %tree1
+  %getIntString_ret = call i8* @getIntString(i32* %tree16, i32 %i15)
+  %sprint = call i32 (i8*, ...) @sprint(i8* %getIntString_ret)
+  ret void
+
+then:                                             ; preds = %entry
+  ret void
+
+else:                                             ; preds = %entry
+  br label %merge
+}
+
+define void @preTraversal(i32* %tree, i32 %i) {
+entry:
+  %tree1 = alloca i32*
+  store i32* %tree, i32** %tree1
+  %i2 = alloca i32
+  store i32 %i, i32* %i2
+  %i3 = load i32, i32* %i2
+  %tree4 = load i32*, i32** %tree1
+  %len = call i32 @arrLength(i32* %tree4)
+  %tmp = icmp sge i32 %i3, %len
+  br i1 %tmp, label %then, label %else
+
+merge:                                            ; preds = %else
+  %lchild = alloca i32
+  %i5 = load i32, i32* %i2
+  %tmp6 = mul i32 %i5, 2
+  %tmp7 = add i32 %tmp6, 1
+  store i32 %tmp7, i32* %lchild
+  %rchild = alloca i32
+  %i8 = load i32, i32* %i2
+  %tmp9 = mul i32 %i8, 2
+  %tmp10 = add i32 %tmp9, 2
+  store i32 %tmp10, i32* %rchild
+  %i11 = load i32, i32* %i2
+  %tree12 = load i32*, i32** %tree1
+  %getIntString_ret = call i8* @getIntString(i32* %tree12, i32 %i11)
+  %sprint = call i32 (i8*, ...) @sprint(i8* %getIntString_ret)
+  %lchild13 = load i32, i32* %lchild
+  %tree14 = load i32*, i32** %tree1
+  call void @preTraversal(i32* %tree14, i32 %lchild13)
+  %rchild15 = load i32, i32* %rchild
+  %tree16 = load i32*, i32** %tree1
+  call void @preTraversal(i32* %tree16, i32 %rchild15)
+  ret void
+
+then:                                             ; preds = %entry
+  ret void
+
+else:                                             ; preds = %entry
+  br label %merge
+}
+
+define i32 @main() {
+entry:
+  %tree = alloca i32*
+  %initArray_result = call i32* @initArray()
+  store i32* %initArray_result, i32** %tree
+  %data = alloca i32*
+  %open_result = call i32* @openFire(i8* getelementptr inbounds ([13 x i8], [13 x i8]* @str, i32 0, i32 0), i8* getelementptr inbounds ([2 x i8], [2 x i8]* @str.4, i32 0, i32 0))
+  store i32* %open_result, i32** %data
+  %line = alloca i8*
+  %data1 = load i32*, i32** %data
+  %readFire_result = call i8* @readFire(i32* %data1)
+  store i8* %readFire_result, i8** %line
+  %line2 = load i8*, i8** %line
+  %split = call i32* @split(i8* %line2, i8* getelementptr inbounds ([2 x i8], [2 x i8]* @str.5, i32 0, i32 0))
+  store i32* %split, i32** %tree
+  %sprint = call i32 (i8*, ...) @sprint(i8* getelementptr inbounds ([20 x i8], [20 x i8]* @str.6, i32 0, i32 0))
+  %sprint3 = call i32 (i8*, ...) @sprint(i8* getelementptr inbounds ([20 x i8], [20 x i8]* @str.7, i32 0, i32 0))
+  %tree4 = load i32*, i32** %tree
+  call void @preTraversal(i32* %tree4, i32 0)
+  %sprint5 = call i32 (i8*, ...) @sprint(i8* getelementptr inbounds ([20 x i8], [20 x i8]* @str.8, i32 0, i32 0))
+  %sprint6 = call i32 (i8*, ...) @sprint(i8* getelementptr inbounds ([21 x i8], [21 x i8]* @str.9, i32 0, i32 0))
+  %sprint7 = call i32 (i8*, ...) @sprint(i8* getelementptr inbounds ([20 x i8], [20 x i8]* @str.10, i32 0, i32 0))
+  %tree8 = load i32*, i32** %tree
+  call void @postTraversal(i32* %tree8, i32 0)
+  %sprint9 = call i32 (i8*, ...) @sprint(i8* getelementptr inbounds ([20 x i8], [20 x i8]* @str.11, i32 0, i32 0))
+  %sprint10 = call i32 (i8*, ...) @sprint(i8* getelementptr inbounds ([19 x i8], [19 x i8]* @str.12, i32 0, i32 0))
+  %sprint11 = call i32 (i8*, ...) @sprint(i8* getelementptr inbounds ([20 x i8], [20 x i8]* @str.13, i32 0, i32 0))
+  %tree12 = load i32*, i32** %tree
+  call void @inTraversal(i32* %tree12, i32 0)
+  %sprint13 = call i32 (i8*, ...) @sprint(i8* getelementptr inbounds ([20 x i8], [20 x i8]* @str.14, i32 0, i32 0))
+  ret i32 0
+}
+```
+
+**binarytree.s**
+
+```
+	.text
+	.file	"Fire"
+	.globl	inTraversal             # -- Begin function inTraversal
+	.p2align	4, 0x90
+	.type	inTraversal,@function
+inTraversal:                            # @inTraversal
+	.cfi_startproc
+# %bb.0:                                # %entry
+	pushq	%rbp
+	.cfi_def_cfa_offset 16
+	.cfi_offset %rbp, -16
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register %rbp
+	pushq	%rbx
+	subq	$24, %rsp
+	.cfi_offset %rbx, -24
+	movl	%esi, %ebx
+	movq	%rdi, -24(%rbp)
+	movl	%ebx, -12(%rbp)
+	callq	arrLength@PLT
+	cmpl	%eax, %ebx
+	jge	.LBB0_2
+# %bb.1:                                # %merge
+	movq	%rsp, %rax
+	leaq	-16(%rax), %rsp
+	movl	-12(%rbp), %ecx
+	leal	1(%rcx,%rcx), %ecx
+	movl	%ecx, -16(%rax)
+	movq	%rsp, %rbx
+	leaq	-16(%rbx), %rsp
+	movl	-12(%rbp), %ecx
+	leal	2(%rcx,%rcx), %ecx
+	movl	%ecx, -16(%rbx)
+	movl	-16(%rax), %esi
+	movq	-24(%rbp), %rdi
+	callq	inTraversal@PLT
+	movl	-12(%rbp), %esi
+	movq	-24(%rbp), %rdi
+	callq	getIntString@PLT
+	movq	%rax, %rcx
+	xorl	%eax, %eax
+	movq	%rcx, %rdi
+	callq	sprint@PLT
+	movl	-16(%rbx), %esi
+	movq	-24(%rbp), %rdi
+	callq	inTraversal@PLT
+.LBB0_2:                                # %then
+	leaq	-8(%rbp), %rsp
+	popq	%rbx
+	popq	%rbp
+	retq
+.Lfunc_end0:
+	.size	inTraversal, .Lfunc_end0-inTraversal
+	.cfi_endproc
+                                        # -- End function
+	.globl	postTraversal           # -- Begin function postTraversal
+	.p2align	4, 0x90
+	.type	postTraversal,@function
+postTraversal:                          # @postTraversal
+	.cfi_startproc
+# %bb.0:                                # %entry
+	pushq	%rbp
+	.cfi_def_cfa_offset 16
+	.cfi_offset %rbp, -16
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register %rbp
+	pushq	%rbx
+	subq	$24, %rsp
+	.cfi_offset %rbx, -24
+	movl	%esi, %ebx
+	movq	%rdi, -24(%rbp)
+	movl	%ebx, -12(%rbp)
+	callq	arrLength@PLT
+	cmpl	%eax, %ebx
+	jge	.LBB1_2
+# %bb.1:                                # %merge
+	movq	%rsp, %rax
+	leaq	-16(%rax), %rsp
+	movl	-12(%rbp), %ecx
+	leal	1(%rcx,%rcx), %ecx
+	movl	%ecx, -16(%rax)
+	movq	%rsp, %rbx
+	leaq	-16(%rbx), %rsp
+	movl	-12(%rbp), %ecx
+	leal	2(%rcx,%rcx), %ecx
+	movl	%ecx, -16(%rbx)
+	movl	-16(%rax), %esi
+	movq	-24(%rbp), %rdi
+	callq	postTraversal@PLT
+	movl	-16(%rbx), %esi
+	movq	-24(%rbp), %rdi
+	callq	postTraversal@PLT
+	movl	-12(%rbp), %esi
+	movq	-24(%rbp), %rdi
+	callq	getIntString@PLT
+	movq	%rax, %rcx
+	xorl	%eax, %eax
+	movq	%rcx, %rdi
+	callq	sprint@PLT
+.LBB1_2:                                # %then
+	leaq	-8(%rbp), %rsp
+	popq	%rbx
+	popq	%rbp
+	retq
+.Lfunc_end1:
+	.size	postTraversal, .Lfunc_end1-postTraversal
+	.cfi_endproc
+                                        # -- End function
+	.globl	preTraversal            # -- Begin function preTraversal
+	.p2align	4, 0x90
+	.type	preTraversal,@function
+preTraversal:                           # @preTraversal
+	.cfi_startproc
+# %bb.0:                                # %entry
+	pushq	%rbp
+	.cfi_def_cfa_offset 16
+	.cfi_offset %rbp, -16
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register %rbp
+	pushq	%r14
+	pushq	%rbx
+	subq	$16, %rsp
+	.cfi_offset %rbx, -32
+	.cfi_offset %r14, -24
+	movl	%esi, %ebx
+	movq	%rdi, -32(%rbp)
+	movl	%ebx, -20(%rbp)
+	callq	arrLength@PLT
+	cmpl	%eax, %ebx
+	jge	.LBB2_2
+# %bb.1:                                # %merge
+	movq	%rsp, %r14
+	leaq	-16(%r14), %rsp
+	movl	-20(%rbp), %eax
+	leal	1(%rax,%rax), %eax
+	movl	%eax, -16(%r14)
+	movq	%rsp, %rbx
+	leaq	-16(%rbx), %rsp
+	movl	-20(%rbp), %eax
+	leal	2(%rax,%rax), %eax
+	movl	%eax, -16(%rbx)
+	movl	-20(%rbp), %esi
+	movq	-32(%rbp), %rdi
+	callq	getIntString@PLT
+	movq	%rax, %rcx
+	xorl	%eax, %eax
+	movq	%rcx, %rdi
+	callq	sprint@PLT
+	movl	-16(%r14), %esi
+	movq	-32(%rbp), %rdi
+	callq	preTraversal@PLT
+	movl	-16(%rbx), %esi
+	movq	-32(%rbp), %rdi
+	callq	preTraversal@PLT
+.LBB2_2:                                # %then
+	leaq	-16(%rbp), %rsp
+	popq	%rbx
+	popq	%r14
+	popq	%rbp
+	retq
+.Lfunc_end2:
+	.size	preTraversal, .Lfunc_end2-preTraversal
+	.cfi_endproc
+                                        # -- End function
+	.globl	main                    # -- Begin function main
+	.p2align	4, 0x90
+	.type	main,@function
+main:                                   # @main
+	.cfi_startproc
+# %bb.0:                                # %entry
+	subq	$24, %rsp
+	.cfi_def_cfa_offset 32
+	callq	initArray@PLT
+	movq	%rax, (%rsp)
+	leaq	.Lstr(%rip), %rdi
+	leaq	.Lstr.4(%rip), %rsi
+	callq	openFire@PLT
+	movq	%rax, 16(%rsp)
+	movq	%rax, %rdi
+	callq	readFire@PLT
+	movq	%rax, 8(%rsp)
+	leaq	.Lstr.5(%rip), %rsi
+	movq	%rax, %rdi
+	callq	split@PLT
+	movq	%rax, (%rsp)
+	leaq	.Lstr.6(%rip), %rdi
+	xorl	%eax, %eax
+	callq	sprint@PLT
+	leaq	.Lstr.7(%rip), %rdi
+	xorl	%eax, %eax
+	callq	sprint@PLT
+	movq	(%rsp), %rdi
+	xorl	%esi, %esi
+	callq	preTraversal@PLT
+	leaq	.Lstr.8(%rip), %rdi
+	xorl	%eax, %eax
+	callq	sprint@PLT
+	leaq	.Lstr.9(%rip), %rdi
+	xorl	%eax, %eax
+	callq	sprint@PLT
+	leaq	.Lstr.10(%rip), %rdi
+	xorl	%eax, %eax
+	callq	sprint@PLT
+	movq	(%rsp), %rdi
+	xorl	%esi, %esi
+	callq	postTraversal@PLT
+	leaq	.Lstr.11(%rip), %rdi
+	xorl	%eax, %eax
+	callq	sprint@PLT
+	leaq	.Lstr.12(%rip), %rdi
+	xorl	%eax, %eax
+	callq	sprint@PLT
+	leaq	.Lstr.13(%rip), %rdi
+	xorl	%eax, %eax
+	callq	sprint@PLT
+	movq	(%rsp), %rdi
+	xorl	%esi, %esi
+	callq	inTraversal@PLT
+	leaq	.Lstr.14(%rip), %rdi
+	xorl	%eax, %eax
+	callq	sprint@PLT
+	xorl	%eax, %eax
+	addq	$24, %rsp
+	retq
+.Lfunc_end3:
+	.size	main, .Lfunc_end3-main
+	.cfi_endproc
+                                        # -- End function
+	.type	.Lfmt,@object           # @fmt
+	.section	.rodata.str1.1,"aMS",@progbits,1
+.Lfmt:
+	.asciz	"%d\n"
+	.size	.Lfmt, 4
+
+	.type	.Lfmt.1,@object         # @fmt.1
+.Lfmt.1:
+	.asciz	"%d\n"
+	.size	.Lfmt.1, 4
+
+	.type	.Lfmt.2,@object         # @fmt.2
+.Lfmt.2:
+	.asciz	"%d\n"
+	.size	.Lfmt.2, 4
+
+	.type	.Lfmt.3,@object         # @fmt.3
+.Lfmt.3:
+	.asciz	"%d\n"
+	.size	.Lfmt.3, 4
+
+	.type	.Lstr,@object           # @str
+.Lstr:
+	.asciz	"treedata.txt"
+	.size	.Lstr, 13
+
+	.type	.Lstr.4,@object         # @str.4
+.Lstr.4:
+	.asciz	"\n"
+	.size	.Lstr.4, 2
+
+	.type	.Lstr.5,@object         # @str.5
+.Lstr.5:
+	.asciz	" "
+	.size	.Lstr.5, 2
+
+	.type	.Lstr.6,@object         # @str.6
+	.section	.rodata.str1.16,"aMS",@progbits,1
+	.p2align	4
+.Lstr.6:
+	.asciz	"pre-order traversal"
+	.size	.Lstr.6, 20
+
+	.type	.Lstr.7,@object         # @str.7
+	.p2align	4
+.Lstr.7:
+	.asciz	"==================="
+	.size	.Lstr.7, 20
+
+	.type	.Lstr.8,@object         # @str.8
+	.p2align	4
+.Lstr.8:
+	.asciz	"==================="
+	.size	.Lstr.8, 20
+
+	.type	.Lstr.9,@object         # @str.9
+	.p2align	4
+.Lstr.9:
+	.asciz	"post-order traversal"
+	.size	.Lstr.9, 21
+
+	.type	.Lstr.10,@object        # @str.10
+	.p2align	4
+.Lstr.10:
+	.asciz	"==================="
+	.size	.Lstr.10, 20
+
+	.type	.Lstr.11,@object        # @str.11
+	.p2align	4
+.Lstr.11:
+	.asciz	"==================="
+	.size	.Lstr.11, 20
+
+	.type	.Lstr.12,@object        # @str.12
+	.p2align	4
+.Lstr.12:
+	.asciz	"in-order traversal"
+	.size	.Lstr.12, 19
+
+	.type	.Lstr.13,@object        # @str.13
+	.p2align	4
+.Lstr.13:
+	.asciz	"==================="
+	.size	.Lstr.13, 20
+
+	.type	.Lstr.14,@object        # @str.14
+	.p2align	4
+.Lstr.14:
+	.asciz	"==================="
+	.size	.Lstr.14, 20
+
+
+	.section	".note.GNU-stack","",@progbits
+
+```
 
 
 ### 6.5 Testing Credits
