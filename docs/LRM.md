@@ -377,7 +377,7 @@ func <return type> <name> = (<parameters>) => { <function body> };
 Where:
  * `<return type>` is the type returned by the function (NOTE: A function that does not return anything has a return type of `void`.  The void return type allows for programmers to create functions that are useful for their side effects)
  * `<name>` is the variable name of the function
- * `<paramters>` are the expected parameters for the function
+ * `<parameters>` are the expected parameters for the function
  * `<function body>` is the body of the function
 
  
@@ -404,7 +404,7 @@ doSomething(saySomething);
 A block is defined inside curly braces, which can include a possibly-empty list of statements.
 
 #### Conditional Statement 
-A Conditional statement is an if, if-else, or if-elif-else statement that takes an expression that evaluates to a
+A Conditional statement is an if or if-else statement that takes an expression that evaluates to a
 bool value. It only executes code based on a `true` value.
 
 ##### Syntax
@@ -416,18 +416,6 @@ if (<expression>) {
 ##### Syntax
 ```
 if (<expression>) {
-	<code block>
-}
-else {
-	<code block>
-}
-```
-##### Syntax
-```
-if (<expression>) {
-	<code block>
-}
-elif(<expression>) {
 	<code block>
 }
 else {
@@ -544,8 +532,11 @@ The first argument is the string to be split. The second argument is a string, t
  
 This function returns an array of strings, `array[int,string]`, that is formed after splitting the given string at each point where the separator occurs.
  
-Example: `struct Array *arr = split("Hello$World", "$");		/* arr[0]=Hello, arr[1]=World */`
-
+Example: 
+```
+array arr [int, str];
+arr = split("Hello$World", "$");		/* arr[0]=Hello, arr[1]=World */`
+```
 ### 4.8 Len
 `len(<array>)` is a built-in function that returns the number of elements in a given array. 
  
@@ -561,63 +552,3 @@ Inspired by PHP's associative array function array_keys($arr), FIRE designs `key
 ```
 keys(<array>);
 ```
-
-
-## 5: Code Sample？？？？
-
-The below is an example of `FIRE` in action. In the snippet below, a `FIRE` program is used to extract phone numbers that begin with a particular area code:
-
-
-```
-user:~ $ cat PhoneNumbers.csv
-Dennis,201-445-9372
-Kenneth,954-667-8990
-Richie,312-421-0098
-Thomas,201-750-0911
-Albert,783-444-7862
-
-user:~ $ cat nj_numbers.fire
-/*
- Program that determines if a number is from NJ based on 201 area code
-*/
-
-func string isNJ = (str phoneNumber) => {
-    return phoneNumber === r'201-[0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]';
-};
-
-func array extractRegion = (func isRegion, file f) {
-    
-    array[int, str] njnums;
-    
-    str number = f.readLine();
-    int i = 0;
-    
-    while(number != "") {
-        if(isNJ(number)){
-            njnums[i,number].add;
-	         i = i + 1;
-	         number = f.readLine();
-        }
-    }
-    return njnums;
-}
-
-func void main = () => {
-
-	file[rw] f;
-	f = open("PhoneNumbers.csv", ",");
-
-	/* Calling a function */
-	extractRegion(isNJ, f);
-}
-
-user:~ $ make
-user:~ $ ./fire.native < nj_numbers.fire
-201-445-9372
-201-750-0911
-```
-
-## 6: Other Code Requirements ???
-
-Programs in FIRE mandate a main function of type `void` or `int`. If int, convention has `0` returned if the program executes successfully and `1` in the event of an error.
-
