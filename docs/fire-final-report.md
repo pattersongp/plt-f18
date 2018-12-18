@@ -4399,6 +4399,27 @@ char *strcatFire(char *s1, char *s2);
 #endif
 ```
 
+**plt-f18/Makefile**
+
+```
+all: clean source tests examples
+
+source:
+	$(MAKE) -C src/ all
+
+tests:
+	./testall.sh
+
+examples:
+	$(MAKE) -C code-examples/fire-lexer/ test
+
+.ONESHELL:
+clean:
+	./testall.sh -c
+	$(MAKE) -C src/ clean
+	$(MAKE) -C code-examples/fire-lexer/ clean
+```
+
 
 
 
