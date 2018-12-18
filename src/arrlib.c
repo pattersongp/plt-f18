@@ -213,30 +213,56 @@ void mapInt(struct Array *array, int (*f)(int)) {
 void filterString(struct Array *array, bool (*f)(char *)) {
 	struct Node *head = array->head;
 	while (head) {
-		if (f((char *)head->data2)) break;
-		else array->head = head->next;
+		if (f((char *)head->data2)){
+                    break;
+                }
+		else {
+                    array->head = head->next;
+                    head = head->next;
+                    array->length--;
+                }
 	}
+        if ((array->head) == NULL) return;
 	struct Node *prev = array->head;
 	head = prev->next;
 	while(head){
-		if (!(f((char *)head->data2))) prev->next = head->next;
-		prev = prev->next;
-		head = prev->next;
+		if (!(f((char *)head->data2))){
+                    prev->next = head->next;
+                    head = prev->next;
+                    array->length--;
+                }
+                else {
+		    prev = prev->next;
+		    head = prev->next;
+                }
 	}
 }
 
 void filterInt(struct Array *array, bool (*f)(int)) {
 	struct Node *head = array->head;
 	while (head) {
-		if (f((int)head->data2)) break;
-		else array->head = head->next;
+		if (f((int)head->data2)){
+                    break;
+                }
+		else {
+                    array->head = head->next;
+                    head = head->next;
+                    array->length--;
+                }
 	}
+        if ((array->head) == NULL) return;
 	struct Node *prev = array->head;
 	head = prev->next;
 	while(head){
-		if (!(f((int)head->data2))) prev->next = head->next;
-		prev = prev->next;
-		head = prev->next;
+		if (!(f((int)head->data2))){
+                    prev->next = head->next;
+                    head = prev->next;
+                    array->length--;
+                }
+                else {
+		    prev = prev->next;
+		    head = prev->next;
+                }
 	}
 }
 
