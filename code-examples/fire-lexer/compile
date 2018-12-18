@@ -1,0 +1,14 @@
+#!/bin/bash
+
+echo "Running fire-lexer example ..."
+
+target="maximalMunch.fire"
+src="./compiler-src"
+
+echo > simple.lexed.ir
+
+$src/fire.native -c < $target > $target.ll
+llc -relocation-model=pic $target.ll > $target.s
+gcc -g -o $target.flames $target.s $src/printlib.o $src/regexlib.o $src/arrlib.o $src/filelib.o $src/util.o
+
+./$target.flames
