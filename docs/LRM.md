@@ -60,7 +60,6 @@ The following keywords indicate keywords for control flow.
 * `elif`
 * `else`
 * `while`
-* `break`
 * `return`
 
 #### 2.2.2 Built-in Functions
@@ -181,8 +180,7 @@ Files are regarded as first-class citizens in FIRE. This is made apparent by the
 The syntax for instantiating a `file` object is as follows:
 
 ```
-file f;
-f.open("filename.csv", "<delimiter>");
+file f = open("filename.csv", "<delimiter>");
 ```
 
 In the example provided above, two argument are fed into the `open(...)` argument: *filename* for reading, writing or both, and <delimiter>. <delimiter> may be provided to the constructor specifying a delimiter for reading. The length of <delimiter> is expected to be exactly 1.
@@ -219,7 +217,7 @@ There are strict restrictions on the types a key can be and a value can be. Plea
 | Legal Key Types | Legal Value Types |
 |-----------------|-------------------|
 | int             | int               |
-| string          | string            |
+| str             | str            |
 |                 | array             |
  
  Finally, a programmer can retrieve a value associated with a key with the below syntax:
@@ -230,13 +228,13 @@ There are strict restrictions on the types a key can be and a value can be. Plea
  
  `int age = arr["myAge"];`
  
-An error will be thrown if `"myAge"` does not exit.
+A key error will be thrown if `"myAge"` does not exist.
 
 ##### Arrays of Arrays
 In certain cases you may create an Array of Arrays. Any value of a type array must specify the types of the array. For example:
 `array[str, array[int, str]] b;`
  
-In this case, array b will be initialized but not array[int,str].
+In this case, array b will be initialized but not array[int,str]. 
  
 #### 2.5.3 Regular Expression
 Regular expressions are supported in FIRE. Via the `regx` type, which assigns an object to a regular expression. That object can then be passed as a parameter to functions that utilize regular expressions to a pattern match or extract data.
