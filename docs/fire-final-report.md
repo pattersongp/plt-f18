@@ -3468,7 +3468,269 @@ let _ =
 
 ```
 
+**parser.mly**
 
+```
+/* FIRE PARSER */
+
+%{
+open Ast
+%}
+
+%token SEMI LPAREN RPAREN LBRACE RBRACE COMMA                      /* Grouping */
+%token PLUS MINUS TIMES DIVIDE ASSN                    /* Arithmetic Operators */
+%token EQ NEQ LT LTEQ GT GTEQ REQ OR AND NOT TRUE FALSE   /* Logical Operators */
+%token IF ELSE WHILE RETURN BREAK FOR IN
+%token LBRACKET RBRACKET CONCAT COLON
+%token REGX INT FUNCTION STRING VOID ARRAY BOOL FILE
+%token FATARROW FILTER MAP OPEN
+%token GRAB WRITEFILE READFILE DOT
+
+%token <int> INT_LIT
+%token <string> ID
+%token <string> STRING_LIT
+
+%token EOF
+
+%nonassoc NOELSE
+%nonassoc ELSE
+%left SEMI
+%right ASSN
+%left OR
+%left AND
+%left EQ NEQ REQ CONCAT
+%left LT GT LTEQ GTEQ
+%left PLUS MINUS
+%left TIMES DIVIDE
+%right NOT NEG
+
+%start program
+%type <Ast.program> program
+
+%%
+
+program:
+  decls EOF { $1 }
+
+decls:
+   /* nothing */ { [] }
+ | decls fdecl { $2 :: $1 }
+
+fdecl:
+   FUNCTION typ ID ASSN LPAREN formals_opt RPAREN FATARROW LBRACE stmt_list RBRACE
+     { { typ = $2;
+	 fname = $3;
+	 formals = $6;
+	 body = List.rev $10 } }
+
+formals_opt:
+    /* nothing */ { [] }
+  | formal_list   { List.rev $1 }
+
+formal_list:
+    typ ID                   { [($1,$2, Noexpr)] }
+  | formal_list COMMA typ ID { ($3,$4, Noexpr) :: $1 }
+
+typ:
+          concrete_typ { $1 }
+        | ARRAY LBRACKET concrete_typ COMMA typ RBRACKET { Array($3, $5) }
+
+concrete_typ:
+          INT       { Int    }
+        | STRING    { String }
+        | BOOL      { Bool }
+        | VOID      { Void   }
+        | FUNCTION  { Function   }
+        | REGX      { Regx }
+        | FILE      { File }
+
+stmt_list:
+    /* nothing */  { [] }
+  | stmt_list stmt { $2 :: $1 }
+
+stmt:
+    expr SEMI { Expr $1 }
+  | RETURN SEMI { Return Noexpr }
+  | BREAK SEMI { Break }
+  | RETURN expr SEMI { Return $2 }
+  | LBRACE stmt_list RBRACE { Block(List.rev $2) }
+  | IF LPAREN expr RPAREN stmt %prec NOELSE { If($3, $5, Block([])) }
+  | IF LPAREN expr RPAREN stmt ELSE stmt    { If($3, $5, $7) }
+  | FOR LPAREN typ ID COLON ID RPAREN stmt
+        { For($3, $4, $6, $8) }
+  | WHILE LPAREN expr RPAREN stmt { While($3, $5) }
+  | ID ASSN expr SEMI { Assign($1, $3) }
+  | typ ID ASSN expr SEMI { Vdecl($1, $2, $4) }
+  | typ ID SEMI { Vdecl($1, $2, Noexpr) }
+
+expr:
+    INT_LIT          { Literal($1) }
+  | STRING_LIT       { StringLit($1) }
+  | TRUE             { BoolLit(true) }
+  | FALSE            { BoolLit(false) }
+  | ID               { Id($1) }
+  | ID LBRACKET expr RBRACKET ASSN expr { Array_Assign($1, $3, $6) }
+  | ID DOT READFILE LPAREN RPAREN       { ReadFile($1) }
+  | ID DOT WRITEFILE LPAREN expr RPAREN { WriteFile($1, $5) }
+  | ID DOT GRAB LPAREN expr RPAREN      { RegexGrab($1, $5) }
+  | OPEN LPAREN expr COMMA expr RPAREN { Open($3, $5) }
+  | MAP LPAREN ID COMMA ID RPAREN { Map($3, $5)  }
+  | FILTER LPAREN ID COMMA ID RPAREN { Filter($3, $5)  }
+  | expr PLUS   expr { Binop($1, Plus,   $3) }
+  | expr MINUS  expr { Binop($1, Minus,   $3) }
+  | expr TIMES  expr { Binop($1, Times,  $3) }
+  | expr DIVIDE expr { Binop($1, Divide,   $3) }
+  | expr EQ     expr { Binop($1, Eq, $3) }
+  | expr NEQ    expr { Binop($1, Neq,   $3) }
+  | expr LT     expr { Binop($1, Lt,  $3) }
+  | expr LTEQ   expr { Binop($1, Lteq,   $3) }
+  | expr GT     expr { Binop($1, Gt, $3) }
+  | expr GTEQ   expr { Binop($1, Gteq,   $3) }
+  | expr AND    expr { Binop($1, And,   $3) }
+  | expr OR     expr { Binop($1, Or,    $3) }
+  | expr REQ    expr { RegexComp($1, $3) }
+  | expr CONCAT expr { StrCat($1, $3) }
+  | MINUS expr %prec NEG { Unop(Neg, $2) }
+  | NOT expr         { Unop(Not, $2) }
+  | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
+  | LPAREN expr RPAREN { $2 } /* this is for grouped expressions */
+  | ID LBRACKET expr RBRACKET { Retrieve($1, $3)}
+
+actuals_opt:
+    /* nothing */ { [] }
+  | actuals_list  { List.rev $1 }
+
+actuals_list:
+    expr                    { [$1] }
+  | actuals_list COMMA expr { $3 :: $1 }
+
+```
+**printlib.c**
+
+```
+#include <stdio.h>
+
+#include "util.h"
+
+void print(int x) {
+	printf("%d\n", x);
+}
+
+void sprint(char *x) {
+	printf("%s\n", x);
+}
+
+```
+
+**regexlib.c**
+
+```
+#include <stdlib.h>
+#include <stdio.h>
+#include <regex.h>
+#include <string.h>
+#include <sys/types.h>
+
+#include "util.h"
+
+/**
+ * Simple wrapper for the regex GNU C interface
+ *
+ * returns 1 on match, otherwise 0
+ */
+int regex_compare(char *regex, char *operand) {
+	int i;
+	regex_t preg;
+
+	if(regcomp(&preg, (const char *)regex, 0) != 0) {
+		printf("regcomp() failed");
+	}
+
+	int ret = regexec((const regex_t *)&preg, operand, 0, 0, 0);
+
+#ifdef DEBUG
+	if(ret == 0) {
+		printf("library says there is a match\n");
+	} else {
+		printf("library says there is NOT a match\n");
+	}
+#endif
+
+	//regfree(&preg);
+	if(ret == 0) return 1;
+	return 0;
+}
+
+/**
+ * Grabs exactly {0,1} sub string matched from @operand
+ *
+ * If no substring is matched, then returns empty string.
+ */
+char *regex_grab(char *regex, char *operand) {
+	int i, ret;
+	char *result;
+	regex_t preg;
+	char buff[100];
+
+#ifdef DEBUG
+	printf("Regx [%s][%d] Operand [%s][%d]\n", regex, strlen(regex),
+			operand, strlen(operand));
+#endif
+
+#if 0
+	if(regcomp(&preg, (const char *)regex, 0) != 0) {
+		printf("regcomp() failed");
+	}
+#endif
+
+	if (0 != (ret = regcomp(&preg, regex, 0))) {
+		regerror(ret, &preg, buff, 100);
+		printf("regcomp() failed, returning nonzero (%d) --> (%s)\n", ret, buff);
+		return "";
+	}
+
+	// pmatch will hold the matched string
+	regmatch_t pmatch[2];
+	if (0 != (ret = regexec((const regex_t *)&preg, operand, 2, pmatch, 0))) {
+		regerror(ret, &preg, buff, 100);
+		printf("regexec('%s', '%s') failed with '%s'\n", regex, operand, buff);
+		return "";
+	}
+
+	// store the string to copy over to fire
+	result = malloc(sizeof(char *)*(pmatch[1].rm_eo - pmatch[1].rm_so));
+	if(result == NULL) { printf("malloc() failed\n"); exit(-1); }
+
+	// copy the string over
+	strncpy(result, &operand[pmatch[1].rm_so],
+			pmatch[1].rm_eo - pmatch[1].rm_so);
+	result[pmatch[0].rm_eo] = '\0';
+
+#ifdef DEBUG
+	printf("lib Result: %s is length %d\n", result, strlen(result));
+	printf("lib matched: \"%s\" at %lld to %lld\n",
+			result, pmatch[0].rm_so, pmatch[0].rm_eo - 1);
+	if(ret == 0) {
+		printf("library says there is a match\n");
+	} else {
+		printf("library says there is NOT a match\n");
+	}
+#endif
+
+	if(ret == 0) { return result; }
+	return "";
+}
+
+#ifdef BUILD_TEST
+int main() {
+	regex_compare("[:alpha:]", "4115hello4115");
+	printf("Expecting 1 -- 7\n");
+	char *ret = regex_grab("hello", "5hello4");
+	printf("%s\n", ret);
+}
+#endif
+
+```
 
 
 
