@@ -171,10 +171,10 @@ Many of these style principles come from our experience coding in other language
 |----------------------	|----------	|
 | Proposal             	| Sep 19th 	|
 | Reference Manual     	| Oct 15th 	|
-| Parser               	|          	| ***
+| Parser               	| Oct 10th      | 
 | Semant               	| Nov 15th 	|
 | Hello World          	| Nov 15th 	|
-| Generate LLVM        	|          	| *** 
+| Generate LLVM        	| Nov 18th      | 
 | Project Report       	| Dec 14th 	|
 | Project Presentation 	| Dec 19th 	|
 
