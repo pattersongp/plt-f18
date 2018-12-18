@@ -518,9 +518,10 @@ func void main = () => {
 
 ### 4.4 Print & SPrint Statement
 The print statement prints integers. To give more explicit typing constraints, print() can only print integers and sprint() can only print strings. The syntax and semantics of the print function are inspired by C. In C, the printf() function requires a format specifier inside printf(), and the function pass it as an argument. To make it more explicit, FIRE intended to call a different printing function to print strings. 
-
+ 
 Example: `print(10);` 
-Example: `sprint("i will be printed to stdout");`
+
+Example: `sprint("i will be printed to stdout");` 
 
 ### 4.6 Strlen
 Like C, the strlen() function calculates the length of a given string. The function takes a single argument, a string variable, whose length is to be found, and returns the length of the string passed.
