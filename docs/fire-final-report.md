@@ -24,7 +24,6 @@ Jason Konikow (jk4057)
 I. Appendix A - Codebase
 
 ## 1. Introduction 
-- *Include your language white paper.*
 
 F.I.R.E (File Input Reinterpretation Engine) is a programming language inspired by AWK, Bash & C. It seeks to provide some of the robust pattern matching and script-manipulation functionality of these languages with a more palatable syntax.
 
@@ -39,7 +38,6 @@ Since C is so well regarded and so well-known, we have made it the inspiration f
 The kind of programmer that will find FIRE useful spends many hours in the terminal. He or she or they will likely have to manipulate dozens if not hundreds of text files. They may be a systems administrator, sifting through system logs, or a scientist working through huge data sets. F.I.R.E empowers this target user with tools to expedite tasks like pattern matching (via our robust regex library, built into the language), the opening and creation of files, and more. 
 
 ## 2. Tutorial
-- *A short explanation telling a novice how to use your language.*
 
 This tutorial assumes a certain degree of familiarity with programming languages, compilation and the command-line. We recommend brushing up on basic git commands like `git pull` and with docker as well. Use git clone to download a local copy of our repository, named `plt-f18`:
 
@@ -173,10 +171,10 @@ Many of these style principles come from our experience coding in other language
 |----------------------	|----------	|
 | Proposal             	| Sep 19th 	|
 | Reference Manual     	| Oct 15th 	|
-| Parser               	|          	|
+| Parser               	|          	| ***
 | Semant               	| Nov 15th 	|
 | Hello World          	| Nov 15th 	|
-| Generate LLVM        	|          	|
+| Generate LLVM        	|          	| *** 
 | Project Report       	| Dec 14th 	|
 | Project Presentation 	| Dec 19th 	|
 
@@ -196,12 +194,19 @@ The below are the roles assigned to us at the inception of the project. As is na
 ### 4.5 Tooling
 
 Languages: OCaml, C, Bash
+
 Version Control: Git
+
 Repository Management: Github
+
 Testing: Bash, FIRE
+
 Editors: Vim, VS Code, Sublime Text, Xcode 
+
 Platforms: MacOS 10.14 Mohave, Ubuntu (via Docker, VirtualBox & Parallels Desktop)
+
 Documentation: Markdown, Macdown Editor
+
 Communication: Slack
 
 
@@ -1832,7 +1837,7 @@ The diagram below describes both the architecture and the interface between each
 
 
 ## 6. Testing Plan
-- *Show two or three representative source language programs along with the target language program generated for each*
+- *Show two or three representative source language programs along with the target language program generated for each* (FIRE TO LLVM)
 - *Show the test suites used to test your translator*
 - *Explain why and how these test cases were chosen*
 - *What kind of automation was used in testing*
@@ -2085,6 +2090,13 @@ exit $globalerror
 
 ### 6.4 Sample Tests
 
+Our test suite has over 80 tests covering a wide array of functionality. The below is a sampling of the tests we used to check FIRE as we developed.  
+
+### 6.5 Target Program to LLVM
+
+The below features three programs written in FIRE and the LLVM our compiler generates:
+
+
 ### 6.5 Testing Credits
 
 - **Parser Testing** Ayer
@@ -2121,6 +2133,10 @@ I am continually fascinated by language and the chasm that can exist between wha
 
 ## 8. Appendix
 - *Attach a complete code listing of your translator with each module signed by its author*
+
+
+
+
 
 
 
