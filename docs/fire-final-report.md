@@ -2092,6 +2092,234 @@ exit $globalerror
 
 Our test suite has over 80 tests covering a wide array of functionality. The below is a sampling of the tests we used to check FIRE as we developed.  
 
+**test-add1.fire**
+
+```
+func int add = (int x, int y) =>
+{
+  return x + y;
+}
+
+func void main = () =>
+{
+  print( add(17, 25) );
+}
+
+```
+**test-arr-all.fire**
+```
+func void testIntString = () => {
+        sprint("... Testing intString");
+        array[int, str] a;
+        a[0] = "Hello World!";
+
+        sprint("Expecting 'Hello World!'");
+        sprint(a[0]);
+        sprint("Testing intString passed ...");
+}
+
+func void testStringString = () => {
+        array[str, str] a;
+        a["hello"] = "world";
+
+        sprint("Expecting world");
+        sprint(a["hello"]);
+}
+
+func void testStringInt = () => {
+        array[str, int] a;
+        a["age"] = 42;
+        a["birth"] = 666;
+        a["hello"] = 69;
+
+        int i = 0;
+
+        sprint("Expecting 42");
+        print(a["age"]);
+        sprint("Expecting 666");
+        print(a["birth"]);
+        sprint("Expecting 69");
+        print(a["hello"]);
+}
+func void testIntInt = () => {
+        array[int, int] a;
+        a[0] = 10;
+        a[1] = 11;
+        a[2] = 12;
+        a[3] = 13;
+
+        int i = 0;
+        while (i < 4) {
+                sprint("Array returned:");
+                print(a[i]);
+                i = i + 1;
+        }
+}
+
+func int main = () => {
+        testIntInt();
+        testStringInt();
+        testIntString();
+        testStringString();
+        return 0;
+}
+```
+**test-arraylen.fire**
+
+```
+func int main = () => {
+
+array[int, int] a;
+a[0] = 1;
+print(len(a));
+
+array[str, int] b;
+b["0"] = 1;
+print(len(b));
+
+return 0;
+}
+```
+**test-fib.fire**
+```
+func int fib = (int z) => {
+		if (z < 3) {
+				return 1;
+		} else {
+				return fib(z-1) + fib(z-2);
+		}
+}
+
+func int main = () => {
+		print(fib(8));
+}
+
+```
+**test-filter1.fire**
+
+```
+func bool modulo = (int x) => {
+    int rem = x - (2 * (x/2));
+    if (rem == 0) { return true; }
+    else { return false; }
+}
+ 
+func bool f = (int x) => {
+    if (modulo(x)) { return true; }
+    else { return false; }
+}
+
+func str p = (str x) => {
+    sprint(x);
+    return x;
+}
+
+func int p1 = (int x) => {
+    print(x);
+    return x;
+}
+
+func int main = () => {
+    array[int, int]a;
+    int i = 0;
+    while (i < 999) {
+        a[i] = i;
+        i = i+1;
+    } 
+    sprint("Length of array is: ");
+    print(len(a));
+    filter(a, modulo);
+    sprint("Length of array after filter for even number is: ");
+    print(len(a));
+    return 0;
+}
+
+
+```
+**test-func9.fire**
+```
+func int bar = (int a) => {
+	return a * 3;
+}
+
+func void foo = (int c) =>
+{
+  int a = c + 10;
+}
+
+func int main = () =>
+{
+  int a = 10;
+  foo(a);
+  print(bar(a));
+  return 0;
+}
+
+```
+
+**test-gcd1.fire**
+
+```
+func int gcd = (int a, int b) => {
+		while (a != b) {
+			if (a > b) {
+					a = a - b;
+			} else {
+					b = b - a;
+			}
+		}
+		return a;
+}
+
+func int main = () => {
+		print(gcd(2, 14));
+		print(gcd(3, 15));
+		print(gcd(99, 121));
+}
+```
+**test-if1.fire**
+```
+func int main = () => {
+    if(true) {
+       sprint("true");
+    }
+    return 0;
+}
+```
+**test-ops1.fire**
+```
+func int main = () => {
+  print(1 + 2);
+  print(1 - 2);
+  print(1 * 2);
+  print(100 / 2);
+  print(99);
+  if (1 == 2){print(1);} else{print(0);}
+  if (1 == 1){print(1);}
+  print(99);
+  if(1 != 2){print(1);}
+  if(1 != 1){print(1);} else{print(0);}
+  print(99);
+  if(1 < 2){print(1);}
+  if(2 < 1){print(1);} else{print(0);}
+  print(99);
+  if (1 <= 2){print(1);}
+  if (1 <= 1){print(1);}
+  if (2 <= 1){print(1);} else{print(0);}
+  print(99);
+  if (1 > 2){print(1);} else{print(0);}
+  if (2 > 1){print(1);}
+  print(99);
+  if (1 >= 2){print(1);} else{print(0);}
+  if (1 >= 1){print(1);}
+  if (2 >= 1){print(1);}
+  return 0;
+}
+
+```
+
+
+
 ### 6.5 Target Program to LLVM
 
 The below features a program written in FIRE and the LLVM our compiler generates:
