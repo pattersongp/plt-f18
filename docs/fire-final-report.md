@@ -2317,6 +2317,50 @@ func int main = () => {
 }
 
 ```
+**fail-unop4.fire**
+
+```
+func void main = () => {
+	str x = "im too positive for you to make me negative";
+	str y = -x; /* cant use the negative unary on a str*/
+	
+}
+
+```
+**fail-identifier3.fire**
+
+```
+func void foo = () => {}
+
+func int bar = () => {
+  int a;
+  void b; /* Error: illegal void local b */
+  bool c;
+
+  return 0;
+}
+
+func void main = () => {}
+
+```
+**fail-formals4.fire**
+```
+func void main = (int x , void y) => { /* void formals not allowed. FAIL */ 
+	str x = " i wonder if anyone can humiliated by Edwards on Facebook this semester";
+	bool a = true;
+}
+
+```
+**fail-binop9.fire**
+```
+func void main = () => {
+    int x = 90001;
+    str y = "its over nine thousand!!!";
+    x <= y;
+}
+
+```
+
 
 
 
