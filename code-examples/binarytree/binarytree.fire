@@ -1,0 +1,78 @@
+/*
+reads in data from a file that has nodes 1 - 7. the tree representation should be the following:
+
+                       1
+		      / \
+                     2   3
+                    / \  /\
+                   4  5  6 7
+
+proper pre-order: 	1,2,4,5,3,6,7
+proper post-order: 	4,5,2,6,7,3,1
+proper in-order: 	4,2,5,1,6,3,7
+*/
+
+
+
+func int main = () => {
+    array[int,str] tree;
+    
+    file data = open("treedata.txt", "\n");
+    str line = data.read();
+    tree = split(line," ");
+    
+    sprint("pre-order traversal");
+    sprint("===================");
+    preTraversal(tree, 0);
+    sprint("===================");
+
+    sprint("post-order traversal");
+    sprint("===================");
+    postTraversal(tree, 0);
+    sprint("===================");
+
+    sprint("in-order traversal");
+    sprint("===================");
+    inTraversal(tree, 0);
+    sprint("===================");
+}
+
+
+func void preTraversal = (array[int, str] tree, int i) => {
+    if(i >= len(tree)){
+        return;
+    }
+    
+    int lchild = (i*2)+1;    
+    int rchild = (i*2)+2; 
+    
+    sprint(tree[i]);
+    preTraversal(tree, lchild);
+    preTraversal(tree, rchild);
+}
+
+func void postTraversal = (array[int, str] tree, int i) => {
+    if(i >= len(tree)){
+        return;
+    }
+    
+    int lchild = (i*2)+1;    
+    int rchild = (i*2)+2; 
+    
+    postTraversal(tree, lchild);
+    postTraversal(tree, rchild);
+    sprint(tree[i]);
+}
+
+func void inTraversal = (array[int, str] tree, int i) => {
+    if(i >= len(tree)){
+        return;
+    }
+    
+    int lchild = (i*2)+1;    
+    int rchild = (i*2)+2; 
+    
+    inTraversal(tree, lchild);
+    sprint(tree[i]);
+    inTraversal(tree, rchild);
+}
