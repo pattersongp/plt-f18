@@ -1,0 +1,5 @@
+func int main = () => {
+   int x = 100;
+   str y = "100";
+   print( atoi(y) + x);
+}
