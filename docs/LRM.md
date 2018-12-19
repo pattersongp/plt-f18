@@ -194,8 +194,8 @@ Example:
 
 The syntax for reading and writing a `file` is as follows:
 ```
-read(<file>);
-write(<file>, <str>);
+<file name>.read();
+<file name>.write(<str>);
 ```
 
 #### 2.5.2 Array
