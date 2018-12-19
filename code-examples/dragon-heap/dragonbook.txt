@@ -178,4 +178,3 @@ Heine, Shih-Wei Liao, Amy Lim, Benjamin Livshits, Michael Martin, Dror
 Maydan, Todd Mowry, Brian Murphy, Jerey Oplinger, Karen Pieper, Martin Rinard, Olatunji Ruwase, Constantine Sapuntzakis, Patrick Sathyanathan,
 Michael Smith, Steven Tjiang, Chau-Wen Tseng, Christopher Unkel, John
 Whaley, Robert Wilson, Christopher Wilson, and Michael Wolf.
-size.
