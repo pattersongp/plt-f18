@@ -1,0 +1,19 @@
+func int main = () => {
+    regx lowercase = "[a-z]";
+    
+    if(lowercase === "match"){
+        sprint("match1");
+    }
+
+   if(lowercase === "MATCH"){
+       sprint("match2");
+    }
+
+    if(lowercase === "1234") {
+        sprint("match3");
+    }
+
+    if(lowercase === ""){
+        sprint("match4");
+    }
+}

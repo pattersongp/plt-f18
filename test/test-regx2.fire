@@ -1,0 +1,19 @@
+func int main = () => {
+    regx anything = ".*";
+    
+    if(anything === "match"){
+        sprint("match1");
+    }
+
+   if(anything === "MATCH"){
+       sprint("match2");
+    }
+
+    if(anything === "1234") {
+        sprint("match3");
+    }
+
+    if(anything === ""){
+        sprint("match4");
+    }
+}

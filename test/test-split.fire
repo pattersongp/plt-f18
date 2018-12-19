@@ -1,0 +1,10 @@
+func int main = () => {
+    str tmp = "i am just a test string";
+    array[int,str] words; 
+    words = split(tmp, " ");
+    int i = len(words)-1;
+    while (i >= 0) {
+        sprint(words[i]);
+        i = i-1;
+    }
+}
