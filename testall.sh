@@ -228,7 +228,5 @@ do
     esac
 done
 
-echo $globalerror
-
 exit $globalerror
 
