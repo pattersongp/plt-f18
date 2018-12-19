@@ -41,7 +41,7 @@ An identifier is a token correlate to a single variable, a function, an array, o
 
 FIRE has a set of identifiers that are restricted from use.
 
-#### 2.2.1 Basic Types
+### 2.2.1 Basic Types
 FIRE was designed for efficiency. Basic types, integer and string, are most efficient for scripting files. They ensure and eliminates certain runtime decisions. Void data type is used for functions that do not return a value. `true` and `false` are two predefined constants for `bool`. A function declaration begins with the `func` keyword.
 
 * `int` 
@@ -51,7 +51,7 @@ FIRE was designed for efficiency. Basic types, integer and string, are most effi
 * `func`
 
 
-#### 2.2.2 Control Flow 
+### 2.2.2 Control Flow 
 The following keywords indicate keywords for control flow.
 
 * `if` 
@@ -59,7 +59,7 @@ The following keywords indicate keywords for control flow.
 * `while`
 * `return`
 
-#### 2.2.2 Built-in Functions
+### 2.2.2 Built-in Functions
 The following keywords are reserved for built-in functions.
 
 * `print`
@@ -71,7 +71,7 @@ The following keywords are reserved for built-in functions.
 * `keys`
 * `atoi`
 
-#### 2.2.3 Advance Data Types
+### 2.2.3 Advance Data Types
 The following keywords are reserved for advance data types. 
 
 * `array`
@@ -83,7 +83,7 @@ The following keywords are reserved for advance data types.
 FIRE supports integer, string and boolean literals, inside expressions. 
 
 
-#### 2.3.1 Integer
+### 2.3.1 Integer
 Identifiers of type `int` represent positive integers. An `int` is a 32-bit integer, and consists of at least one digit. The following defines the regular expression of a decimal digit for `int`.
 
 `digit = ['0' - '9']`
@@ -97,7 +97,7 @@ Identifiers of type `int` represent positive integers. An `int` is a 32-bit inte
 
 `int a = 34 * 2 + (2 / 1);`
 
-#### 2.3.2 String
+### 2.3.2 String
 Identifiers of type `str` are used to represent sequences of characters, strings. Strings can be declared in the following manner.
 
 #### Example
@@ -127,7 +127,7 @@ To print out the raw forms of specially marked characters listed above, `\\` dou
 `\\\\`
 `\\/`
 
-#### 2.3.3 Boolean
+### 2.3.3 Boolean
 Boolean objects contain a value of either `true` or `false`. They can be declared on their own and are used in conditional statements. The structure of a boolean declaration is as follow.
 #### Example
 ```
@@ -175,7 +175,7 @@ Semicolon is used to separate statement:
 
 ### 2.5 Advance Data Type
 
-#### 2.5.1 File
+### 2.5.1 File
 Files are regarded as first-class citizens in FIRE. This is made apparent by the importance and centrality of files. A `file` type represents an existing file. This allows the programmer to more easily perform operations on the file. The syntax for instantiating a `file` object is as follows:
 
 #### Syntax
@@ -190,7 +190,7 @@ file f = open("filename.csv", "<delimiter>");
 #### Example
 `file f; f.open("test.csv", ",");` will open the File named `test.csv` in the current directory for both reading and writing, and delimited by the `,` string.
 
-#### Reading and Writing
+### Reading and Writing
 `read()` function returns the whole text of a delimited file. `write()` function takes in a string and does not return anything. 
 
 #### Syntax
@@ -200,7 +200,7 @@ The syntax for reading and writing a `file` is as follows
 <file name>.write(<str>);
 ```
 
-#### 2.5.2 Array
+### 2.5.2 Array
 Arrays are dynamic sequence containers: they hold any number of elements ordered in a linear sequence. Inspired by AWK's associative arrays, an `array` collection maps keys of one type to values of one type. Keys and values do not have to be the same type, but all keys must share the same type and all values must share the same type. The structure of `array` variable declarations is as follows.
 
 #### Syntax
@@ -222,7 +222,7 @@ array[<key_type>, <value_type>] arr;
 #### Example 
 `array[str, str] arr;`
 
-#### 2.5.2.1 Assignment
+### Assignment
 The assignment of variables has the following syntax:
 
 ```
@@ -233,7 +233,7 @@ arr[<key_value>] = <element>;
 
  `arr["myAge"] = "28";`
  
-#### 2.5.2.2 Retrieve
+### Retrieve
 Retrieving an element of an array has the following syntax:
  ```
  int element = arr[<key_value>];
@@ -245,7 +245,7 @@ Retrieving an element of an array has the following syntax:
  
 A key error will be thrown if `"myAge"` does not exist.
 
-#### 2.5.2.3 Arrays of Arrays
+### Arrays of Arrays
 A multidimensional array in FIRE is an array of arrays, declared by using syntax like the following:
 ```
 array[<key_type1>, array[<key_type2>, <value_type2>]] myArray;
@@ -261,7 +261,7 @@ array[<key_type1>, array[<key_type2>, <value_type2>]] myArray;
  
 In this case, array b will be initialized but not array[int,str]. 
  
-#### 2.5.3 Regular Expression
+### 2.5.3 Regular Expression
 Regular expressions are supported in FIRE. Via the `regx` type, which assigns an object to a regular expression. That object can then be passed as a parameter to functions that utilize regular expressions to a pattern match or extract data.
 
 #### Syntax
@@ -332,27 +332,27 @@ Objects are instantiated via declarations, which explicitly assign a data type t
 
 ### 3.3 Expressions
 
-#### 3.3.1 Primary Expressions
+### 3.3.1 Primary Expressions
 The grammars of the two primitive literals are INT_LIT and STRING_LIT. 
 
-#### 3.3.2 Function Calls
+### 3.3.2 Function Calls
 Functions take in arguments by value except in the case of other functions which are passed by reference. Functions, other than build-in functions, need to be assigned before being called, but FIRE does not support prototyping. The scope of a function is the top level.
 
-#### 3.3.3 Logical Negation
+### 3.3.3 Logical Negation
 FIRE provides `true` and `false` values. The logical negation operator `!` evaluates to the parity of the operand.
 
-#### 3.3.4 AND Operator
+### 3.3.4 AND Operator
 The logical AND `&&` is a short circuit operator, and returns `true` if and only if the expressions on its left and right both evaluate to `true`, otherwise `false`.
 
-#### 3.3.5 OR Operator
+### 3.3.5 OR Operator
 The logical OR `||` operator is a short circuit operator and returns `true` if either of the expressions on its left or right return `true`, otherwise `false`.
 
-#### 3.3.6 Relational Operators
+### 3.3.6 Relational Operators
 The relational operators `<, >, <=, <=, ==` return `true` if the expression on the left side of the operator has the expected relation to the operator on the right-hand side, otherwise `false`.
 
 These relationships amongst ints are determined by natural ordering. Strings can only be evaluated using the `==` operator.
 
-#### 3.3.7 String Concatenation Operator
+### 3.3.7 String Concatenation Operator
 The string concatenation `^` operator returns a new string that is the concatenation of the string on its left side and the string on its right side. `^` operator can concat multiple strings into a larger string. 
 
 #### Example
@@ -363,7 +363,7 @@ str z = x ^ y;
 str a = x ^ y ^ y; // evaluates to 'hello world world'
 ```
 
-#### 3.3.8 Bracket Operator
+### 3.3.8 Bracket Operator
 The bracket operator `[]` are operators on `array`. When `[]` is used on an `array`, it is supplied with a key and returns the corresponding element. Indexing a key using the bracket operator assigns an element to the corresponding key.
 
 #### Example
@@ -420,10 +420,10 @@ doSomething(saySomething);
 
 ### 4.3 Blocks and Control Flow 
 
-#### Block 
+### Block 
 A block is defined inside curly braces, which can include a possibly-empty list of statements.
 
-#### Conditional Statement 
+### Conditional Statement 
 A conditional statement is an if or if-else statement that takes an expression and evaluates to a
 bool value. It only executes `<code block>` based on a `true` value. 
 
@@ -443,7 +443,7 @@ else {
 }
 ``` 
 		
-#### Iteration Statement 
+### Iteration Statement 
 An iteration statement begins with the `while` keyword. The expressions must evaluate to a `bool` value. While statements execute a code block until its provided condition fails to be met:
 
 #### Syntax
@@ -453,7 +453,7 @@ while(<condition>) {
 }
 ```
 
-#### Jump Statements 
+### Jump Statements 
 The return statement takes an expression at the end of a function and exits out of that function
 
 #### Syntax
@@ -469,7 +469,7 @@ func <return type> main = () => {
 
 
 ### 4.3 Built-in Functions
-#### 4.3.1 Map 
+### 4.3.1 Map 
 Strongly influenced by Python and OCaml, the map built-in function allows a programmer to apply a function to every element of an array and modifies values of that array.
  
 #### Syntax
@@ -492,7 +492,7 @@ func void main = () => {
 }
 ```
 
-#### 4.3.2 Filter 
+### 4.3.2 Filter 
 The filter function creates an array with elements for which a function returns true. It takes any function that returns a boolean and applies the function to each element of the array. This allows the filter to quickly generate a new array that consists of elements that match whatever member criteria your function tests for.
 
 #### Syntax
