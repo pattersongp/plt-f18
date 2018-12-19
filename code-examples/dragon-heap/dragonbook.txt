@@ -11,6 +11,7 @@ Monica S. Lam
 Stanford University
 Ravi Sethi
 Avaya
+.
 Jeffrey D. Ullman
 Stanford University
 Publisher
