@@ -13,7 +13,6 @@ Jason Konikow (jk4057)
 2. Lexical Conventions
 3. Syntax
 4. Statements
-5. Code Sample ？？？
 
 
 ## 1: Introduction
@@ -42,7 +41,7 @@ An identifier is a token correlate to a single variable, a function, an array, o
 FIRE has a set of identifiers that are restricted from use.
 
 #### 2.2.1 Basic Types
-FIRE was designed for efficiency. Basic types, integer and string, are most efficient for scripting files. They ensure and eliminates certian runtime decisions. Void data type is used for functions that does not return a value. `true` and `false` are two predefined constants for `bool`.
+FIRE was designed for efficiency. Basic types, integer and string, are most efficient for scripting files. They ensure and eliminates certain runtime decisions. Void data type is used for functions that do not return a value. `true` and `false` are two predefined constants for `bool`.
 
 * `int` 
 * `str`
@@ -57,8 +56,6 @@ The following keywords indicate keywords for control flow.
 
 * `if` 
 * `else`
-* `elif`
-* `else`
 * `while`
 * `return`
 
@@ -69,6 +66,10 @@ The following keywords are reserved for built-in functions.
 * `sprint`
 * `map`
 * `filter`
+* `strlen`
+* `len`
+* `keys`
+* `atoi`
 
 #### 2.2.3 Advance Data Types
 The following keywords are reserved for advance data types. 
@@ -82,7 +83,7 @@ The following keywords are reserved for advance data types.
 FIRE supports integer, string and boolean literals, inside expressions. 
 
 #### 2.3.1 Integer
-Identifiers of type `int` represent positive integers. An `int` is a 32-bit singed integer, and consists of at least one digit. The following defines the regular expression of a decimal digit for `int`:
+Identifiers of type `int` represent positive integers. An `int` is a 32-bit integer, and consists of at least one digit. The following defines the regular expression of a decimal digit for `int`:
 
 `digit = ['0' - '9']`
 
@@ -90,7 +91,7 @@ Example:
 
 `int num = 32;`
 
-`int` types can also be assigned to the result of expressions:
+`int` type can also be assigned to the result of expressions:
 
 `int a = 34 * 2 + (2 / 1);`
 
@@ -101,11 +102,10 @@ Example:
 
 `str myString = "Hello World";`
 
-Length of string can be checkout using a build-in function: 
-`strlen(<string>)`
+checkout the length of a string using: `strlen(<str>)`
 
-Not all strings are in printable form. Some printable characters have conflicts with the lexical conventions. They are
-specially marked with a backslash. FIRE also supports the following escape sequences:
+Not all strings are in printable form. Some printable characters have conflicts with lexical conventions. They are
+specially marked with a backslash. FIRE supports the following escape sequences:
 
 `\n`
 `\r`
@@ -115,7 +115,7 @@ specially marked with a backslash. FIRE also supports the following escape seque
 `\\`
 `/`
 
-In order to print out the raw forms of speically marked characters that are listed above, `\\` double backlash can cancel the escape sequences.
+To print out the raw forms of specially marked characters listed above, `\\` double backlash cancels escape sequences.
 
 `\\\n`
 `\\\r`
@@ -153,7 +153,7 @@ FIRE supports primary expressions using the previously-mentioned identifiers. Pr
 
 `f()` 
 
-Statement in blocks are indicated by braces. Braces imply blocks that make up function bodies:
+Blocks are indicated by braces. Braces imply blocks that makeup function bodies:
 
 `{  \* This is a block *\  }`
 
@@ -175,7 +175,7 @@ Semicolon is used to separate statement:
 ### 2.5 Advance Data Type
 
 #### 2.5.1 File
-Files are regarded as first-class citizens in FIRE. This is made apparent by the importance and centrality of files. A `file` type represents either an existing file or a file that is to be written. This allows the programmer to more easily perform operations on the file.
+Files are regarded as first-class citizens in FIRE. This is made apparent by the importance and centrality of files. A `file` type represents either an existing file or a file that is to be written. This allows the programmer to more easily perform operations on the file. 
 
 The syntax for instantiating a `file` object is as follows:
 
@@ -183,55 +183,78 @@ The syntax for instantiating a `file` object is as follows:
 file f = open("filename.csv", "<delimiter>");
 ```
 
-In the example provided above, two argument are fed into the `open(...)` argument: *filename* for reading, writing or both, and <delimiter>. <delimiter> may be provided to the constructor specifying a delimiter for reading. The length of <delimiter> is expected to be exactly 1.
+In the example provided above, two arguments are fed into the `open(...)` argument: *filename* for reading, writing or both, and <delimiter>. <delimiter> may be provided to the constructor specifying a delimiter for reading. The length of <delimiter> is expected to be exactly 1. There will be an error message if a file does not exist.
 
 Example:
 
 `file f; f.open("test.csv", ",");` will open the File named `test.csv` in the current directory for both reading and writing, and delimited by the `,` string.
 
+##### Read and Write
+`read()` method returns the whole text of a file. 
+
+The syntax for reading and writing a `file` is as follows:
+```
+read(<file>);
+write(<file>, <str>);
+```
+
 #### 2.5.2 Array
-The `array` type is a dynamic collection of elements. Inspired by AWK's associative arrays, an `array` collection maps keys of one type to values of one type. Keys and values do not have be the same type, but all keys must share the same type and all values must share the same type.
+The `array` type is a dynamic collection of elements. Inspired by AWK's associative arrays, an `array` collection maps keys of one type to values of one type. Keys and values do not have to be the same type, but all keys must share the same type and all values must share the same type.
 
 The structure of `array` variable declarations is as follows:
+```
+array[<key_type>, <value_type>] arr;
+```
 
-`array[<key_type>, <value_type>] arr;`
+Where:
+* `arr` is initialized without pointing to a value.
+* `<key_type>` do not have to be of the same type as the `<value_type>` they correspond with - but all keys in an array must have the same type, and all values must be of the same type. 
+* There are strict restrictions on the types a key can be and a value can be. Please consult the table below:
 
-Example:
+| Legal Key Types | Legal Value Types |
+|-----------------|-------------------|
+| int             | int               |
+| str             | str               |
+|                 | array             |
 
+Example: 
 `array[str, str] arr;`
 
-Note that arrays are initialized without pointing to a value.
+##### Assignment
+The assignment of variables has the following syntax:
 
-The assignment of variables has the following structure:
-
-`arr[<key_value>] = <element>;` 
+```
+arr[<key_value>] = <element>;
+```
 
 Example:
 
  `arr["myAge"] = "28";`
  
-As the above example demonstrates, keys do not have to be of the same type as the values they correspond with - but all keys in an array must be of the same type, and all values must be of the same type. 
+##### Retrieve
+Retrieving an element of an array has the following syntax:
+ ```
+ int element = arr[<key_value>];
+ ```
 
-There are strict restrictions on the types a key can be and a value can be. Please consult the table below:
-
-| Legal Key Types | Legal Value Types |
-|-----------------|-------------------|
-| int             | int               |
-| str             | str            |
-|                 | array             |
- 
- Finally, a programmer can retrieve a value associated with a key with the below syntax:
- 
- `int element = arr[<key_value>];`
- 
- Example:
+Example:
  
  `int age = arr["myAge"];`
  
 A key error will be thrown if `"myAge"` does not exist.
 
 ##### Arrays of Arrays
-In certain cases you may create an Array of Arrays. Any value of a type array must specify the types of the array. For example:
+A multidimensional array in FIRE is an array of arrays, declared by using syntax like the following:
+```
+array[<key_type1>, array[<key_type2>, <value_type2>]] myArray;
+```
+
+Where:
+* `myArray` is initialized but not the anonymous `array[<type>, <type>]`. The anonymous array will not be initialized until assignment.
+* arrays that assign to `myArray` must follow the type `array[<key_type2>, <value_type2>]`. 
+
+
+Example:
 `array[str, array[int, str]] b;`
  
 In this case, array b will be initialized but not array[int,str]. 
@@ -265,7 +288,7 @@ The syntax for the regex patterns are as follows:
 
 
 ### 2.4 Comments
-FIRE only supports the use the block comments. Comments are initiated with the `/*` symbol and terminated by the `*/` symbol. Everything in between the symbols will be ignored by FIRE during compilation:
+FIRE only supports the use the block comments. Comments are initiated with the `/*` symbol and terminated by the `*/` symbol. Everything in between the symbols will be ignored by FIRE during compilation. A nested comment gets a parsing error. Comments have the following syntax:
 
  `/* This is a comment. */`
 
@@ -309,13 +332,13 @@ Objects are instantiated via declarations, which explicitly assign a data type t
 ### 3.3 Expressions
 
 #### 3.3.1 Primary Expressions
-The grammar of the two primitive literals are INT_LIT and STRING_LIT. 
+The grammars of the two primitive literals are INT_LIT and STRING_LIT. 
 
 #### 3.3.2 Function Calls
 Functions take in arguments by value except in the case of other functions which are passed by reference. Functions, other than build-in functions, need to be assigned before being called, but FIRE does not support prototyping. The scope of a function is the top level.
 
 #### 3.3.3 Logical Negation
-FIRE provides `true` and `false` values. The logical negation operator `!` evalutates to the parity of the operand.
+FIRE provides `true` and `false` values. The logical negation operator `!` evaluates to the parity of the operand.
 
 #### 3.3.4 AND Operator
 The logical AND `&&` is a short circuit operator, and returns `true` if and only if the expressions on its left and right both evaluate to `true`, otherwise `false`.
@@ -329,14 +352,14 @@ The relational operators `<, >, <=, <=, ==` return `true` if the expression on t
 These relationships amongst ints are determined by natural ordering. Strings can only be evaluated using the `==` operator.
 
 #### 3.3.7 String Concatenation Operator
-The string concatenation `^` operator returns a new string that is the concatenation of the string on its left side and the string on its right side. This operator cannot be chained without parenthesis - as a binary operator, if you wish to concatenate multiple strings into a larger string, you must group operands. 
+The string concatenation `^` operator returns a new string that is the concatenation of the string on its left side and the string on its right side. `^` operator can concat multiple strings into a larger string. 
 
 Example:
 ```
 str x = "hello";
 str y = " world";
 str z = x ^ y;
-str a = (x ^ y) ^ y; // evaluates to 'hello world world'
+str a = x ^ y ^ y; // evaluates to 'hello world world'
 ```
 
 #### 3.3.8 Bracket Operator
@@ -356,7 +379,7 @@ arr[2] = "dog";
 str animal = arr[0];
 ```
 
-where `arr` is a type of `[int,str]` array, `arr` can only accpet integer keys and elements.
+where `arr` is a type of `[int,str]` array, `arr` can only accept integer keys and elements.
 
 
 
@@ -364,7 +387,7 @@ where `arr` is a type of `[int,str]` array, `arr` can only accpet integer keys a
 
 ### 4.1 Assignments
 
-The assignment operators `=` returns the value of the expression that is evaluated on its right-hand side and stores it in the identifier on the left hand side. The scope of that identifier is described in [section 2](#Identifiers)
+The assignment operators `=` returns the value of the expression that is evaluated on its right-hand side and stores it in the identifier on the left-hand side. The scope of that identifier is described in [section 2](#Identifiers)
 
 ### 4.2 Function Declaration
 `func` objects reference functions and are treated as first class citizens. The structure of `func` variable declarations is as follows.
@@ -382,8 +405,8 @@ Where:
 
  
 
-#### Paramaterization
-We originally aim to provide paramaterization, so that named functions can be passed to other functions as a parameter. However, this functionality is not implemented in FIRE at this point. Inspired by JavaScript, we wanted to be able to pass anonymous functions and also use functions as first class citizens as follows.
+#### Parameterization
+We originally aimed to provide parameterization, so that named functions can be passed to other functions as a parameter. However, this functionality is not implemented in FIRE at this point. Inspired by JavaScript, we wanted to be able to pass anonymous functions and also use functions as first class citizens as follows.
  
 Example:
 ```
@@ -404,8 +427,8 @@ doSomething(saySomething);
 A block is defined inside curly braces, which can include a possibly-empty list of statements.
 
 #### Conditional Statement 
-A Conditional statement is an if or if-else statement that takes an expression that evaluates to a
-bool value. It only executes code based on a `true` value.
+A conditional statement is an if or if-else statement that takes an expression and evaluates to a
+bool value. It only executes `<code block>` based on a `true` value. 
 
 ##### Syntax
 ```
@@ -434,7 +457,7 @@ while(<condition>) {
 ```
 
 #### Jump Statements 
-The return statement takes an expression at the end of a function and exit out of that function
+The return statement takes an expression at the end of a function and exits out of that function
 
 ##### Syntax
 ```
@@ -449,7 +472,7 @@ Where:
 
 ### 4.3 Built-in Functions
 #### 4.3.1 Map 
-Strongly influence by Python and OCaml, the map built-in function allows a programmer to apply a function to every element of an array and modifies values of that array.
+Strongly influenced by Python and OCaml, the map built-in function allows a programmer to apply a function to every element of an array and modifies values of that array.
  
 ##### Syntax
 ```
@@ -457,7 +480,7 @@ map(<array>,<function>);
 ```
 
 Where:
-* `<function>` is the name of the function, no need to specify argument. 
+* `<function>` is the name of the function, no need to specify an argument. 
 The return type of `<function>` must match the type of element in `<array>`. A function used in `map()` must take exactly 1 argument. 
 * return type of `map` is `void` 
 
@@ -472,7 +495,7 @@ func void main = () => {
 ```
 
 #### 4.3.2 Filter 
-The filter function creates an array with elements for which a function returns true. It takes any function that returns a boolean and applies the function to each element of the array. This allows filter to quickly generate a new array that consists of elements that match whatever member criteria your function tests for.
+The filter function creates an array with elements for which a function returns true. It takes any function that returns a boolean and applies the function to each element of the array. This allows the filter to quickly generate a new array that consists of elements that match whatever member criteria your function tests for.
 
 ##### Syntax
 ```
@@ -480,7 +503,7 @@ filter(<array>,<function>);
 ```
 
 Where:
-* `<function>` is the name of the function, no need to specify argument. The return type of `<function>` must be a boolean.  Additionally, the only argument of `<function>` must be the type of the value in the array. `<function>` must take exactly 1 argument.   
+* `<function>` is the name of the function, no need to specify an argument. The return type of `<function>` must be a boolean.  Additionally, the only argument of `<function>` must be the type of the value in the array. `<function>` must take exactly 1 argument.   
 * return type of `filter` is `void` 
 * `<array>` is pointed to a new array after it gets filtered
 
@@ -489,7 +512,7 @@ Example:
 ```
 func bool f = (int i) => { ... }
 ...
-array[string, int] a;
+array[str, int] a;
 ...
 filter(a,f);
 ```
@@ -503,7 +526,13 @@ func void main = () => {
 ```
 
 ### 4.4 Print & SPrint Statement
-The print statement prints integers. To give more explicit typing constraints, print() can only print integers and sprint() can only print strings. The syntax and semantics of the print function are inspired by C. In C, the printf() function requires a format specifier inside printf(), and the function pass it as an argument. To make it more explicit, FIRE intended to call a different printing function to print strings. 
+The print statement prints integers. To give more explicit typing constraints, print() can only print integers and sprint() can only print strings. The syntax and semantics of the print function are inspired by C. In C, the printf() function requires a format specifier inside printf(). To make it more explicit, FIRE intended to call a different printing function to print strings. 
+
+##### Syntax
+```
+print(<int>);
+sprint(<str>);
+```
  
 Example: `print(10);` 
 
@@ -514,23 +543,23 @@ Like C, the strlen() function calculates the length of a given string. The funct
 
 ##### Syntax
 ```
-strlen(<string>);
+strlen(<str>);
 ```
 
 Example: `strlen("FIRE");	/* "FIRE" is length of 4 */`
 
 ### 4.7 Split
-Inspired by Javascript's str.split() method, FIRE also supports spliting a string. split() function is used to split the given string into array of strings by separating it into substrings using a specified separator provided in the argument. The syntax of the function is as follows.
+Inspired by Javascript's str.split() method, FIRE also supports splitting a string. split() function is used to split the given string into an array of strings by separating it into substrings using a specified separator provided in the argument. The syntax of the function is as follows.
 
 ##### Syntax
 ```
-split(<string>, <delimiter>);
+split(<str>, <delimiter>);
 ```
 
 ##### Arguments and Return value
-The first argument is the string to be split. The second argument is a string, the delimiter, which specifies the points where the split has to take place. The delimiter string is expected to be length of 1 and less than 1024
+The first argument is the string to be split. The second argument is a string, the delimiter, which specifies the points where the split has to take place. The delimiter string is expected to be a length of 1 and less than 1024
  
-This function returns an array of strings, `array[int,string]`, that is formed after splitting the given string at each point where the separator occurs.
+This function returns an array of strings, `array[int,str]`, that is formed after splitting the given string at each point where the separator occurs.
  
 Example: 
 ```
@@ -546,9 +575,18 @@ len(<array>);
 ```
 
 ### 4.9 Keys
-Inspired by PHP's associative array function array_keys($arr), FIRE designs `keys()` function to get all the keys out of an  array. The `keys()` function takes in an array as argument and returns a new array containing the keys.
+Inspired by PHP's associative array function array_keys($arr), FIRE designs `keys()` function to get all the keys out of an array. The `keys()` function takes in an array as an argument and returns a new array containing the keys.
 
 ##### Syntax
 ```
 keys(<array>);
 ```
+### 4.10 Atoi
+Inspired by C, `atoi()` parses a string `str` interpreting its content as an integral number, which is returned as a value of type `int`.
+
+##### Syntax
+```
+atoi(<str>);
+```
+Example:
+`int x = atoi("3") + 3;		/* x = 6 */`
