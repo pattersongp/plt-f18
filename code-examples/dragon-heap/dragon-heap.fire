@@ -1,0 +1,86 @@
+/* program that performs heap sort on the intro section of the dragon book using the length of each word as ordering property*/
+
+func int main = () => {
+    array[int,str] arr;
+
+    str book = "dragonbook.txt";
+    arr = fileToArr(book);
+    heapSort(arr, len(arr));
+    printArray(arr);
+}
+
+func array[int,str] fileToArr = (str filename) => {
+    file data = open(filename, "\n");
+    str text = data.read();
+    array[int,str] converted;
+
+    int i = 0;
+    array[int,str] tmp;
+    while(strlen(text) > 0) {
+        int j = 0;
+        tmp = split(text," ");
+        
+        while( j < len(tmp)) {
+            converted[i] = tmp[j];
+            i = i+1;
+            j = j+1;
+        }
+        
+        text = data.read();
+    }
+    
+    return converted;
+}
+
+func void heapify = (array[int,str] tree, int i, int n) => {
+    int largest = i;
+
+    int root = i;
+    int lchild = (root*2)+1;
+    int rchild = (root*2)+2;
+    
+    if(lchild < n) {
+        if(strlen(tree[lchild]) > strlen(tree[root])){
+           largest = lchild;
+        }
+    }
+
+    if(rchild < n) {
+        if(strlen(tree[rchild]) > strlen(tree[largest])){
+            largest = rchild;
+        }  
+    }
+   
+    if(largest != root){
+        str tmp = tree[root];
+        tree[root] = tree[largest];
+        tree[largest] = tmp;
+        heapify(tree, largest, n);
+    }
+}
+
+func void heapSort = (array[int,str] tree, int n) => {
+    int i = (n/2)-1;
+    while(i >= 0) {
+        heapify(tree,i,n);
+        i = i-1;
+    }
+    
+    int j = n-1;
+    while (j >= 0) {
+        str tmp = tree[j];
+        tree[j] = tree[0];
+        tree[0] = tmp;
+
+        heapify(tree, 0, j);
+        j = j-1;
+    }
+} 
+
+func void printArray = (array[int,str] arr) => {
+    int i = 0;
+    while(i < len(arr)) {
+        sprint(arr[i]);
+        i = i+1;
+    }
+}
