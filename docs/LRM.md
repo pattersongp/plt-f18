@@ -222,7 +222,7 @@ array[<key_type>, <value_type>] arr;
 #### Example 
 `array[str, str] arr;`
 
-#### Assignment
+#### 2.5.2.1 Assignment
 The assignment of variables has the following syntax:
 
 ```
@@ -233,7 +233,7 @@ arr[<key_value>] = <element>;
 
  `arr["myAge"] = "28";`
  
-#### Retrieve
+#### 2.5.2.2 Retrieve
 Retrieving an element of an array has the following syntax:
  ```
  int element = arr[<key_value>];
@@ -245,7 +245,7 @@ Retrieving an element of an array has the following syntax:
  
 A key error will be thrown if `"myAge"` does not exist.
 
-#### Arrays of Arrays
+#### 2.5.2.3 Arrays of Arrays
 A multidimensional array in FIRE is an array of arrays, declared by using syntax like the following:
 ```
 array[<key_type1>, array[<key_type2>, <value_type2>]] myArray;
