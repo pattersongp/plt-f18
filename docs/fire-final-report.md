@@ -2938,17 +2938,15 @@ func void main = () => {
     str y = "its over nine thousand!!!";
     x <= y;
 }
-
 ```
 
-
-
-
 ### 6.5 Target Program to LLVM
+
 
 The below features a program written in FIRE and the LLVM our compiler generates:
 
 **binarytree.fire**
+
 
 ```
 /*
@@ -2964,8 +2962,6 @@ proper pre-order: 	1,2,4,5,3,6,7
 proper post-order: 	4,5,2,6,7,3,1
 proper in-order: 	4,2,5,1,6,3,7
 */
-
-
 
 func int main = () => {
     array[int,str] tree;
@@ -2989,7 +2985,6 @@ func int main = () => {
     inTraversal(tree, 0);
     sprint("===================");
 }
-
 
 func void preTraversal = (array[int, str] tree, int i) => {
     if(i >= len(tree)){
@@ -3029,7 +3024,6 @@ func void inTraversal = (array[int, str] tree, int i) => {
     sprint(tree[i]);
     inTraversal(tree, rchild);
 }
-
 ```
 
 **binarytree.ll**
@@ -3607,7 +3601,6 @@ main:                                   # @main
 
 
 	.section	".note.GNU-stack","",@progbits
-
 ```
 
 
@@ -3628,21 +3621,18 @@ main:                                   # @main
 **Graham**
 
   The most important experience I had during this course was the demystification of compilers, interpreters,
-	and translators. Working on various components of the compiler exposed the various choices of production
-	compilers like gcc, clang, and Javascript interpreter. Engaging with various problems like code generation
-	and intermediate representation of programs exposes problems that compiler writers have experienced. For
-	example, when implementing the lexer code example, I needed to implement a token choice algorithm. When I
-	researched the algorithm I usually found its shortcomings described in the context of the C++ compiler
-	and the issues with <template<template>> and the >> operator. Engaging with algorithms that are used in
-	tools that I use everyday was incredibly rewarding. This course made me a more well rounded programmer
-	and software developer.
+and translators. Working on various components of the compiler exposed the various choices of production
+compilers like gcc, clang, and Javascript interpreter. Engaging with various problems like code generation
+and intermediate representation of programs exposes problems that compiler writers have experienced. For
+example, when implementing the lexer code example, I needed to implement a token choice algorithm. When I
+researched the algorithm I usually found its shortcomings described in the context of the C++ compiler
+and the issues with <template<template>> and the >> operator. Engaging with algorithms that are used in
+tools that I use everyday was incredibly rewarding. This course made me a more well rounded programmer
+and software developer.
 	 
 **Christopher**
 
-  I am continually fascinated by language and the chasm that can exist between what we say and we mean to say. This chasm becomes especially apparent in the design of programming languages. In natural language, it is perilously easy to say something that is far removed from the concept you are attempting to convey - how many fights between friends, colleagues or couples stem from a poor or ambiguous choice of words. 
-This same difficulty can plague the art of programming, 
-and so much of the task of becoming proficient in a language is learning how to tell a computer exactly what it is you intend it to do. 
-Programming languages can play a huge role in how successful these attempts can be. I've come to realize that the way a language is structured shapes the way we approach or even think about a problem. We are transmuted by the very tools we employ. PLT will rank as one of my favorite classes because I didn't just solve a problem, I had a say in shaping the inner life and mental models employed by the coders who use our language.
+  I am continually fascinated by language and the chasm that can exist between what we say and we mean to say. This chasm becomes especially apparent in the design of programming languages. In natural language, it is perilously easy to say something that is far removed from the concept you are attempting to convey - how many fights between friends, colleagues or couples stem from a poor or ambiguous choice of words. This same difficulty can plague the art of programming, and so much of the task of becoming proficient in a language is learning how to tell a computer exactly what it is you intend it to do. Programming languages can play a huge role in how successful these attempts can be. I've come to realize that the way a language is structured shapes the way we approach or even think about a problem. We are transmuted by the very tools we employ. PLT will rank as one of my favorite classes because I didn't just solve a problem, I had a say in shaping the inner life and mental models employed by the coders who use our language.
 
 **Jason**
 
@@ -3657,7 +3647,7 @@ Programming languages can play a huge role in how successful these attempts can 
 
 **Ayer**
 
-  Since this is my first time working with functional programming, OCaml was challenging. You have to 
+Since this is my first time working with functional programming, OCaml was challenging. You have to 
 	set your mind and think in a way that a compiler thinks. That will take a while to get used to. Micro C
 	is probably one of the most helpful reference in building your own language. It sets a base for ast, 
 	sementics, sast, and codegen. It’s a good starting point, but students also need to be careful about 
@@ -3671,7 +3661,7 @@ Programming languages can play a huge role in how successful these attempts can 
 
 **Frank**
 	
-  Before this class I really had no idea how a programming language is created. Looking back, that seems weird given that much of my life is centered around using said languages. The scanning/parsing/ building of the ast was fascinating as it felt like I finally got to see some of the the theories we learned about in CS Theory applied. Perhaps the most interesting part of the project was learning that our language could be complied down to llvm and then linked with libraries from other languages. I feel that this class filled a void in my computer science knowledge and I'm a more complete engineer having taken it. 
+Before this class I really had no idea how a programming language is created. Looking back, that seems weird given that much of my life is centered around using said languages. The scanning/parsing/ building of the ast was fascinating as it felt like I finally got to see some of the the theories we learned about in CS Theory applied. Perhaps the most interesting part of the project was learning that our language could be complied down to llvm and then linked with libraries from other languages. I feel that this class filled a void in my computer science knowledge and I'm a more complete engineer having taken it. 
 
 ## 8. Appendix
 
