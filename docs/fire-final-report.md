@@ -3655,9 +3655,19 @@ I am continually fascinated by language and the chasm that can exist between wha
 	i feel i am leaving better software engineer than when i entered. 
 
 **Ayer**
-```
-Since this is my first time working with functional programming, OCaml was challenging. You have to set your mind and think in a way that a compiler thinks. That will take a while to get used to. Micro C is probably one of the most helpful reference in building your own language. It sets a base for ast, sementics, sast, and codegen. It’s a good starting point, but students also need to be careful about Micro C’s variable declarations. If you allow dynamic declaration, start thinking early on how to implement that. I had a good experience with the team, since we meet every week twice for code sprint and meetings. We also meet with John, our TA, every week. He helped out a lot in terms of thinking ahead and function implementation. The biggest take away of this project is that I can actually start to write my own little language for other purpose. Now that when I code in other language, I actually understand what’s going on with the compilers, error message and various advantage and disadvantage in designing a programming language. 
-```
+
+	Since this is my first time working with functional programming, OCaml was challenging. You have to 
+	set your mind and think in a way that a compiler thinks. That will take a while to get used to. Micro C
+	is probably one of the most helpful reference in building your own language. It sets a base for ast, 
+	sementics, sast, and codegen. It’s a good starting point, but students also need to be careful about 
+	Micro C’s variable declarations. If you allow dynamic declaration, start thinking early on how to 
+	implement that. I had a good experience with the team, since we meet every week twice for code sprint 
+	and meetings. We also meet with John, our TA, every week. He helped out a lot in terms of thinking ahead
+	and function implementation. The biggest take away of this project is that I can actually start to write
+	my own little language for other purpose. Now that when I code in other language, I actually understand 
+	what’s going on with the compilers, error message and various advantage and disadvantage in designing a 
+	programming language. 
+
 
 ## 8. Appendix
 
