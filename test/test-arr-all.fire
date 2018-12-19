@@ -1,0 +1,55 @@
+func void testIntString = () => {
+        sprint("... Testing intString");
+        array[int, str] a;
+        a[0] = "Hello World!";
+
+        sprint("Expecting 'Hello World!'");
+        sprint(a[0]);
+        sprint("Testing intString passed ...");
+}
+
+func void testStringString = () => {
+        array[str, str] a;
+        a["hello"] = "world";
+
+        sprint("Expecting world");
+        sprint(a["hello"]);
+}
+
+func void testStringInt = () => {
+        array[str, int] a;
+        a["age"] = 42;
+        a["birth"] = 666;
+        a["hello"] = 69;
+
+        int i = 0;
+
+        sprint("Expecting 42");
+        print(a["age"]);
+        sprint("Expecting 666");
+        print(a["birth"]);
+        sprint("Expecting 69");
+        print(a["hello"]);
+}
+func void testIntInt = () => {
+        array[int, int] a;
+        a[0] = 10;
+        a[1] = 11;
+        a[2] = 12;
+        a[3] = 13;
+
+        int i = 0;
+        while (i < 4) {
+                sprint("Array returned:");
+                print(a[i]);
+                i = i + 1;
+        }
+}
+
+func int main = () => {
+        testIntInt();
+        testStringInt();
+        testIntString();
+        testStringString();
+        return 0;
+}

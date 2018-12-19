@@ -1,0 +1,5 @@
+func void main = () => { 
+    print(100);
+    print("Hello World!"); /* should not be able to call print on str */
+    print(54);
+}

@@ -1,0 +1,6 @@
+func void main = () => {
+    str x = " you better not do that or....";
+    else {
+        str a = " or ELSE what?";
+    }
+}

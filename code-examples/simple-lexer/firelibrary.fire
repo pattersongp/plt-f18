@@ -1,0 +1,17 @@
+
+/**
+ * Library function for string equality
+ */
+func bool equals = (regx lval, str rval) => {
+	return lval === rval;
+}
+
+
+/**
+ * Takes an empty Array and filled array of the same type
+ * Copies array into the other
+ */
+func void equals = (array[int, int] a, array[int, int] b) => {
+
+}
+

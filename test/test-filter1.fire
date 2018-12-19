@@ -1,3 +1,36 @@
-func void main = (array a) => {
-filter(a, 4);
+func bool modulo = (int x) => {
+    int rem = x - (2 * (x/2));
+    if (rem == 0) { return true; }
+    else { return false; }
 }
+ 
+func bool f = (int x) => {
+    if (modulo(x)) { return true; }
+    else { return false; }
+}
+
+func str p = (str x) => {
+    sprint(x);
+    return x;
+}
+
+func int p1 = (int x) => {
+    print(x);
+    return x;
+}
+
+func int main = () => {
+    array[int, int]a;
+    int i = 0;
+    while (i < 999) {
+        a[i] = i;
+        i = i+1;
+    } 
+    sprint("Length of array is: ");
+    print(len(a));
+    filter(a, modulo);
+    sprint("Length of array after filter for even number is: ");
+    print(len(a));
+    return 0;
+}
+

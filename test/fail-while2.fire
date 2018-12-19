@@ -1,0 +1,11 @@
+func void main = () => {
+
+  while (true) {
+    str i = "this is going to take a while";
+  }
+
+  while (true) {
+    boutThatLife(); /* boutThatLife undefined */
+  }
+
+}

@@ -1,0 +1,5 @@
+func void main = () => {
+    int x = 1000;
+    bool y;
+    x * y;
+}

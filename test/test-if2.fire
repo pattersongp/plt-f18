@@ -1,12 +1,14 @@
-func void main = (int x) => {
+func int main = () => {
+    bool x = true;
+    str result = "false";
+    
+    if(x) {
+        result = "true";
+    }
 
-if (x > 10)
-{
-return true;
-}
-else
-{
-return false;
+    sprint(result);
+    return 0;
 }
 
-}
+    
+        

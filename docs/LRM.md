@@ -26,6 +26,7 @@ FIRE is written in OCaml , utilizing libraries built in `C`, and leveraging the 
 This manual describes in detail the lexical conventions, types, scoping rules, built-in functions, and grammar of the FIRE language.
 
 
+
 ## 2: Lexical Conventions 
 
 ### 2.1 Identifiers
@@ -81,6 +82,7 @@ The following keywords are reserved for advance data types.
 ### 2.3 Constants
 
 FIRE supports integer, string and boolean literals, inside expressions. 
+
 
 #### 2.3.1 Integer
 Identifiers of type `int` represent positive integers. An `int` is a 32-bit integer, and consists of at least one digit. The following defines the regular expression of a decimal digit for `int`:
@@ -140,6 +142,7 @@ Example:
 func void main = () => {
 	int x = 0;
 	bool switch = true;
+
 
 	// infinite loop
 	while(switch) {
@@ -286,7 +289,6 @@ The syntax for the regex patterns are as follows:
 * `+` matches the preceding character at least once
 
 
-
 ### 2.4 Comments
 FIRE only supports the use the block comments. Comments are initiated with the `/*` symbol and terminated by the `*/` symbol. Everything in between the symbols will be ignored by FIRE during compilation. A nested comment gets a parsing error. Comments have the following syntax:
 
@@ -364,6 +366,7 @@ str a = x ^ y ^ y; // evaluates to 'hello world world'
 
 #### 3.3.8 Bracket Operator
 The bracket operator `[]` are operators on `array`.
+
 
 When used on `array` it is supplied a key and returns the corresponding element. Indexing a key using the bracket operator  assigns an element to the corresponding key.
 

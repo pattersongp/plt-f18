@@ -1,0 +1,9 @@
+func void main = () => {
+    if (true) {
+        str bruceYoungSwaySoup = " when in rome do as the romans";
+    }
+    else {
+        grenade; /* Error: undeclared variable */
+
+    }
+}

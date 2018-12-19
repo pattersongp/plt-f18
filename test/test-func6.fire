@@ -1,0 +1,7 @@
+func int bar = (int a, str b, int c) => { return a + c; }
+
+func int main = () =>
+{
+  print(bar(17, "hello", 25));
+  return 0;
+}

@@ -1,0 +1,23 @@
+func int main = () => {
+        
+        array[int, str] a;
+        array[int, int] n;
+        a[0] = "GATE";
+        n[0] = 0;
+        a[1] = "GATE";
+        n[1] = 1;
+        a[2] = "PARASAMGATE";
+        n[2] = 2;
+        a[3] = "BODHI SAVHA";
+        n[3] = 3;
+
+
+        int j = 0;
+        while(j < 4) {
+        	sprint(a[j]);
+        	print(n[j]);
+        	j = j + 1;
+        }
+
+        return 0;
+}

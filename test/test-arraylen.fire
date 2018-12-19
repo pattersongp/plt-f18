@@ -1,0 +1,12 @@
+func int main = () => {
+
+array[int, int] a;
+a[0] = 1;
+print(len(a));
+
+array[str, int] b;
+b["0"] = 1;
+print(len(b));
+
+return 0;
+}

@@ -1,2 +1,9 @@
-func void foo = () => { print(0); }
-func void main = () => { foo(); }
+func int foo = (int a) =>
+{
+  return a;
+}
+
+func int main = () =>
+{
+  return 0;
+}

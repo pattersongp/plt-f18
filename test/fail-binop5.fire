@@ -1,0 +1,8 @@
+func int main = (int x, str y) => {
+    int a = 10;
+    str b = "dont play with FIRE";
+    a = x;
+    b = y;
+    str c = "...or youll get burnt";
+    str d = x + c; /* fail here, int + string */
+}

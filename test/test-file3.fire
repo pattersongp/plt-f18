@@ -1,7 +1,0 @@
-file["report.csv",","] f;
-
-func void main = () => {
-f.open(rw);
-string line = f.read();
-int bytes = f.write("line");
-}

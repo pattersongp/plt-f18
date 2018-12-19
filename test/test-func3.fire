@@ -1,1 +1,16 @@
-func int main = (int a) => { return 1; }
+func int fun = (int x) =>
+{
+  x = 100;
+  return x;
+}
+
+func int main = () =>
+{
+  int i;
+  i = 1;
+
+  fun(i);
+
+  print(i);
+  return 0;
+}

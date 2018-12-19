@@ -1,1 +1,0 @@
-func bool main = () => { return 3 > 4; }

@@ -1,9 +1,0 @@
-func void main = () => {
-int x = 3;
-while (x > 1) {
-while (x > 2) {
-x = 0;
-}
-}
-return x;
-}

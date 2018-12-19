@@ -1,0 +1,13 @@
+func int main = () => {
+        
+        array[int, str] a;
+        a[0] = "hello";
+        a[1] = " " ;
+        a[2] = "world";
+
+        sprint(a[0]);
+        sprint(a[1]);
+        sprint(a[2]);
+
+        return 0;
+}

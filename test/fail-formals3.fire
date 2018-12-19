@@ -1,0 +1,3 @@
+func void main = (int x int z, int y) => {  /* missing comma */
+	str y = "frank lost his blue eyes white dragon....now hes sad";
+}

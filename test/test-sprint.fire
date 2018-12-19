@@ -1,0 +1,9 @@
+func int main = () => {
+    sprint("hello world!");
+    sprint("100");
+    
+    str q = "hasn't anyone told you that you shouldn't play with FIRE?";
+    sprint(q);
+    return 0;
+
+}

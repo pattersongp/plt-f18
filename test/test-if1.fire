@@ -1,12 +1,6 @@
-func void main = (int x) => {
-
-if (x > 10)
-{
-
-}
-else
-{
-
-}
-
+func int main = () => {
+    if(true) {
+       sprint("true");
+    }
+    return 0;
 }

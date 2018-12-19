@@ -1,0 +1,30 @@
+func bool getPrimes = (int i) => { return i != 0; }
+
+func int printVals = (int i) => { print(i); return i; }
+
+func int main = () => {
+    int n = 2000;
+
+    array[int, int] factors;
+    int i = 2;
+    while(i < n+1) { factors[i] = i; i = i+1; }
+
+    i = 2;
+    while(i < n) {
+        if(factors[i] != 0) {
+            int k = 1;
+            int j = (i * i);
+            while(j <= n) {
+                factors[j] = 0;
+                j = (k*i)+(i * i);
+                k = k + 1;
+            }
+        }
+        i = i + 1;
+    }
+
+    filter(factors, getPrimes);
+    map(factors, printVals);
+
+    return 0;
+}

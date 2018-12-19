@@ -1,0 +1,5 @@
+func void main = () => {
+	str x = "im too positive for you to make me negative";
+	str y = -x; /* cant use the negative unary on a str*/
+	
+}

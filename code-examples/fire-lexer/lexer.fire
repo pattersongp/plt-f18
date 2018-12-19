@@ -1,0 +1,134 @@
+/* Reads in the grammar from @filename */
+func array[int, array[str, str]] readGrammer = (str filename) => {
+
+		int i = 0;
+
+		array[int, str] tmp;
+		array[int, array[str, str]] grammar;
+
+		file input = open(filename, "\n");
+
+		str chunk = input.read();
+		while(strlen(chunk) > 0) {
+				array[str, str] entry;
+				tmp = split(chunk, "$");
+				entry[tmp[0]] = tmp[1];
+
+				grammar[i] = entry;
+				i = i + 1;
+				chunk = input.read();
+		}
+		return grammar;
+}
+
+func array[int, str] readFile = (str filename) => {
+		file input = open(filename, "\n");
+		str chunk = input.read();
+		array[int, str] line;
+		array[int, str] ret;
+
+		int i = 0;
+		while(strlen(chunk) > 0) {
+
+				line = split(chunk, " ");
+
+				int j = 0;
+				while(j < len(line)) {
+
+						ret[i] = strip(line[j], "\t");
+						j = j + 1;
+						i = i + 1;
+				}
+
+				chunk = input.read();
+				sprint("Read [" ^ chunk ^ "]");
+		}
+		return ret;
+}
+
+func bool equals = (str a, str b) => {
+		return (strcmp(a,b) == 0);
+}
+
+func str match = (str target, array[int, array[str, str]] g) => {
+		int i = 0;
+		while(i < len(g)) {
+
+				/* String to Token */
+				array[str, str] kvPair;
+				kvPair = g[i];
+
+
+				/* Key for the token */
+				array[int, str] key;
+				key = keys(kvPair);
+				/*sprint("Checking: [" ^ key[0] ^ "] against [" ^ target ^ "]");*/
+
+				if(equals(key[0], target)) {
+						return kvPair[key[0]];
+				}
+				i = i+1;
+		}
+
+		return "";
+}
+
+func array[int, str] tokenize = (array[int, array[str, str]] g, array[int, str] prog) => {
+		array[int, str] tokenizedProg;
+
+		regx id = "\\([[:alpha:]]\\+\\)";
+		regx intLit = "\\([0-9]\\+\\)";
+
+		int progLength = len(prog);
+		int i = 0;
+
+
+		while(i < progLength) {
+				str s = prog[i]; /* String to be tokenized */
+				str token = match(s, g);
+				sprint("Matched Token: [" ^ token ^ "]");
+
+				if(equals(token, "")) {
+						/*tokenizedProg[i] = "Error No Match";*/
+						sprint("Might've found int lit or id");
+
+						if(id === s) { tokenizedProg[i] = "ID(" ^ s ^ ")"; }
+						if(intLit === s) { tokenizedProg[i] = "LIT(" ^ s ^ ")"; }
+
+				} else {
+						sprint("Adding token...");
+						tokenizedProg[i] = token;
+				}
+
+				i = i + 1;
+		}
+		return tokenizedProg;
+}
+
+func str printArray = (str s) => { sprint(s); return s; }
+
+func int main = () => {
+		str filename = "simple.lexed.ir";
+
+		file output = open((filename ^ ".lex"), "");
+
+		array[int, str] targetProgram;
+		targetProgram = readFile(filename);
+
+		sprint("========== Target Program ==========");
+		map(targetProgram, printArray);
+		sprint("====================================");
+
+		array[int, array[str, str]] grammar;
+		grammar= readGrammer("grammar.fire");
+
+		array[int, str] tokenizedProg;
+		tokenizedProg = tokenize(grammar, targetProgram);
+
+		sprint("========== Tokenized Program ==========");
+		map(tokenizedProg, printArray);
+		sprint("=======================================");
+
+		return 0;
+}
+
