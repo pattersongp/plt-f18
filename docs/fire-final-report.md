@@ -112,7 +112,7 @@ If you would like to clean up binaries or recompile the FIRE compiler, run `make
 
 ## 3. Language Reference Manual 
 
-## 3.0 LRM Table of contents
+## 3.0 Reference Manual Table of contents
 
 1. Introduction
 2. Lexical Conventions
@@ -491,7 +491,7 @@ where `arr` is a type of `[int,str]` array, `arr` can only accept integer keys a
 
 
 
-## 3.4:Statements 
+## 3.4: Statements 
 
 ### 3.4.1 Assignments
 
@@ -699,7 +699,6 @@ atoi(<str>);
 Example:
 `int x = atoi("3") + 3;		/* x = 6 */`
 
- 
 
 ## 4. Project Plan
 
