@@ -2417,11 +2417,6 @@ The diagram below describes both the architecture and the interface between each
 
 
 ## 6. Testing Plan
-- *Show two or three representative source language programs along with the target language program generated for each* (FIRE TO LLVM)
-- *Show the test suites used to test your translator*
-- *Explain why and how these test cases were chosen*
-- *What kind of automation was used in testing*
-- *State who did what*
 
 Testing was a pivotal part of our development process. As FIRE matured as a language, we rapidly realized that as our language grew more complex, we would have to develop automated means of testing new and existing functionality. The following section details our test plan. 
 
@@ -2686,7 +2681,9 @@ func void main = () =>
 }
 
 ```
+
 **test-arr-all.fire**
+
 ```
 func void testIntString = () => {
         sprint("... Testing intString");
@@ -2760,7 +2757,9 @@ print(len(b));
 return 0;
 }
 ```
+
 **test-fib.fire**
+
 ```
 func int fib = (int z) => {
 		if (z < 3) {
@@ -2775,6 +2774,7 @@ func int main = () => {
 }
 
 ```
+
 **test-filter1.fire**
 
 ```
@@ -2814,9 +2814,10 @@ func int main = () => {
     return 0;
 }
 
-
 ```
+
 **test-func9.fire**
+
 ```
 func int bar = (int a) => {
 	return a * 3;
@@ -2857,7 +2858,9 @@ func int main = () => {
 		print(gcd(99, 121));
 }
 ```
+
 **test-if1.fire**
+
 ```
 func int main = () => {
     if(true) {
@@ -2866,7 +2869,9 @@ func int main = () => {
     return 0;
 }
 ```
+
 **test-ops1.fire**
+
 ```
 func int main = () => {
   print(1 + 2);
@@ -2897,6 +2902,7 @@ func int main = () => {
 }
 
 ```
+
 **fail-unop4.fire**
 
 ```
@@ -2907,6 +2913,7 @@ func void main = () => {
 }
 
 ```
+
 **fail-identifier3.fire**
 
 ```
@@ -2923,7 +2930,9 @@ func int bar = () => {
 func void main = () => {}
 
 ```
+
 **fail-formals4.fire**
+
 ```
 func void main = (int x , void y) => { /* void formals not allowed. FAIL */ 
 	str x = " i wonder if anyone can humiliated by Edwards on Facebook this semester";
@@ -2931,7 +2940,9 @@ func void main = (int x , void y) => { /* void formals not allowed. FAIL */
 }
 
 ```
+
 **fail-binop9.fire**
+
 ```
 func void main = () => {
     int x = 90001;
@@ -3641,9 +3652,9 @@ and software developer.
 	solve tomorrow's problems. Working on our compiler, particularly the semantic checker, has given me new appreciation
 	for the aspects of modern programming languages we as developers can sometime take for granted. Additionally, 
 	being forced to craft and learn every aspect of our language, and consider its every possible use case is an
-	exercise in meticulousness that has impacted the way i approach any development task. This course has given me an
+	exercise in meticulousness that has impacted the way I approach any development task. This course has given me an
 	expanded context to consider in both appreciating the art of computer science, and approaching real world problems and
-	I feel I am leaving better software engineer than when i entered. 
+	I feel I am leaving a better software engineer than when I entered. 
 
 **Ayer**
 
@@ -3743,39 +3754,6 @@ scanner.cmx : parser.cmx
 semant.cmo : ast.cmo
 semant.cmx : ast.cmx
 parser.cmi : ast.cmo
-```
-**arr.h**
-
-```
-#ifndef _ARRAY_H_
-#define _ARRAY_H_
-#include <stdio.h>
-#include <stdlib.h>
-
-/*
- * A node in a linked list.
- */
-struct Node {
-    void *data;
-    struct Node *next;
-};
-
-/*
- * A linked list.
- * 'head' points to the first node in the list.
- */
-struct List {
-    struct Node *head;
-};
-
-/*
- * Initialize an empty list.
- */
-static inline void initList(struct List *list)
-{
-    list->head = 0;
-}
-#endif
 ```
 **arrlib.c**
 
