@@ -3644,6 +3644,17 @@ Include any advice the team has for future teams*
 ```
 I am continually fascinated by language and the chasm that can exist between what we say and we mean to say. This chasm becomes especially apparent in the design of programming languages. In natural language, it is perilously easy to say something that is far removed from the concept you are attempting to convey - how many fights between friends, colleagues or couples stem from a poor or ambiguous choice of words. This same difficulty can plague the art of programming, and so much of the task of becoming proficient in a language is learning how to tell a computer exactly what it is you intend it to do. Programming languages can play a huge role in how successful these attempts can be. I've come to realize that the way a language is structured shapes the way we approach or even think about a problem. We are transmuted by the very tools we employ. PLT will rank as one of my favorite classes because I didn't just solve a problem, I had a say in shaping the inner life and mental models employed by the coders who use our language.
 ```
+**Jason**
+
+	The most important thing I feel I am taking away from this course is a larger understanding of how a "program" can go 
+	from simply being ordinary text characters in a meaningless document, to powerful tools meant to be harnessed to
+	solve tomorrow's problems. Working on our compiler, particularly the semantic checker, has given me new appreciation
+	for the aspects of modern programming languages we as developers can sometime take for granted. Additionally, 
+	being forced to craft and learn every aspect of our language, and consider its every possible use case is an
+	excercise in meticulousness that has impacted the way i approach any development task. This course has given me an
+	expanded context to consider in both apreciating the art of computer science, and approaching real world problems and
+	i feel i am leaving better software engineer than when i entered. 
+
 
 
 ## 8. Appendix
