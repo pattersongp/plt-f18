@@ -183,24 +183,26 @@ Files are regarded as first-class citizens in FIRE. This is made apparent by the
 file f = open("filename.csv", "<delimiter>");
 ```
 #### Where
-two arguments are fed into the `open(...)` argument
+* two arguments are fed into `open(...)`
 * `<filename>` for reading, writing or both on an existing file. 
 * `<delimiter>` may be provided to the constructor specifying a delimiter for reading. The length of <delimiter> is expected to be exactly 1. An error will be thrown if a file does not exist.
 
 #### Example
 `file f; f.open("test.csv", ",");` will open the File named `test.csv` in the current directory for both reading and writing, and delimited by the `,` string.
 
-#### Read and Write
-`read()` method returns the whole text of a file. 
+#### Reading and Writing
+`read()` function returns the whole text of a delimited file. `write()` function takes in a string and does not return anything. 
 
-The syntax for reading and writing a `file` is as follows:
+#### Syntax
+The syntax for reading and writing a `file` is as follows
 ```
 <file name>.read();
 <file name>.write(<str>);
 ```
 
 #### 2.5.2 Array
-The `array` type is a dynamic collection of elements. Inspired by AWK's associative arrays, an `array` collection maps keys of one type to values of one type. Keys and values do not have to be the same type, but all keys must share the same type and all values must share the same type. The structure of `array` variable declarations is as follows.
+Arrays are dynamic sequence containers: they hold any number of elements ordered in a linear sequence. Inspired by AWK's associative arrays, an `array` collection maps keys of one type to values of one type. Keys and values do not have to be the same type, but all keys must share the same type and all values must share the same type. The structure of `array` variable declarations is as follows.
+
 #### Syntax
 ```
 array[<key_type>, <value_type>] arr;
