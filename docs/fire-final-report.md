@@ -3668,6 +3668,9 @@ I am continually fascinated by language and the chasm that can exist between wha
 	what’s going on with the compilers, error message and various advantage and disadvantage in designing a 
 	programming language. 
 
+**Frank**
+	
+	Before this class I really had no idea how a programming language is created. Looking back, that seems weird given that much of my life is centered around using said languages. The scanning/parsing/ building of the ast was fascinating as it felt like I finally got to see some of the the theories we learned about in CS Theory applied. Perhaps the most interesting part of the project was learning that our language could be complied down to llvm and then linked with libraries from other languages. I feel that this class filled a void in my computer science knowledge and I'm a more complete engineer having taken it. 
 
 ## 8. Appendix
 
