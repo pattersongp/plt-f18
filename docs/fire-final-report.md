@@ -463,7 +463,7 @@ The string concatenation `^` operator returns a new string that is the concatena
 str x = "hello";
 str y = " world";
 str z = x ^ y;
-str a = x ^ y ^ y; // evaluates to 'hello world world'
+str a = x ^ y ^ y; 
 ```
 
 ### 3.3.3.8 Bracket Operator
@@ -790,16 +790,556 @@ Documentation: Markdown, Macdown Editor
 Communication: Slack
 
 
-### 4.6 Project Log
+### 4.6 Project Log (Git History)
 
-GITHUB COMMITS HERE - REPLACE DAY OF DEMO. Current Commits are from 12/14, pulled from master.
+commit e2db856dc7f1e2ca055aed0b763606cbb5e29f70
+Merge: b9a4e53 da1a92a
+Author: Christopher Thomas <sethosayher@gmail.com>
+Date:   Wed Dec 19 16:47:26 2018 -0500
 
-commit 6410255c4bdc50c0e249ecac7301a1f8b65cc3bc
-Merge: 411cf3e 52b8098
+    Merge pull request #101 from pattersongp/final-report
+    
+    Final report **do not delete branch**
+
+commit da1a92ae2ba311325aa0b3a7a4327633098ac91a
 Author: Lord-Left <sethosayher@gmail.com>
-Date:   Fri Dec 14 23:49:23 2018 -0500
+Date:   Wed Dec 19 16:02:52 2018 -0500
 
-    Merge branch 'master' of https://github.com/pattersongp/plt-f18
+    The following changes have been committed:
+    
+    + Instructions deleted in section 6
+    + Removed arr.h
+    + Fixed typos in reflections section
+    + Corrected formatting issues in Final Report Section 6
+
+commit b9a4e53799651eff36f79fc8b30a5752bf07daea
+Merge: c00e035 11459c3
+Author: Christopher Thomas <sethosayher@gmail.com>
+Date:   Wed Dec 19 15:54:06 2018 -0500
+
+    Merge pull request #102 from pattersongp/remove-files
+    
+    Removes old header file
+
+commit 11459c33e5f452f528a4fcc830a3186ee6625913
+Author: Graham Patterson <pattersongp.usmc@gmail.com>
+Date:   Wed Dec 19 15:43:28 2018 -0500
+
+    Removes old header file
+
+commit 53dabd505202f9701e920309fb2afdc6aba21ba5
+Author: Lord-Left <sethosayher@gmail.com>
+Date:   Wed Dec 19 14:26:28 2018 -0500
+
+    Settled on revised formatting for larger code blocks. Also added reference pdf to provide sense of what final report pdf will look like.
+
+commit e3fe9eeb9bb5fc4271527c25df5a13fb5b9f050c
+Author: Lord-Left <sethosayher@gmail.com>
+Date:   Wed Dec 19 14:03:12 2018 -0500
+
+    Experimented with no formatting for reflections
+
+commit 1439cfbe60b311792395695e61b9152cfed6931f
+Author: Lord-Left <sethosayher@gmail.com>
+Date:   Wed Dec 19 14:00:33 2018 -0500
+
+    Experimented with alternative formatting for reflections
+
+commit c00e035aa02dfbfeb5d7839cdbf756ffb5f977c1
+Author: Graham Patterson <gpp2109@columbia.edu>
+Date:   Wed Dec 19 08:38:19 2018 -0500
+
+    Removes echo call to exit status
+
+commit c54f9f9563b31282d506e618aa788514a7800a8e
+Author: frank spano <fspano@tripcents.co>
+Date:   Wed Dec 19 07:59:17 2018 -0500
+
+    frank added what section 7
+
+commit c2ec1e9d8d136b608d6427a75f12cbcadcb30c4d
+Author: Ayer Chan <oc2237@columbia.edu>
+Date:   Wed Dec 19 07:31:01 2018 -0500
+
+    Update fire-final-report.md
+
+commit 020e1cfe6326b4deb8118cfb1a481d199ece34be
+Author: Ayer Chan <oc2237@columbia.edu>
+Date:   Wed Dec 19 07:26:18 2018 -0500
+
+    Add my lesson learn
+
+commit a3da55f928742f3d931918d484479916248e4544
+Author: Ayer Chan <oc2237@columbia.edu>
+Date:   Wed Dec 19 07:01:33 2018 -0500
+
+    Update LRM Part
+
+commit 12591c46b3c38ae795f498bc3a6f5f318b6f186f
+Merge: 270c601 01a0133
+Author: Ayer Chan <oc2237@columbia.edu>
+Date:   Wed Dec 19 06:46:47 2018 -0500
+
+    Merge pull request #99 from pattersongp/jason
+    
+    add tests for regx, atoi, split
+
+commit 01a0133cad3cab9897bfd0a02c32b1799f605d6f
+Author: Jkon1513 <jkon1513@gmail.com>
+Date:   Wed Dec 19 03:15:39 2018 -0500
+
+    add tests for atoi, split, and regx
+
+commit ed695f2b513fddba17fec8bd7e6ca46c19d7c195
+Author: Jason Konikow <jkon1513@gmail.com>
+Date:   Wed Dec 19 02:32:08 2018 -0500
+
+    added Jason's Reflection
+
+commit bffeb4d38c005dde92340b5dae6b6c4b02ff799e
+Author: Jkon1513 <jkon1513@gmail.com>
+Date:   Wed Dec 19 02:09:38 2018 -0500
+
+    removing .o file from repo
+
+commit 270c601ffbd96fc0b373cd79abff55d355b95be3
+Author: Ayer Chan <oc2237@columbia.edu>
+Date:   Wed Dec 19 01:56:43 2018 -0500
+
+    Lrm update formatting (#98)
+    
+    * Update LRM.md
+    
+    * Update LRM.md
+    
+    * Update LRM.md
+    
+    * Update LRM.md
+
+commit 046c176a43c87669fe486c104e73da08fbe7834b
+Author: Christopher Thomas <cpt2132@columbia.edu>
+Date:   Wed Dec 19 00:18:26 2018 -0500
+
+    Made minor formatting changes
+
+commit 138d9294fdd2cefa7f71310b6925e4017eda4f44
+Author: Christopher Thomas <cpt2132@columbia.edu>
+Date:   Wed Dec 19 00:16:17 2018 -0500
+
+    Draft Integration of LRM into Final Report
+
+commit 0894978955a0e793bcecc652215952eba28ecf7e
+Merge: 0fb2587 84d40be
+Author: Christopher Thomas <sethosayher@gmail.com>
+Date:   Wed Dec 19 00:09:05 2018 -0500
+
+    Merge pull request #96 from pattersongp/lrm-update
+    
+    Lrm update add other builtin functions
+
+commit 0fb25876556948221aac5c05364f9f09bca89b2b
+Merge: 1e16e89 be820a2
+Author: Ayer Chan <oc2237@columbia.edu>
+Date:   Wed Dec 19 00:05:54 2018 -0500
+
+    Merge pull request #97 from pattersongp/dragonHeap
+    
+    Dragon heap
+
+commit be820a22b339ad016422ab45ea22217995b00f46
+Merge: 9991676 7bdd944
+Author: Jkon1513 <jkon1513@gmail.com>
+Date:   Tue Dec 18 22:56:49 2018 -0500
+
+    resolve conflict
+
+commit 9991676a66bf357c11eb3c3ab37917f600880b0d
+Author: Jkon1513 <jkon1513@gmail.com>
+Date:   Tue Dec 18 22:52:01 2018 -0500
+
+    corrected typo
+
+commit 50d6eb8047e24aef914a3a78ee86d0e8ec05512a
+Author: Jkon1513 <jkon1513@gmail.com>
+Date:   Tue Dec 18 22:38:28 2018 -0500
+
+    complete heap sort code example
+
+commit 7bdd94483d8a97c5fb7e684b65d1191c7a51d167
+Author: Jkon1513 <jkon1513@gmail.com>
+Date:   Tue Dec 18 22:38:28 2018 -0500
+
+    complete heap sort code example
+
+commit 84d40bef38fd1c986a3ac9b7fe84360ebd3a0a91
+Merge: d429b79 1e16e89
+Author: Ayer Chan <oc2237@columbia.edu>
+Date:   Tue Dec 18 20:42:38 2018 -0500
+
+    Merge branch 'master' into lrm-update
+
+commit d429b79ff0021c57d4b9fcfbefad3116c1d19873
+Author: Ayer Chan <oc2237@columbia.edu>
+Date:   Tue Dec 18 19:59:56 2018 -0500
+
+    Update LRM.md
+
+commit 893ab3734cb3803a35ea0c16bb503b27cd4d1276
+Author: Ayer Chan <oc2237@columbia.edu>
+Date:   Tue Dec 18 19:56:49 2018 -0500
+
+    Update LRM.md
+
+commit 90c20b8627ae452cd92d68cab755d5e029a71dfc
+Author: Christopher Thomas <sethosayher@gmail.com>
+Date:   Tue Dec 18 17:43:16 2018 -0500
+
+    Added sample invalid-program tests
+
+commit f6e642efed759e3256c800d693344f6487472be3
+Author: Christopher Thomas <sethosayher@gmail.com>
+Date:   Tue Dec 18 17:40:06 2018 -0500
+
+    Added sample valid test cases
+
+commit edc809297353d93430e37a86b5bbca006908b9f4
+Author: Christopher Thomas <sethosayher@gmail.com>
+Date:   Tue Dec 18 17:16:15 2018 -0500
+
+    Added binarytree.fire file under fire to llvm section
+
+commit 6f2d63057eebdd05a0f645689e9af9d0c5e6e9b9
+Author: Lord-Left <sethosayher@gmail.com>
+Date:   Tue Dec 18 17:14:03 2018 -0500
+
+    Added binarytree generated llvm
+
+commit 1e16e899a85e59fac7080e17963053b932b4e9eb
+Author: Graham Patterson <pattersongp.usmc@gmail.com>
+Date:   Tue Dec 18 17:08:15 2018 -0500
+
+    Changes name (#95)
+
+commit 8e11a5ea0b71dd212dd0bb7a243e07f22ef0aade
+Author: Christopher Thomas <cpt2132@columbia.edu>
+Date:   Tue Dec 18 17:04:32 2018 -0500
+
+    Updated Project Timeline
+
+commit e90f13500f6ba244e91309a15cb00a0737fc9af2
+Author: Christopher Thomas <cpt2132@columbia.edu>
+Date:   Tue Dec 18 17:02:50 2018 -0500
+
+    Added plt-f18/Makefile
+
+commit 709fe199796b58f3c168d459e712ccb2b2567613
+Author: Christopher Thomas <cpt2132@columbia.edu>
+Date:   Tue Dec 18 17:01:20 2018 -0500
+
+    Added util.c & util.h
+
+commit 1556ba7889690985321cb2600e31d6aa3ef16d97
+Author: Christopher Thomas <cpt2132@columbia.edu>
+Date:   Tue Dec 18 17:00:18 2018 -0500
+
+    Added sast.ml, scanner.mll and semant.ml
+
+commit 18da37af231aec61a93bf019c702fe5094320dd3
+Author: Christopher Thomas <cpt2132@columbia.edu>
+Date:   Tue Dec 18 16:57:28 2018 -0500
+
+    Added parser.mly, printlib.c and regexlib.c
+
+commit 03eb36fedcbedea4101b5b713eb968844aa28f9b
+Author: Christopher Thomas <cpt2132@columbia.edu>
+Date:   Tue Dec 18 16:55:30 2018 -0500
+
+    Added filelib.c  & fire.ml to Appendix I
+
+commit 107e3b4c88dd8c40b1ec50334c265caf0dfef628
+Author: Christopher Thomas <cpt2132@columbia.edu>
+Date:   Tue Dec 18 16:54:25 2018 -0500
+
+    Added filelib.c to Appendix I
+
+commit a38240064f988ab9e50ce1fd8f73b6036385eb49
+Author: Christopher Thomas <cpt2132@columbia.edu>
+Date:   Tue Dec 18 16:53:31 2018 -0500
+
+    Added codegen.ml to Appendix I
+
+commit 9789057ae1061316017df076211089dbeae138f4
+Author: Christopher Thomas <cpt2132@columbia.edu>
+Date:   Tue Dec 18 16:52:24 2018 -0500
+
+    Added ast.ml to Appendix I
+
+commit 68ebe40c7b8969f7998059d2110ce68cf16c98aa
+Author: Christopher Thomas <cpt2132@columbia.edu>
+Date:   Tue Dec 18 16:51:20 2018 -0500
+
+    Added arrlib.h to Appendix I
+
+commit a8e93e6cdf399f4fc543e696505037b36f9984f9
+Author: Christopher Thomas <cpt2132@columbia.edu>
+Date:   Tue Dec 18 16:50:03 2018 -0500
+
+    Added arrlib.c to Appendix I
+
+commit 58e38fb81bdca52f965960f5c2a9fb30ba603115
+Author: Christopher Thomas <cpt2132@columbia.edu>
+Date:   Tue Dec 18 16:49:11 2018 -0500
+
+    Added arr.h to appendix
+
+commit 26f58fcffe448a7cfd22742d3df99cd1b524221b
+Author: Christopher Thomas <cpt2132@columbia.edu>
+Date:   Tue Dec 18 16:48:10 2018 -0500
+
+    Added Makefile to Appendix I
+
+commit 2af426201788659bf665127d41fef8579f4d6855
+Author: Lord-Left <sethosayher@gmail.com>
+Date:   Tue Dec 18 16:46:22 2018 -0500
+
+    Made some minor tweaks to fire-final-report.md
+
+commit 81ad3e0f758a082f6b3e68423a5b1f83aa11c18e
+Author: Lord-Left <sethosayher@gmail.com>
+Date:   Tue Dec 18 15:21:48 2018 -0500
+
+    Added a few lines about the size of our test suite.
+
+commit 2fb6e825e78aa6f6724e3e49bb00bf4a1a425020
+Author: Ayer Chan <oc2237@columbia.edu>
+Date:   Tue Dec 18 13:52:39 2018 -0500
+
+    Update LRM.md
+    
+    trying to link to c++ library --> templating --> in c, create as mangy special function as possible
+
+commit 6fce804a1670d7d4e3300700e0121533fec7d51d
+Author: Ayer Chan <oc2237@columbia.edu>
+Date:   Tue Dec 18 13:35:02 2018 -0500
+
+    Update LRM.md
+
+commit bd880cd3e81dab79b335d548c8296ad9b90684d7
+Author: Ayer Chan <oc2237@columbia.edu>
+Date:   Tue Dec 18 13:25:15 2018 -0500
+
+    Update LRM.md
+
+commit fe331d54097bc1afcd0bbdeb76847452a96a0800
+Author: Ayer Chan <oc2237@columbia.edu>
+Date:   Tue Dec 18 13:00:58 2018 -0500
+
+    Update LRM Added Split Len keys strlen
+
+commit 7ef7934f7f9ff319cce60a851c0be9bccc634bd9
+Author: Graham Patterson <pattersongp.usmc@gmail.com>
+Date:   Tue Dec 18 12:37:37 2018 -0500
+
+    tabs
+
+commit cffe1600f79e03be9a4ab6bb242b0b286a1d1289
+Merge: 272d22b 453e298
+Author: Ayer Chan <oc2237@columbia.edu>
+Date:   Tue Dec 18 11:59:25 2018 -0500
+
+    Merge pull request #94 from pattersongp/sieve
+    
+    Adds a code example with Sieve of Eratosthenes
+
+commit 453e29863f671b032cc27c619154b1123405d514
+Author: Graham Patterson <pattersongp.usmc@gmail.com>
+Date:   Tue Dec 18 11:45:52 2018 -0500
+
+    Adds a code example with Sieve of Eratosthenes
+
+commit 272d22b9d2b56c8059329f690c6a19dd54137cce
+Merge: e713a81 0c25561
+Author: Graham Patterson <pattersongp.usmc@gmail.com>
+Date:   Tue Dec 18 11:32:34 2018 -0500
+
+    Merge pull request #93 from pattersongp/testfilter
+    
+    Testfilter
+
+commit 0c255611ce935daa15edadc88fb5ba354449b00f
+Merge: 5018884 e713a81
+Author: frank spano <fspano@tripcents.co>
+Date:   Tue Dec 18 11:29:48 2018 -0500
+
+    Merge branch 'master' into testfilter
+
+commit 5018884405fea421d8fb012ed1fd5a5856a32d95
+Author: frank spano <fspano@tripcents.co>
+Date:   Tue Dec 18 11:29:32 2018 -0500
+
+    filter and filter tests
+
+commit e713a81fec5bfdbda9ce6bccb8a9d67f7747d223
+Merge: 701acd6 1dc5ddd
+Author: Ayer Chan <oc2237@columbia.edu>
+Date:   Tue Dec 18 09:35:14 2018 -0500
+
+    Merge pull request #92 from pattersongp/forgotten
+    
+    Adds forgotten files...
+
+commit 1dc5ddd6c6ecdc98e243235499f52d1d844b236b
+Author: Graham Patterson <pattersongp.usmc@gmail.com>
+Date:   Tue Dec 18 09:29:31 2018 -0500
+
+    Adds forgotten files...
+
+commit 701acd6927e4de5402834f96b4f4f84129c4bd3a
+Merge: 2535801 0c01b49
+Author: Ayer Chan <oc2237@columbia.edu>
+Date:   Tue Dec 18 01:17:52 2018 -0500
+
+    Merge pull request #91 from pattersongp/binaryTree
+    
+    completed binary tree recursion example
+
+commit 0c01b4915428c9cd948f13ef0605cf8b42975b55
+Author: Jkon1513 <jkon1513@gmail.com>
+Date:   Tue Dec 18 00:54:37 2018 -0500
+
+    completed binary tree recursion example
+
+commit 3a939d6a3c1c32ab7a689d94f39fcbe1fd982ec0
+Author: Lord-Left <sethosayher@gmail.com>
+Date:   Mon Dec 17 19:13:28 2018 -0500
+
+    Added testall.sh script to Testing section and wrote accreditation section.
+
+commit a2f85692da591f31904d4b58e7d570ab1489405a
+Author: Lord-Left <sethosayher@gmail.com>
+Date:   Mon Dec 17 18:43:17 2018 -0500
+
+    Added Section 6.1 - Testing Workflow.
+
+commit 667cc1deede7cd39bf431191cf14e7f73079ca17
+Author: Lord-Left <sethosayher@gmail.com>
+Date:   Mon Dec 17 18:22:27 2018 -0500
+
+    Fixed typos, added a link to our git repo, added a personal reflection.
+
+commit 25358013ce91a3cfd91084abf4c513a21e6dd0d8
+Author: Graham Patterson <pattersongp.usmc@gmail.com>
+Date:   Mon Dec 17 17:28:24 2018 -0500
+
+    Add example make (#90)
+    
+    * Adds a makefile for the examples and fixes small issue with testall
+    
+    * clears intermediary file
+    
+    * Actually clears it
+
+commit 0be6e29f2077448c69f7eb5f05f340e974beddb9
+Author: Graham Patterson <gpp2109@columbia.edu>
+Date:   Mon Dec 17 16:38:05 2018 -0500
+
+    Adds part 5 and grahams reflection
+
+commit 97ce360978c3d61e0da2304aab6a475d29008121
+Author: Graham Patterson <pattersongp.usmc@gmail.com>
+Date:   Mon Dec 17 16:26:43 2018 -0500
+
+    Adds code example for lexer (#89)
+
+commit 841af360c44e30927ac7cf1e98517e677f6de4f0
+Merge: bbc18e4 cafc262
+Author: Christopher Thomas <sethosayher@gmail.com>
+Date:   Mon Dec 17 15:13:20 2018 -0500
+
+    Merge pull request #88 from pattersongp/features
+    
+    Adds features
+
+commit cafc2622487f8a2986241d20c30109908957764b
+Author: Graham Patterson <gpp2109@columbia.edu>
+Date:   Mon Dec 17 15:07:38 2018 -0500
+
+    Adds more features
+
+commit bbc18e4eb7f4f62255614fc4ccf106359d97e977
+Merge: 52b8098 25793f9
+Author: Ayer Chan <oc2237@columbia.edu>
+Date:   Sat Dec 15 03:07:53 2018 -0500
+
+    Merge pull request #86 from pattersongp/tests-jay
+    
+    adding more basic test cases
+
+commit 2d286b2e9bf7e8d052e686e21b058fec81eac649
+Author: Ayer Chan <oc2237@columbia.edu>
+Date:   Sat Dec 15 03:04:08 2018 -0500
+
+    Update LRM.md
+
+commit def62c520d35683017b87df277203e747ddd0d54
+Author: Ayer Chan <oc2237@columbia.edu>
+Date:   Sat Dec 15 03:02:55 2018 -0500
+
+    More formating
+    
+    REMEMBER TO ADD MORE 1.GRAMMAR 2. REASON TO CERTAIN DESIGN
+
+commit 156366831dd6a4a339660f312360ab00b5ef6484
+Author: Ayer Chan <oc2237@columbia.edu>
+Date:   Sat Dec 15 02:58:39 2018 -0500
+
+    More Formating
+
+commit a481614c873b9949eada3b95e47c227f92a3b0b1
+Author: Ayer Chan <oc2237@columbia.edu>
+Date:   Sat Dec 15 02:54:04 2018 -0500
+
+    Change formatting
+
+commit 87f3371c865776e58f0f44724930d2edec0eeddc
+Author: Ayer Chan <oc2237@columbia.edu>
+Date:   Sat Dec 15 02:49:20 2018 -0500
+
+    Update LRM ***made big changes
+    
+    Need to add more reasons for our designs
+
+commit 89795470e818760d9c0f789ab31e26e82997d7fa
+Author: Ayer Chan <oc2237@columbia.edu>
+Date:   Sat Dec 15 02:48:57 2018 -0500
+
+    Update LRM ***
+    
+    Need to add more reasons for our designs
+
+commit a5b8ddbfaee366834427881d45a596398d34e91b
+Author: Lord-Left <sethosayher@gmail.com>
+Date:   Fri Dec 14 23:55:34 2018 -0500
+
+    Added git log output from master, reflecting git commits as of 12/14 - update day before final presentation.
+
+commit 25793f92374819a8646a474b461e74b0788ccd47
+Author: Jkon1513 <jkon1513@gmail.com>
+Date:   Wed Dec 12 17:58:50 2018 -0500
+
+    completed basic ops testing
+
+commit 297e389a06040472a94e553d9f7ebfbaf6530436
+Author: Jkon1513 <jkon1513@gmail.com>
+Date:   Thu Dec 6 14:32:02 2018 -0500
+
+    added tests for print / sprint
+
+commit 5b1ae1bea21737544bed469b077ca7f800f96059
+Author: Jkon1513 <jkon1513@gmail.com>
+Date:   Wed Dec 12 17:58:50 2018 -0500
+
+    add tests for if statements
 
 commit 52b8098f4a1a081a57777d017ab7c81a6c4cc739
 Merge: f6b1069 4c39595
@@ -822,6 +1362,24 @@ Date:   Fri Dec 14 10:38:21 2018 -0500
 
     Adds atoi
 
+commit 6ee5b8bc847f155a1fcaebf0ce5003c96b4a27e4
+Author: Lord-Left <sethosayher@gmail.com>
+Date:   Thu Dec 13 21:27:08 2018 -0500
+
+    Added Team Roles section for Section 4 and created section for project log.
+
+commit 2c30996c37b85bab0ded3f61c5406bece0bc3112
+Author: Lord-Left <sethosayher@gmail.com>
+Date:   Thu Dec 13 21:10:15 2018 -0500
+
+    Added project timeline to Section 4.
+
+commit 16de64933dae94bc22a34e01949c7772ccddd6a5
+Author: Lord-Left <sethosayher@gmail.com>
+Date:   Thu Dec 13 21:01:53 2018 -0500
+
+    Added preliminary draft of style guide in Section 4.
+
 commit f97851a0a12fcdcfcabe156ca539d489d87e5a57
 Merge: d13ec4e d6244fa
 Author: fspano118 <fas2154@columbia.edu>
@@ -843,6 +1401,36 @@ Author: Graham Patterson <pattersongp.usmc@gmail.com>
 Date:   Thu Dec 13 16:27:23 2018 -0500
 
     Adds strcmp
+
+commit 7b14a9b2b70290ab2dc26a9f39aa1853e3bfe57b
+Author: Lord-Left <sethosayher@gmail.com>
+Date:   Wed Dec 12 22:36:50 2018 -0500
+
+    Added a section discussing git and our use of branches, PRs, and PR approvals.
+
+commit 1e48e187392534bc8b42d8656bdbcd7460750cee
+Author: Lord-Left <sethosayher@gmail.com>
+Date:   Wed Dec 12 22:23:18 2018 -0500
+
+    Wrote about our use of Github Projects and took screenshots.
+
+commit bdffa3b3203dd0f9fa19ef68a211c26de9e5dd3c
+Author: Lord-Left <sethosayher@gmail.com>
+Date:   Wed Dec 12 21:49:58 2018 -0500
+
+    Wrote Section 4.1.2 on Team Communication.
+
+commit f14fbd266302b72f355e617d20843c930aa4bf5a
+Author: Lord-Left <sethosayher@gmail.com>
+Date:   Wed Dec 12 21:39:31 2018 -0500
+
+    Wrote Section 4.1.1 on our Weekly meeting structure.
+
+commit 9339c91b295cf0c1c67af8e65d351deadc05c74b
+Author: Lord-Left <sethosayher@gmail.com>
+Date:   Wed Dec 12 21:26:55 2018 -0500
+
+    Updated Tutorial Section and Began Section 4.
 
 commit d13ec4e649e72ecca3901a8b4a90349c90598ab0
 Author: Jason Konikow <jkon1513@gmail.com>
@@ -901,6 +1489,12 @@ Author: Graham Patterson <pattersongp.usmc@gmail.com>
 Date:   Wed Dec 12 11:08:48 2018 -0500
 
     Adds Add/Get for IntArray() functions
+
+commit 2ac81df0bc9a96f47a46cf8507ae297ee6bcc0cd
+Author: Lord-Left <sethosayher@gmail.com>
+Date:   Tue Dec 11 13:15:35 2018 -0500
+
+    Began writing FIRE Tutorial.
 
 commit 59a06db13326332cf77ddb840f57207bcff41e35
 Author: Graham Patterson <pattersongp.usmc@gmail.com>
@@ -1019,11 +1613,23 @@ Date:   Tue Dec 11 06:53:16 2018 -0500
     
     * Added output file for Graham's general array test (test-arr-all.fire)
 
-commit 411cf3e1283ef65d4eecef6d8035aa17c16c48c3
+commit a23385abc37b43779d73512252caca5528f0beb0
 Author: Lord-Left <sethosayher@gmail.com>
-Date:   Mon Dec 10 21:59:15 2018 -0500
+Date:   Mon Dec 10 22:27:29 2018 -0500
 
-    Wrote Scaffolding of Final Report.
+    Added Section 1.2: Target Audience.
+
+commit f0777cb94d96565e41da3ccc5e1c157556d18942
+Author: Lord-Left <sethosayher@gmail.com>
+Date:   Mon Dec 10 22:16:20 2018 -0500
+
+    Working on Section 1; Motivation & Introduction.
+
+commit e04f92a6a6a6a4b3a5f4bc5b913bd68b232b3d0a
+Author: Lord-Left <sethosayher@gmail.com>
+Date:   Mon Dec 10 22:02:59 2018 -0500
+
+    Created first version of Final Report; contains TOC and general scaffolding.
 
 commit 1197ed2eec7557c39e98957178e39f0b974c5fa4
 Author: frank spano <fspano@tripcents.co>
@@ -1134,6 +1740,12 @@ Date:   Sat Dec 1 16:43:11 2018 -0500
     * Added Other Code Requirements Section.
     
     * Added documentation for string concat
+
+commit c718bd666330aee6456b6e1b020580136ddda3cb
+Author: Lord-Left <sethosayher@gmail.com>
+Date:   Sat Dec 1 15:04:40 2018 -0500
+
+    Added documentation for string concat
 
 commit 8c7ccd8e51eb5ce2effec8d77361e675d52bfa98
 Author: Jason Konikow <jkon1513@gmail.com>
@@ -1249,6 +1861,18 @@ Date:   Thu Nov 29 19:41:59 2018 -0500
 
     Adds support for writing files. (#58)
 
+commit 72dcda3350fe8ad3ce4dca595c6db080be058853
+Author: Lord-Left <sethosayher@gmail.com>
+Date:   Thu Nov 29 14:37:43 2018 -0500
+
+    Added Other Code Requirements Section.
+
+commit 26e344e8e7cf3845853d1323ab2ddd60276324be
+Author: Lord-Left <sethosayher@gmail.com>
+Date:   Thu Nov 29 14:25:30 2018 -0500
+
+    Added table of permissible types for Array Keys & Values.
+
 commit 9a94d131542c13310fde0f49177346c4c26b0ebe
 Author: Graham Patterson <pattersongp.usmc@gmail.com>
 Date:   Thu Nov 29 12:47:59 2018 -0500
@@ -1306,6 +1930,12 @@ Date:   Thu Nov 29 09:35:36 2018 -0500
     Merge pull request #54 from pattersongp/integrate-semantic-1
     
     Integrate semantic 1
+
+commit 3daf504ae6dd545b8da31b92ed0c5a3e7b0eb2c6
+Author: Lord-Left <sethosayher@gmail.com>
+Date:   Wed Nov 28 23:37:02 2018 -0500
+
+    Fixed minor typos in opening paragraphs, added mention of  keyword re: array initalizing.
 
 commit 239ce027269a4431296a8350af45883f3e9aebb4
 Author: Graham Patterson <gpp2109@columbia.edu>
@@ -2399,6 +3029,8 @@ Date:   Thu Sep 6 09:19:02 2018 -0400
 
     This will be the last direct commit to master, everything else through branches
 
+
+ 
 
 ## 5. Architectural Design
 
